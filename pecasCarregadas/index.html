@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Painel de Peças Carregadas</title>
+
+<style>
+
+:root{
+    --azul:#2563eb;
+    --laranja:#f59e0b;
+    --cinza:#6b7280;
+    --fundo:#f3f4f6;
+    --branco:#ffffff;
+    --borda:#e5e7eb;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, Arial, sans-serif;
+}
+
+body{
+    background:var(--fundo);
+    padding:10px;
+}
+
+/* ===============================
+   TÍTULO
+================================ */
+
+.header{
+    margin-bottom:10px;
+}
+
+.header h1{
+    font-size:22px;
+    color:#111827;
+}
+
+.header p{
+    font-size:10px;
+    color:var(--cinza);
+}
+
+/* ===============================
+   CARDS
+================================ */
+
+.cards{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+.card{
+    flex:1;
+    max-width:220px;
+    background:var(--branco);
+    border-radius:8px;
+    padding:12px;
+    min-height:90px;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+
+.card-pecas{
+    border-left:4px solid var(--azul);
+}
+
+.card-cargas{
+    border-left:4px solid var(--laranja);
+}
+
+.card-titulo{
+    text-align:center;
+    font-size:11px;
+    font-weight:600;
+    color:#4b5563;
+}
+
+.card-valor{
+    text-align:center;
+    font-size:32px;
+    font-weight:bold;
+    color:#111827;
+    margin:6px 0;
+}
+
+.card-info{
+    text-align:center;
+    font-size:9px;
+    color:var(--cinza);
+}
+
+/* ===============================
+   TABELA
+================================ */
+
+.tabela{
+    width:450px;
+    background:var(--branco);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+
+.tabela-titulo{
+    background:var(--azul);
+    color:white;
+    padding:8px;
+    font-size:11px;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead{
+    background:#eff6ff;
+}
+
+thead th{
+    padding:6px;
+    font-size:10px;
+    border-bottom:1px solid var(--borda);
+}
+
+tbody td{
+    padding:6px;
+    font-size:10px;
+    text-align:center;
+    border-bottom:1px solid var(--borda);
+}
+
+.valor{
+    font-weight:bold;
+}
+
+/* ===============================
+   RESPONSIVO
+================================ */
+
+@media(max-width:768px){
+
+    .cards{
+        flex-direction:column;
+    }
+
+    .card{
+        max-width:100%;
+    }
+
+    .tabela{
+        width:100%;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Painel de Peças Carregadas</h1>
+    <p>Monitoramento Operacional</p>
+</div>
+
+<div class="cards">
+
+    <div class="card card-pecas">
+
+        <div class="card-titulo">
+            Peças Carregadas Hoje
+        </div>
+
+        <div class="card-valor" id="pecasHoje">
+            12.450
+        </div>
+
+        <div class="card-info">
+            Quantidade carregada
+        </div>
+
+    </div>
+
+    <div class="card card-cargas">
+
+        <div class="card-titulo">
+            Cargas em Andamento
+        </div>
+
+        <div class="card-valor" id="cargas">
+            9
+        </div>
+
+        <div class="card-info">
+            Carregamentos ativos
+        </div>
+
+    </div>
+
+</div>
+
+<div class="tabela">
+
+    <div class="tabela-titulo">
+        Histórico de Carregamentos
+    </div>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Peças</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>24/05/2026</td>
+                <td class="valor">9.850</td>
+            </tr>
+
+            <tr>
+                <td>25/05/2026</td>
+                <td class="valor">10.420</td>
+            </tr>
+
+            <tr>
+                <td>26/05/2026</td>
+                <td class="valor">11.180</td>
+            </tr>
+
+            <tr>
+                <td>27/05/2026</td>
+                <td class="valor">12.050</td>
+            </tr>
+
+            <tr>
+                <td>28/05/2026</td>
+                <td class="valor">11.930</td>
+            </tr>
+
+            <tr>
+                <td>29/05/2026</td>
+                <td class="valor">12.450</td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<script>
+
+document.getElementById('pecasHoje').innerHTML =
+    Number(12450).toLocaleString('pt-BR');
+
+document.getElementById('cargas').innerHTML = 9;
+
+</script>
+
+</body>
+</html>
