@@ -8,24 +8,9 @@
 <head>
 	<title>Painel Reunião Diária</title>
 	<link rel="stylesheet" type="text/css" href="${BASE_FOLDER}/css/">
-	<snk:load/> <!-- essa tag deve ficar nesta posição -->
-	
-	<script type='text/javascript'>
-		function abrirContatos(codParc){
-			var params = {'CODPARC' : codParc};
-			refreshDetails('html5_ulnyo6', params);
-		}
-		
-		function abrirFinanceiros(codParc){
-			var params = {'CODPARC' : codParc};
-			openLevel('lvl_ulnyo9', params);
-		}
-	</script>
 </head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
 
 <snk:load/>
 
