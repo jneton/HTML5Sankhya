@@ -226,8 +226,7 @@
                 <body>
                     
                     <snk:query var="cabecalho">
-                        SELECT upper(w.opcao || ' - ' || to_char(SYSDATE, 'MONTH/YYYY')) AS
-                        DESCRICAO
+                        SELECT upper(w.opcao || ' - ' || to_char(SYSDATE, 'MONTH/YYYY')) AS DESCRICAO
                         FROM tddopc w
                         WHERE w.nucampo = 9999990191
                         AND to_char(w.valor, 'FM00') = :XSETOR
