@@ -224,13 +224,20 @@
 
 
                 <body>
-                   
-                    <snk:query var="cabecalho">
-                        SELECT UPPER( w.opcao || ' - ' || TO_CHAR(to_date(:XDT, 'yyyy-mm-dd'), 'MONTH/YYYY', 'NLS_DATE_LANGUAGE=PORTUGUESE')) AS DESCRICAO
-                        FROM tddopc w
-                        WHERE w.nucampo = 9999990191
-                        AND TO_CHAR(w.valor,'FM00') = :XSETOR
-                    </snk:query>
+                      
+                        <div style="padding:10px;background:#ffffcc;border:1px solid #ccc;">
+                            <%
+                                out.println("XDT Attribute = " + request.getAttribute("XDT") + "<br>");
+                                out.println("XDT Parameter = " + request.getParameter("XDT") + "<br>");
+                            %>
+                        </div>
+                    
+                        <snk:query var="cabecalho">
+                            SELECT UPPER( w.opcao || ' - ' || TO_CHAR(:XDT, 'MONTH/YYYY', 'NLS_DATE_LANGUAGE=PORTUGUESE')) AS DESCRICAO
+                            FROM tddopc w
+                            WHERE w.nucampo = 9999990191
+                            AND TO_CHAR(w.valor,'FM00') = :XSETOR
+                        </snk:query>
 
                     <snk:query var="qualityQuery">
                         WITH base AS
