@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="ComponenteData" file="inline">
+    <params>
+        <!-- Definição do parâmetro de data -->
+        <param name="XDT" type="DATA"/>
+    </params>
+
+    <!-- Conteúdo HTML5 -->
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Componente Sankhya - Data</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .data-box { padding: 10px; border: 1px solid #ccc; width: fit-content; }
+            </style>
+        </head>
+        <body>
+            <h2>Exemplo de Componente HTML5</h2>
+            <div class="data-box">
+                <p>Data recebida (XDT): <span id="dataXDT"></span></p>
+            </div>
+
+            <script>
+                // Recupera o parâmetro injetado pelo Sankhya
+                const dataXDT = params.XDT;
+
+                // Converte para formato legível (pt-BR)
+                const dataFormatada = new Date(dataXDT).toLocaleDateString("pt-BR");
+
+                // Exibe na tela
+                document.getElementById("dataXDT").innerText = dataFormatada;
+
+                // Debug no console
+                console.log("Data recebida (XDT):", dataXDT);
+            </script>
+        </body>
+    </html>
+</component>
