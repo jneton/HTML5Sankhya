@@ -1,13 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8" isELIgnored="false" %>
-    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-    <%@ page import="java.util.*" %>
-        <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-            <%@ taglib prefix="snk" uri="/WEB-INF/tld/sankhyaUtil.tld" %>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"  isELIgnored ="false"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ page import="java.util.*" %>
+<%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<%@ taglib prefix="snk" uri="/WEB-INF/tld/sankhyaUtil.tld" %>
 
-            <!DOCTYPE html>
-                <html lang="pt-BR">
+            <html>
 
                 <head>
+
+                    <snk:load />
+
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -20,8 +22,6 @@
                         Chart.register(ChartDataLabels);
                     </script>
                     
-                    <snk:load />
-
                     <style>
                         :root {
                             --bg: #edf1f5;
@@ -224,14 +224,19 @@
                 </head>
 
                 <body>
-                    
-                    <snk:query var="cabecalho">
 
-                        SELECT UPPER( w.opcao || ' - ' || TO_CHAR(:XDT, 'MONTH/YYYY', 'NLS_DATE_LANGUAGE=PORTUGUESE')) AS DESCRICAO
-                          FROM tddopc w
-                         WHERE w.nucampo = 9999990191
-                           AND TO_CHAR(w.valor,'FM00') = :XSETOR
-                        
+                    <snk:query var="cabecalho">
+                        SELECT UPPER(
+                                w.opcao || ' - ' ||
+                                TO_CHAR(
+                                    SYSDATE,
+                                    'MONTH/YYYY',
+                                    'NLS_DATE_LANGUAGE=PORTUGUESE'
+                                )
+                            ) AS DESCRICAO
+                        FROM tddopc w
+                        WHERE w.nucampo = 9999990191
+                        AND TO_CHAR(w.valor, 'FM00') = :XSETOR
                     </snk:query>
 
                     <snk:query var="qualityQuery">
@@ -736,18 +741,14 @@
                     </snk:query>
 
                     <header class="header">
-
                         <c:forEach items="${cabecalho.rows}" var="row">
                             <h1>
-
                                 <span>
-                                    <c:out value="${row.XDT_RECEBIDO}" />
+                                    <c:out value="${row.DESCRICAO}"/><br>
                                 </span>
-
                             </h1>
                         </c:forEach>
-
-                    </header>
+                    </header>                    
 
                     <div class="dashboard">
 
@@ -1233,4 +1234,4 @@
 
                 </body>
 
-                </html>
+            </html>
