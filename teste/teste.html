@@ -1,39 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component name="ComponenteData" file="inline">
-    <params>
-        <!-- Definição do parâmetro de data -->
-        <param name="XDT" type="DATA"/>
-    </params>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Exemplo Sankhya BI com Data</title>
+</head>
+<body>
+  <h2>Filtro de Data no Sankhya BI</h2>
 
-    <!-- Conteúdo HTML5 -->
-    <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>Componente Sankhya - Data</title>
-            <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
-                .data-box { padding: 10px; border: 1px solid #ccc; width: fit-content; }
-            </style>
-        </head>
-        <body>
-            <h2>Exemplo de Componente HTML5</h2>
-            <div class="data-box">
-                <p>Data recebida (XDT): <span id="dataXDT"></span></p>
-            </div>
+  <!-- Campo de data que recebe o parâmetro vindo do BI -->
+  <label for="dataEvento">Data do Evento:</label>
+  <input type="date" id="dataEvento" value="{{pData}}">
 
-            <script>
-                // Recupera o parâmetro injetado pelo Sankhya
-                const dataXDT = params.XDT;
+  <br><br>
 
-                // Converte para formato legível (pt-BR)
-                const dataFormatada = new Date(dataXDT).toLocaleDateString("pt-BR");
+  <!-- Botão para enviar a data escolhida de volta ao BI -->
+  <button onclick="enviarParaSQL()">Enviar Data para SQL</button>
 
-                // Exibe na tela
-                document.getElementById("dataXDT").innerText = dataFormatada;
+  <p id="resultado"></p>
 
-                // Debug no console
-                console.log("Data recebida (XDT):", dataXDT);
-            </script>
-        </body>
-    </html>
-</component>
+  <script>
+    // Recebe o parâmetro do BI (binding)
+    let dataParametro = "{{pData}}";
+    document.getElementById("dataEvento").value = dataParametro;
+
+    // Função para atualizar o parâmetro no BI
+    function enviarParaSQL() {
+      let dataSelecionada = document.getElementById("dataEvento").value;
+      // Atualiza o parâmetro no Sankhya BI
+      $scope.setParam("pData", dataSelecionada);
+
+      // Mostra na tela para conferência
+      document.getElementById("resultado").innerText = "Data enviada: " + dataSelecionada;
+    }
+  </script>
+</body>
+</html>

@@ -20,12 +20,6 @@
                         Chart.register(ChartDataLabels);
                     </script>
                     
-                    <script>
-                        const XDT = params.XDT;
-                        console.log("Data Inicial:", XDT);
-                        <p>Data inicial: <span id="XDT"></span></p>
-                    </script>
-
                     <snk:load />
 
                     <style>
@@ -229,18 +223,14 @@
 
                 </head>
 
-                <params>
-                    <!-- Definição do parâmetro de data -->
-                    <param name="XDT" type="DATA"/>
-                </params>
-
                 <body>
                     
                     <snk:query var="cabecalho">
+
                         SELECT UPPER( w.opcao || ' - ' || TO_CHAR(:XDT, 'MONTH/YYYY', 'NLS_DATE_LANGUAGE=PORTUGUESE')) AS DESCRICAO
-                        FROM tddopc w
-                        WHERE w.nucampo = 9999990191
-                        AND TO_CHAR(w.valor,'FM00') = :XSETOR
+                          FROM tddopc w
+                         WHERE w.nucampo = 9999990191
+                           AND TO_CHAR(w.valor,'FM00') = :XSETOR
                         
                     </snk:query>
 
