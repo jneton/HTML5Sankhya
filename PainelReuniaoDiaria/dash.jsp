@@ -4,11 +4,15 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib prefix="snk" uri="/WEB-INF/tld/sankhyaUtil.tld" %>
 
+
             <html>
 
                 <head>
 
+                    
                     <snk:load />
+
+                    <c:set var=“XDT” value=“‘${P_XDT}’”></c:set>
 
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,7 +25,7 @@
                     <script>
                         Chart.register(ChartDataLabels);
                     </script>
-                    
+
                     <style>
                         :root {
                             --bg: #edf1f5;
@@ -85,6 +89,9 @@
 
                         .card-body {
                             padding: 15px;
+                            max-height: 350px;   /* ajuste conforme necessário */
+                            overflow-y: auto;
+                            overflow-x: auto;
                         }
 
                         .span-5 {
@@ -101,6 +108,8 @@
 
                         .span-3 {
                             grid-column: span 3;
+                            font-size: 7px;
+                            line-height: 1.2;
                         }
 
                         .span-4 {
@@ -223,13 +232,14 @@
 
                 </head>
 
-                <body>
+                <c:set var="XDT" value="${empty P_XDT ? param.P_XDT : P_XDT}" />
 
+                <body>
                     <snk:query var="cabecalho">
                         SELECT UPPER(
                                 w.opcao || ' - ' ||
                                 TO_CHAR(
-                                    SYSDATE,
+                                    SYSDATE
                                     'MONTH/YYYY',
                                     'NLS_DATE_LANGUAGE=PORTUGUESE'
                                 )
@@ -363,7 +373,8 @@
                         (SELECT DISTINCT to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'IW') AS iw
                             FROM dual
                         WHERE to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7)
-                        CONNECT BY LEVEL <= to_number(to_char(last_day(SYSDATE), 'DD'))),
+                        CONNECT BY LEVEL <= to_number(to_char(last_day(SYSDATE), 'DD'))
+                        ORDER BY to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'IW')),
                         dados_brutos AS
                         (SELECT to_char(apo.dhapo, 'IW') AS semana,
                                 COUNT(DISTINCT trunc(apo.dhapo)) over (PARTITION BY to_char(apo.dhapo, 'IW')) AS d,
@@ -387,7 +398,8 @@
                                 SUM(qtd) AS qtd
                             FROM dados_brutos
                         GROUP BY semana,
-                                    d)
+                                    d
+                            ORDER BY semana)
                         SELECT s.iw,
                             to_char(rownum, 'FM9') || 'ª SEM' AS semana_label,
                             CASE
@@ -740,6 +752,77 @@
 
                     </snk:query>
 
+                    <snk:query var="planoAcaoQuery">
+
+                        WITH tot AS
+                        (SELECT (coalesce(adm_x, 0) + coalesce(com_x, 0) + coalesce(ind_x, 0)) AS total_vencida,
+                                coalesce(adm_x, 0) AS administrativo,
+                                coalesce(com_x, 0) AS comercial,
+                                coalesce(ind_x, 0) AS industria
+                            FROM (SELECT y.cod,
+                                        coalesce(COUNT(*), 0) i
+                                    FROM ad_gsetor y
+                                    LEFT JOIN ad_ggestao x
+                                    ON y.cod = x.cod
+                                WHERE trunc(x.dtprazo) < trunc(SYSDATE)
+                                    AND x.status NOT IN (4, 5)
+                                GROUP BY y.cod)
+                        pivot(SUM(i) AS x
+                            FOR cod IN(4 AS adm, 5 AS com, 6 AS ind))),
+                        qtd AS
+                        (SELECT x.cod,
+                                MAX(trunc(SYSDATE) - x.dtprazo) maior,
+                                COUNT(*) qtd_em_atrazo_area
+                            FROM ad_ggestao x
+                        WHERE trunc(x.dtprazo) < trunc(SYSDATE)
+                            AND x.status <> 5
+                        GROUP BY x.cod)
+                        SELECT to_char(dtprazo, 'DD/MM/YY') AS dtprazo,
+                            acao,
+                            responsavel,
+                            setor,
+                            status
+                        FROM (SELECT t.total_vencida,
+                                    t.administrativo,
+                                    t.comercial,
+                                    t.industria,
+                                    q.qtd_em_atrazo_area,
+                                    q.maior,
+                                    gse.descricao area,
+                                    gge.cod,
+                                    gge.sequencial,
+                                    upper(gge.acao) acao,
+                                    option_label('AD_GGESTAO', 'CLASSIFICACAO', gge.classificacao) classificacao,
+                                    upper(gge.responsavel) responsavel,
+                                    upper(gar.descricao) setor,
+                                    dbms_lob.substr(upper(gge.porque), 4000, 1) porque,
+                                    gge.dtprazo,
+                                    trunc(SYSDATE) - gge.dtprazo dias,
+                                    CASE
+                                        WHEN (trunc(SYSDATE) - gge.dtprazo) > 0 THEN
+                                        'VENCIDA A ' || to_char(trunc(SYSDATE) - gge.dtprazo, 'FM990') || ' DIA(S)'
+                                        WHEN (trunc(SYSDATE) - gge.dtprazo) < 0 THEN
+                                        'NO PRAZO'
+                                        WHEN (trunc(SYSDATE) - gge.dtprazo) = 0 THEN
+                                        'VENCENDO'
+                                    END AS status,
+                                    dbms_lob.substr(upper(gge.observacao1), 4000, 1) observacao,
+                                    dbms_lob.substr(upper(gge.obsevacao2), 4000, 1) novaobservacao
+                                FROM ad_ggestao gge
+                                INNER JOIN ad_gsetor gse
+                                    ON gge.cod = gse.cod
+                                INNER JOIN ad_garea gar
+                                    ON gge.cod = gar.cod
+                                AND gge.seq = gar.seq
+                                INNER JOIN qtd q
+                                    ON gge.cod = q.cod
+                                CROSS JOIN tot t
+                                WHERE gge.status NOT IN (4, 5)
+                                AND gge.cod = 6)
+                        ORDER BY dias DESC
+
+                    </snk:query>
+
                     <header class="header">
                         <c:forEach items="${cabecalho.rows}" var="row">
                             <h1>
@@ -885,20 +968,24 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Data</th>
+                                            <th>Prazo</th>
                                             <th>Ação</th>
-                                            <th>OS</th>
-                                            <th>Resp.</th>
+                                            <th>Responsavel</th>
+                                            <th>Setor</th>
+                                            <th>Status</th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
-                                        <tr>
-                                            <td>17/Mar</td>
-                                            <td>Troca do Manômetro</td>
-                                            <td>5265</td>
-                                            <td>Paulo</td>
-                                        </tr>
+                                        <c:forEach items="${planoAcaoQuery.rows}" var="row">
+                                            <tr>
+                                                <td><c:out value="${row.dtprazo}" /></td>
+                                                <td><c:out value="${row.acao}" /></td>
+                                                <td><c:out value="${row.responsavel}" /></td>
+                                                <td><c:out value="${row.setor}" /></td>
+                                                <td><c:out value="${row.status}" /></td>
+                                            </tr>
+                                        </c:forEach>
                                     </tbody>
                                 </table>
 
