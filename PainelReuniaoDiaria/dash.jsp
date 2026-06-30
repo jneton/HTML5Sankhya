@@ -6,14 +6,8 @@
 
 
             <html>
-
                 <head>
-
-                    
-                    <snk:load />
-
-                    <c:set var=“XDT” value=“‘${P_XDT}’”></c:set>
-
+                    <snk:load/>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -232,18 +226,17 @@
 
                 </head>
 
-                <c:set var="XDT" value="${empty P_XDT ? param.P_XDT : P_XDT}" />
-
                 <body>
+
                     <snk:query var="cabecalho">
                         SELECT UPPER(
                                 w.opcao || ' - ' ||
                                 TO_CHAR(
-                                    SYSDATE
-                                    'MONTH/YYYY',
-                                    'NLS_DATE_LANGUAGE=PORTUGUESE'
+                                TRUNC(:P_XDT),
+                                'MONTH/YYYY',
+                                'NLS_DATE_LANGUAGE=PORTUGUESE'
                                 )
-                            ) AS DESCRICAO
+                                )AS DESCRICAO
                         FROM tddopc w
                         WHERE w.nucampo = 9999990191
                         AND TO_CHAR(w.valor, 'FM00') = :XSETOR
@@ -263,7 +256,7 @@
                              ON ipa.codprodpa = pro.codprod
                           INNER JOIN tprapo apo
                              ON atv.idiatv = apo.idiatv
-                          WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(SYSDATE, -1)) + 1) AND last_day(SYSDATE)
+                          WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(TRUNC(:P_XDT), -1)) + 1) AND last_day(TRUNC(:P_XDT))
                             AND (coalesce(qld.qtdreprovada, 0) + coalesce(qld.qtdretida, 0) + coalesce(qld.qtdnotificada, 0)) > 0
                             AND to_char(coalesce(qld.setor_def, pro.ad_set_producao), 'FM00') = :XSETOR),
                         tipos AS
@@ -299,7 +292,7 @@
                             ON apo.nuapo = apf.nuapo
                         INNER JOIN tgfpro pro
                             ON ipa.codprodpa = pro.codprod
-                        WHERE to_char(apo.dhapo, 'YYYY') = to_char(SYSDATE, 'YYYY')
+                        WHERE to_char(apo.dhapo, 'YYYY') = to_char(TRUNC(:P_XDT), 'YYYY')
                             AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
                         GROUP BY trunc(apo.dhapo)),
                         producao_anual AS
@@ -315,7 +308,7 @@
                             FROM base_producao
                         GROUP BY to_char(dhapo, 'YYYYMM')),
                         meses AS
-                        (SELECT to_char(SYSDATE, 'YYYY') || to_char(LEVEL, 'FM00') AS anomes,
+                        (SELECT to_char(TRUNC(:P_XDT), 'YYYY') || to_char(LEVEL, 'FM00') AS anomes,
                                 to_char(to_date(LEVEL, 'MM'), 'MON') AS mesano
                             FROM dual
                         CONNECT BY LEVEL <= 12),
@@ -369,60 +362,65 @@
 
                     <snk:query var = "mediaSemanaQuery">
 
-                        WITH semanas AS
-                        (SELECT DISTINCT to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'IW') AS iw
+                        WITH semanas AS (
+                            SELECT DISTINCT
+                                TO_CHAR(LAST_DAY(ADD_MONTHS(TRUNC(:P_XDT), -1)) + LEVEL, 'IW') AS iw
                             FROM dual
-                        WHERE to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7)
-                        CONNECT BY LEVEL <= to_number(to_char(last_day(SYSDATE), 'DD'))
-                        ORDER BY to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'IW')),
-                        dados_brutos AS
-                        (SELECT to_char(apo.dhapo, 'IW') AS semana,
-                                COUNT(DISTINCT trunc(apo.dhapo)) over (PARTITION BY to_char(apo.dhapo, 'IW')) AS d,
+                            CONNECT BY LEVEL <= TO_NUMBER(TO_CHAR(LAST_DAY(TRUNC(:P_XDT)), 'DD'))
+                        ),
+
+                        dados_brutos AS (
+                            SELECT
+                                TO_CHAR(apo.dhapo, 'IW') AS semana,
+                                TRUNC(apo.dhapo)         AS dia,
                                 apf.qtd
                             FROM tpriproc ord
-                        INNER JOIN tpriatv atv
-                            ON ord.idiproc = atv.idiproc
-                        INNER JOIN tpripa ipa
-                            ON atv.idiproc = ipa.idiproc
-                        INNER JOIN tprapo apo
-                            ON atv.idiatv = apo.idiatv
-                        INNER JOIN tprapf apf
-                            ON apo.nuapo = apf.nuapo
-                        INNER JOIN tgfpro pro
-                            ON ipa.codprodpa = pro.codprod
-                        WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(SYSDATE, -1)) + 1) AND last_day(SYSDATE)
-                            AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR),
-                        dados_consolidados AS
-                        (SELECT semana,
-                                d,
+                                INNER JOIN tpriatv atv
+                                    ON ord.idiproc = atv.idiproc
+                                INNER JOIN tpripa ipa
+                                    ON atv.idiproc = ipa.idiproc
+                                INNER JOIN tprapo apo
+                                    ON atv.idiatv = apo.idiatv
+                                INNER JOIN tprapf apf
+                                    ON apo.nuapo = apf.nuapo
+                                INNER JOIN tgfpro pro
+                                    ON ipa.codprodpa = pro.codprod
+                            WHERE TRUNC(apo.dhapo) BETWEEN
+                                LAST_DAY(ADD_MONTHS(TRUNC(:P_XDT), -1)) + 1
+                                AND LAST_DAY(TRUNC(:P_XDT))
+                            AND TO_CHAR(pro.ad_set_producao, 'FM00') = :XSETOR
+                        ),
+
+                        dados_consolidados AS (
+                            SELECT
+                                semana,
+                                COUNT(DISTINCT dia) AS dias,
                                 SUM(qtd) AS qtd
                             FROM dados_brutos
-                        GROUP BY semana,
-                                    d
-                            ORDER BY semana)
-                        SELECT s.iw,
-                            to_char(rownum, 'FM9') || 'ª SEM' AS semana_label,
-                            CASE
-                                WHEN dc.d = 0 THEN
+                            GROUP BY semana
+                        )
+
+                        SELECT
+                            s.iw,
+                            ROW_NUMBER() OVER (ORDER BY s.iw) || 'ª SEM' AS semana_label,
+                            NVL(
+                                ROUND(dc.qtd / NULLIF(dc.dias, 0), 2),
                                 0
-                                ELSE
-                                coalesce(dc.qtd / dc.d, 0)
-                            END AS qtd_media
+                            ) AS qtd_media
                         FROM semanas s
                         LEFT JOIN dados_consolidados dc
                             ON s.iw = dc.semana
                         ORDER BY s.iw
-
                     </snk:query>
 
                     <snk:query var = "producaoDiariaQuery">
 
                         WITH dias_mes AS
-                        (SELECT to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'DD') AS d,
-                                to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'DD') || '-' || to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'DY', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS dia
+                        (SELECT to_char(last_day(add_months(TRUNC(:P_XDT), -1)) + LEVEL, 'DD') AS d,
+                                to_char(last_day(add_months(TRUNC(:P_XDT), -1)) + LEVEL, 'DD') || '-' || to_char(last_day(add_months(TRUNC(:P_XDT), -1)) + LEVEL, 'DY', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS dia
                             FROM dual
-                        WHERE to_char(last_day(add_months(SYSDATE, -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7) -- exclui domingo
-                        CONNECT BY LEVEL <= to_number(to_char(last_day(SYSDATE), 'DD'))),
+                        WHERE to_char(last_day(add_months(TRUNC(:P_XDT), -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7) -- exclui domingo
+                        CONNECT BY LEVEL <= to_number(to_char(last_day(TRUNC(:P_XDT)), 'DD'))),
                         dados_producao AS
                         (SELECT to_char(apo.dhapo, 'DD') AS dia,
                                 SUM(apf.qtd) AS qtd
@@ -437,7 +435,7 @@
                             ON apo.nuapo = apf.nuapo
                         INNER JOIN tgfpro pro
                             ON ipa.codprodpa = pro.codprod
-                        WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(SYSDATE, -1)) + 1) AND last_day(SYSDATE)
+                        WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(TRUNC(:P_XDT), -1)) + 1) AND last_day(TRUNC(:P_XDT))
                             AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
                         GROUP BY to_char(apo.dhapo, 'DD'))
                         SELECT dm.dia AS d,
@@ -479,7 +477,7 @@
                             ON ipa.codprodpa = pro.codprod
                             LEFT JOIN tprapo apo
                             ON atv.idiatv = apo.idiatv
-                        WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(SYSDATE, -1)) + 1) AND last_day(SYSDATE)
+                        WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(TRUNC(:P_XDT), -1)) + 1) AND last_day(TRUNC(:P_XDT))
                             AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
                         GROUP BY ROLLUP(cnc.codmtp))
                         SELECT a.codmtp,
@@ -516,7 +514,7 @@
                                                                                 FROM tddopc w
                                                                                 WHERE w.nucampo = 9999990191
                                                                                 AND to_char(w.valor, 'FM00') = :XSETOR))
-                                    AND to_char(mos.dtos, 'YYYYMM') = to_char(SYSDATE, 'YYYYMM'))
+                                    AND to_char(mos.dtos, 'YYYYMM') = to_char(TRUNC(:P_XDT), 'YYYYMM'))
                         GROUP BY coditem,
                                     descritem),
                         qtdano AS
@@ -539,7 +537,7 @@
                                                                                 FROM tddopc w
                                                                                 WHERE w.nucampo = 9999990191
                                                                                 AND to_char(w.valor, 'FM00') = :XSETOR))
-                                    AND to_char(mos.dtos, 'YYYY') = to_char(SYSDATE, 'YYYY'))
+                                    AND to_char(mos.dtos, 'YYYY') = to_char(TRUNC(:P_XDT), 'YYYY'))
                         GROUP BY coditem,
                                     descritem)
                         SELECT REPLACE(REPLACE(mit.codmaq, '<', ' '), '>', ' ') || ' ' || REPLACE(REPLACE(mit.descmaquina, '<', ''), '>', '') AS descritem,
@@ -585,7 +583,7 @@
                         INNER JOIN ad_msetor mse
                             ON mos.codsetor = mse.codsetor
                         WHERE mos.codsetor = (SELECT codsetor FROM setor_filtrado)
-                            AND trunc(mos.dtos) BETWEEN (last_day(add_months(SYSDATE, -1)) + 1) AND last_day(SYSDATE)),
+                            AND trunc(mos.dtos) BETWEEN (last_day(add_months(TRUNC(:P_XDT), -1)) + 1) AND last_day(TRUNC(:P_XDT))),
                         dados_pivot AS
                         (SELECT *
                             FROM (SELECT tp.valor,
@@ -668,7 +666,7 @@
                         WHERE cab.codtipoper IN (502, 503)
                             AND cab.nunota NOT IN (63316)
                             AND to_char(ite.ad_origem_defeito, 'FM00') = :XSETOR
-                            AND to_char(cab.dtneg, 'YYYYMM') = to_char(SYSDATE, 'YYYYMM')),
+                            AND to_char(cab.dtneg, 'YYYYMM') = to_char(TRUNC(:P_XDT), 'YYYYMM')),
                         movimentos AS
                         (SELECT origem_defeito,
                                 codprod,
