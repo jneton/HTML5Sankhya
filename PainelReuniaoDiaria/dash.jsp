@@ -484,7 +484,7 @@
                             a.descricao,
                             coalesce(b.freq, 0) AS freq,
                             lpad(coalesce(b.tempo, '0h:00m'), 8, ' ') AS tempo,
-                            coalesce(b.percentual, 0) AS percentual
+                            lpad(to_char(coalesce(b.percentual, 0), 'FM990D0'), 5, ' ') AS percentual
                         FROM cte_mtp_formatado a
                         LEFT JOIN cte_cnc b
                             ON a.codmtp = b.codmtp
@@ -906,9 +906,9 @@
                                         <c:forEach items="${ocorrenciaOPQuery.rows}" var="row">
                                             <tr>
                                                 <td><c:out value="${row.descricao}" /></td>
-                                                <td><c:out value="${row.freq}" /></td>
-                                                <td><c:out value="${row.tempo}" /></td>
-                                                <td><c:out value="${row.percentual}" />%</td>
+                                                <td style="text-align:center;"><c:out value="${row.freq}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.tempo}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.percentual}" />%</td>
                                             </tr>
                                         </c:forEach>
 
@@ -942,8 +942,8 @@
                                         
                                             <tr>
                                                 <td><c:out value="${row.descritem}" /></td>
-                                                <td><c:out value="${row.mes}" /></td>
-                                                <td><c:out value="${row.ano}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.mes}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.ano}" /></td>
                                             </tr>
 
                                         </c:forEach>
@@ -1138,52 +1138,93 @@
                             </c:forEach>
                         ];
 
-                       new Chart(
-                                 document.getElementById('efficiencyChart'),
-                                    {
-                                        type: 'bar', // gráfico principal continua sendo 'bar'
-                                        data: {
-                                            labels: efilabels,
-                                            datasets: [
-                                                {
-                                                    label: 'Metas',
-                                                    data: efimetas,
-                                                    backgroundColor: '#4f81bd'
-                                                },
-                                                {
-                                                    label: 'Qtds',
-                                                    data: efiqtd,
-                                                    backgroundColor: '#9bbb59'
-                                                }/*,
-                                                {
-                                                    label: '%',
-                                                    data: efiperc,
-                                                    type: 'line', // este dataset será linha
-                                                    borderColor: 'red', //'#c0504d',
-                                                    backgroundColor: 'red', //'#c0504d',
-                                                    fill: false, // não preencher área abaixo da linha
-                                                    yAxisID: 'y' // opcional: garante que use o mesmo eixo
-                                                }*/
-                                            ]
-                                        },
-                                        options: {
-                                            responsive: true,
-                                            maintainAspectRatio: false,
-                                            plugins: {
-                                                datalabels: {
-                                                    color: 'black',          // cor do texto
-                                                    anchor: 'center',        // posição em relação à barra
-                                                    align: 'center',         // alinhamento dentro da barra
-                                                    rotation: -90,
-                                                    formatter: function(value) {
-                                                        return value;        // mostra o valor diretamente
+                       new Chart(document.getElementById('efficiencyChart'), {
+                                    type: 'bar',
+                                    data: {
+                                        labels: efilabels,
+                                        datasets: [
+                                            {
+                                                label: 'Metas',
+                                                type: 'line',              // <-- Linha
+                                                data: efimetas,
+                                                borderColor: '#4f81bd',
+                                                backgroundColor: '#4f81bd',
+                                                borderWidth: 3,
+                                                fill: false,
+                                                tension: 0.3,              // Suaviza a linha
+                                                pointRadius: 4,
+                                                pointHoverRadius: 6,
+                                                pointBackgroundColor: '#4f81bd',
+                                                order: 1                   // Desenha por cima das barras
+                                            },
+                                            {
+                                                label: 'Qtds',
+                                                data: efiqtd,
+                                                backgroundColor: '#9bbb59',
+                                                order: 2
+                                            }
+                                        ]
+                                    },
+                                    options: {
+                                                responsive: true,
+                                                maintainAspectRatio: false,
+
+                                                plugins: {
+                                                    datalabels: {
+
+                                                        // ADICIONE AQUI
+                                                        display: function(context) {
+
+                                                            if (context.dataset.type === 'line') {
+
+                                                                const meta = context.dataset.data[context.dataIndex];
+                                                                const qtd  = context.chart.data.datasets[1].data[context.dataIndex];
+
+                                                                if (Math.abs(meta - qtd) < 10) {
+                                                                    return false;
+                                                                }
+                                                            }
+
+                                                            return true;
+                                                        },
+
+                                                        color: function(context) {
+                                                            return context.dataset.type === 'line'
+                                                                ? '#4f81bd'
+                                                                : 'black';
+                                                        },
+
+                                                        anchor: function(context) {
+                                                            return context.dataset.type === 'line'
+                                                                ? 'end'
+                                                                : 'center';
+                                                        },
+
+                                                        align: function(context) {
+                                                            return context.dataset.type === 'line'
+                                                                ? 'top'
+                                                                : 'center';
+                                                        },
+
+                                                        offset: function(context) {
+                                                            return context.dataset.type === 'line'
+                                                                ? 10
+                                                                : 0;
+                                                        },
+
+                                                        rotation: function(context) {
+                                                            return context.dataset.type === 'line'
+                                                                ? 0
+                                                                : -90;
+                                                        },
+
+                                                        formatter: function(value) {
+                                                            return value;
+                                                        }
                                                     }
                                                 }
                                             }
-                                        }
-                                    }
-                                );
-
+                                });
 
 
                         // PRODUÇÃO MEDIA SEMANA
