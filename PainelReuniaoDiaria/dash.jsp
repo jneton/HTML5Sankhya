@@ -1015,11 +1015,11 @@
                                         <c:forEach items="${manutencaoOSQuery.rows}" var="row">
                                             <tr>
                                                 <td><c:out value="${row.opcao}" /></td>
-                                                <td><c:out value="${row.corretiva}" /></td>
-                                                <td><c:out value="${row.preventiva}" /></td>
-                                                <td><c:out value="${row.programada}" /></td>
-                                                <td><c:out value="${row.melhorias}" /></td>
-                                                <td><c:out value="${row.total}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.corretiva}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.preventiva}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.programada}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.melhorias}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.total}" /></td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
