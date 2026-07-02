@@ -1057,10 +1057,10 @@
                                             <tr>
                                                 <td><c:out value="${row.codprod}" /></td>
                                                 <td><c:out value="${row.descprod}" /></td>
-                                                <td><c:out value="${row.codvol}" /></td>
-                                                <td><c:out value="${row.custo}" /></td>
-                                                <td><c:out value="${row.qtd}" /></td>
-                                                <td><c:out value="${row.total}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.codvol}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.custo}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.qtd}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.total}" /></td>
                                             </tr>
 
                                         </c:forEach>
@@ -1170,6 +1170,7 @@
                                                 maintainAspectRatio: false,
 
                                                 plugins: {
+
                                                     datalabels: {
 
                                                         // ADICIONE AQUI
@@ -1220,8 +1221,16 @@
 
                                                         formatter: function(value) {
                                                             return value;
+                                                        },
+
+                                                        font: {
+                                                            size: 14,        // tamanho da fonte
+                                                            weight: 'bold',  // negrito
+                                                            family: 'Arial'
                                                         }
+                                                   
                                                     }
+                                                    
                                                 }
                                             }
                                 });
@@ -1262,6 +1271,13 @@
                                                     anchor: 'center',        // posição em relação à barra
                                                     align: 'center',         // alinhamento dentro da barra
                                                     rotation: -90,
+
+                                                    font: {
+                                                            size: 14,        // tamanho da fonte
+                                                            weight: 'bold',  // negrito
+                                                            family: 'Arial'
+                                                    },
+
                                                     formatter: function(value) {
                                                         return value;        // mostra o valor diretamente
                                                     }
@@ -1307,6 +1323,13 @@
                                             anchor: 'center',        // posição em relação à barra
                                             align: 'center',         // alinhamento dentro da barra
                                             rotation: -90,
+                                            
+                                            font: {
+                                                    size: 14,        // tamanho da fonte
+                                                    weight: 'bold',  // negrito
+                                                    family: 'Arial'
+                                                },
+
                                             formatter: function(value) {
                                                 return value;        // mostra o valor diretamente
                                             }
@@ -1348,14 +1371,30 @@
                                     indexAxis: 'y',
                                     responsive: true,
                                     maintainAspectRatio: false,
+
                                     plugins: {
                                         legend: {
                                             display: false
+                                        },
+
+                                        datalabels: {
+                                            color: '#fff',          // branco para aparecer na barra
+                                            anchor: 'center',
+                                            align: 'center',
+
+                                            font: {
+                                                size: 16,
+                                                weight: 'bold'
+                                            },
+
+                                            formatter: function(value) {
+                                                return value;
+                                            }
                                         }
                                     }
                                 }
-                            });
-
+                            }
+                        );                        
                     </script>
 
                 </body>

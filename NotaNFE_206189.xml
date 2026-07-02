@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NFe xmlns="http://www.portalfiscal.inf.br/nfe">
+  <infNFe Id="NFe52260702437341000154550550001164521467990728" versao="4.00">
+    <ide>
+      <cUF>52</cUF>
+      <cNF>46799072</cNF>
+      <natOp>Dev cpa p/ industr</natOp>
+      <mod>55</mod>
+      <serie>55</serie>
+      <nNF>116452</nNF>
+      <dhEmi>2026-07-02T09:50:00-03:00</dhEmi>
+      <dhSaiEnt>2026-07-02T09:50:00-03:00</dhSaiEnt>
+      <tpNF>1</tpNF>
+      <idDest>2</idDest>
+      <cMunFG>5218508</cMunFG>
+      <tpImp>1</tpImp>
+      <tpEmis>1</tpEmis>
+      <cDV>8</cDV>
+      <tpAmb>1</tpAmb>
+      <finNFe>4</finNFe>
+      <indFinal>0</indFinal>
+      <indPres>0</indPres>
+      <procEmi>0</procEmi>
+      <verProc>4.35b757</verProc>
+    </ide>
+    <emit>
+      <CNPJ>02437341000154</CNPJ>
+      <xNome>HAIALA METALURGICA LTDA</xNome>
+      <xFant>HAIALA METALURGICA</xFant>
+      <enderEmit>
+        <xLgr>VIA ACESSO DISTRITO AGROINDUSTRIAL QUIRINOPLIS</xLgr>
+        <nro>SN</nro>
+        <xCpl>QD 04 LT 74/82</xCpl>
+        <xBairro>PARQUE INDUSTRIAL</xBairro>
+        <cMun>5218508</cMun>
+        <xMun>Quirinopolis</xMun>
+        <UF>GO</UF>
+        <CEP>75860000</CEP>
+        <cPais>1058</cPais>
+        <xPais>Brasil</xPais>
+        <fone>6436159400</fone>
+      </enderEmit>
+      <IE>100902707</IE>
+      <CRT>3</CRT>
+    </emit>
+    <dest>
+      <CNPJ>53763009000110</CNPJ>
+      <xNome>HI-TEC INDUSTRIA E COMERCIO DE PRODUTOS QUIMICOS LTDA</xNome>
+      <enderDest>
+        <xLgr>AL COMENDADOR DOUTOR SANTORO MIRONE</xLgr>
+        <nro>937</nro>
+        <xBairro>RECREIO CAMPESTRE JOIA</xBairro>
+        <cMun>3520509</cMun>
+        <xMun>INDAIATUBA</xMun>
+        <UF>SP</UF>
+        <CEP>13347300</CEP>
+        <cPais>1058</cPais>
+        <xPais>Brasil</xPais>
+        <fone>551939368800</fone>
+      </enderDest>
+      <indIEDest>1</indIEDest>
+      <IE>353201138110</IE>
+      <email>pegaso.representa@gmail.com</email>
+    </dest>
+    <det nItem="1">
+      <prod>
+        <cProd>5141</cProd>
+        <cEAN>SEM GTIN</cEAN>
+        <xProd>ADITIVO ZINCO 132 ( 4. ESTAGIO )</xProd>
+        <NCM>28342990</NCM>
+        <CFOP>6201</CFOP>
+        <uCom>KG</uCom>
+        <qCom>150</qCom>
+        <vUnCom>19.26</vUnCom>
+        <vProd>2889.00</vProd>
+        <cEANTrib>SEM GTIN</cEANTrib>
+        <uTrib>KG</uTrib>
+        <qTrib>150</qTrib>
+        <vUnTrib>19.26</vUnTrib>
+        <indTot>1</indTot>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>2889.00</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>202.23</vICMS>
+          </ICMS00>
+        </ICMS>
+        <IPI>
+          <cEnq>999</cEnq>
+          <IPITrib>
+            <CST>00</CST>
+            <vBC>0.00</vBC>
+            <pIPI>0.00</pIPI>
+            <vIPI>0.00</vIPI>
+          </IPITrib>
+        </IPI>
+        <PIS>
+          <PISOutr>
+            <CST>49</CST>
+            <vBC>2889.00</vBC>
+            <pPIS>1.6500</pPIS>
+            <vPIS>47.67</vPIS>
+          </PISOutr>
+        </PIS>
+        <COFINS>
+          <COFINSOutr>
+            <CST>49</CST>
+            <vBC>2889.00</vBC>
+            <pCOFINS>7.6000</pCOFINS>
+            <vCOFINS>219.56</vCOFINS>
+          </COFINSOutr>
+        </COFINS>
+      </imposto>
+      <vItem>2889.00</vItem>
+    </det>
+    <det nItem="2">
+      <prod>
+        <cProd>3765</cProd>
+        <cEAN>SEM GTIN</cEAN>
+        <xProd>ADITIVO 100 ( 4. ESTAGIO )</xProd>
+        <NCM>28341010</NCM>
+        <CFOP>6201</CFOP>
+        <uCom>KG</uCom>
+        <qCom>175</qCom>
+        <vUnCom>24.64</vUnCom>
+        <vProd>4312.00</vProd>
+        <cEANTrib>SEM GTIN</cEANTrib>
+        <uTrib>KG</uTrib>
+        <qTrib>175</qTrib>
+        <vUnTrib>24.64</vUnTrib>
+        <indTot>1</indTot>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>4312.00</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>301.84</vICMS>
+          </ICMS00>
+        </ICMS>
+        <IPI>
+          <cEnq>999</cEnq>
+          <IPITrib>
+            <CST>00</CST>
+            <vBC>0.00</vBC>
+            <pIPI>0.00</pIPI>
+            <vIPI>0.00</vIPI>
+          </IPITrib>
+        </IPI>
+        <PIS>
+          <PISOutr>
+            <CST>49</CST>
+            <vBC>4312.00</vBC>
+            <pPIS>1.6500</pPIS>
+            <vPIS>71.15</vPIS>
+          </PISOutr>
+        </PIS>
+        <COFINS>
+          <COFINSOutr>
+            <CST>49</CST>
+            <vBC>4312.00</vBC>
+            <pCOFINS>7.6000</pCOFINS>
+            <vCOFINS>327.71</vCOFINS>
+          </COFINSOutr>
+        </COFINS>
+      </imposto>
+      <vItem>4312.00</vItem>
+    </det>
+    <det nItem="3">
+      <prod>
+        <cProd>3831</cProd>
+        <cEAN>SEM GTIN</cEAN>
+        <xProd>HIACTIVE 95 ( 3. ESTAGIO )</xProd>
+        <NCM>28352990</NCM>
+        <CFOP>6201</CFOP>
+        <uCom>KG</uCom>
+        <qCom>100</qCom>
+        <vUnCom>26.33</vUnCom>
+        <vProd>2633.00</vProd>
+        <cEANTrib>SEM GTIN</cEANTrib>
+        <uTrib>KG</uTrib>
+        <qTrib>100</qTrib>
+        <vUnTrib>26.33</vUnTrib>
+        <indTot>1</indTot>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>2633.00</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>184.31</vICMS>
+          </ICMS00>
+        </ICMS>
+        <IPI>
+          <cEnq>999</cEnq>
+          <IPITrib>
+            <CST>00</CST>
+            <vBC>0.00</vBC>
+            <pIPI>0.00</pIPI>
+            <vIPI>0.00</vIPI>
+          </IPITrib>
+        </IPI>
+        <PIS>
+          <PISOutr>
+            <CST>49</CST>
+            <vBC>2633.00</vBC>
+            <pPIS>1.6500</pPIS>
+            <vPIS>43.44</vPIS>
+          </PISOutr>
+        </PIS>
+        <COFINS>
+          <COFINSOutr>
+            <CST>49</CST>
+            <vBC>2633.00</vBC>
+            <pCOFINS>7.6000</pCOFINS>
+            <vCOFINS>200.11</vCOFINS>
+          </COFINSOutr>
+        </COFINS>
+      </imposto>
+      <vItem>2633.00</vItem>
+    </det>
+    <det nItem="4">
+      <prod>
+        <cProd>3767</cProd>
+        <cEAN>SEM GTIN</cEAN>
+        <xProd>HICOAT 005 ( 5. ESTAGIO )</xProd>
+        <NCM>29221100</NCM>
+        <CFOP>6201</CFOP>
+        <uCom>KG</uCom>
+        <qCom>150</qCom>
+        <vUnCom>19.44</vUnCom>
+        <vProd>2916.00</vProd>
+        <cEANTrib>SEM GTIN</cEANTrib>
+        <uTrib>KG</uTrib>
+        <qTrib>150</qTrib>
+        <vUnTrib>19.44</vUnTrib>
+        <indTot>1</indTot>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>2916.00</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>204.12</vICMS>
+          </ICMS00>
+        </ICMS>
+        <IPI>
+          <cEnq>999</cEnq>
+          <IPITrib>
+            <CST>00</CST>
+            <vBC>0.00</vBC>
+            <pIPI>0.00</pIPI>
+            <vIPI>0.00</vIPI>
+          </IPITrib>
+        </IPI>
+        <PIS>
+          <PISOutr>
+            <CST>49</CST>
+            <vBC>2916.00</vBC>
+            <pPIS>1.6500</pPIS>
+            <vPIS>48.11</vPIS>
+          </PISOutr>
+        </PIS>
+        <COFINS>
+          <COFINSOutr>
+            <CST>49</CST>
+            <vBC>2916.00</vBC>
+            <pCOFINS>7.6000</pCOFINS>
+            <vCOFINS>221.62</vCOFINS>
+          </COFINSOutr>
+        </COFINS>
+      </imposto>
+      <vItem>2916.00</vItem>
+    </det>
+    <det nItem="5">
+      <prod>
+        <cProd>3767</cProd>
+        <cEAN>SEM GTIN</cEAN>
+        <xProd>HICOAT 005 ( 5. ESTAGIO )</xProd>
+        <NCM>29221100</NCM>
+        <CFOP>6201</CFOP>
+        <uCom>KG</uCom>
+        <qCom>150</qCom>
+        <vUnCom>19.44</vUnCom>
+        <vProd>2916.00</vProd>
+        <cEANTrib>SEM GTIN</cEANTrib>
+        <uTrib>KG</uTrib>
+        <qTrib>150</qTrib>
+        <vUnTrib>19.44</vUnTrib>
+        <indTot>1</indTot>
+        <xPed>3669</xPed>
+        <nItemPed>3</nItemPed>
+      </prod>
+      <imposto>
+        <ICMS>
+          <ICMS00>
+            <orig>0</orig>
+            <CST>00</CST>
+            <modBC>3</modBC>
+            <vBC>2916.00</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>204.12</vICMS>
+          </ICMS00>
+        </ICMS>
+        <IPI>
+          <cEnq>999</cEnq>
+          <IPITrib>
+            <CST>00</CST>
+            <vBC>0.00</vBC>
+            <pIPI>0.00</pIPI>
+            <vIPI>0.00</vIPI>
+          </IPITrib>
+        </IPI>
+        <PIS>
+          <PISOutr>
+            <CST>49</CST>
+            <vBC>2916.00</vBC>
+            <pPIS>1.6500</pPIS>
+            <vPIS>48.11</vPIS>
+          </PISOutr>
+        </PIS>
+        <COFINS>
+          <COFINSOutr>
+            <CST>49</CST>
+            <vBC>2916.00</vBC>
+            <pCOFINS>7.6000</pCOFINS>
+            <vCOFINS>221.62</vCOFINS>
+          </COFINSOutr>
+        </COFINS>
+      </imposto>
+      <vItem>2916.00</vItem>
+      <DFeReferenciado>
+        <chaveAcesso>35260553763009000110550010000559361020137656</chaveAcesso>
+        <nItem>1</nItem>
+      </DFeReferenciado>
+    </det>
+    <total>
+      <ICMSTot>
+        <vBC>15666.00</vBC>
+        <vICMS>1096.62</vICMS>
+        <vICMSDeson>0.00</vICMSDeson>
+        <vFCP>0.00</vFCP>
+        <vBCST>0.00</vBCST>
+        <vST>0.00</vST>
+        <vFCPST>0.00</vFCPST>
+        <vFCPSTRet>0.00</vFCPSTRet>
+        <vProd>15666.00</vProd>
+        <vFrete>0.00</vFrete>
+        <vSeg>0.00</vSeg>
+        <vDesc>0.00</vDesc>
+        <vII>0.00</vII>
+        <vIPI>0.00</vIPI>
+        <vIPIDevol>0.00</vIPIDevol>
+        <vPIS>258.48</vPIS>
+        <vCOFINS>1190.62</vCOFINS>
+        <vOutro>0.00</vOutro>
+        <vNF>15666.00</vNF>
+      </ICMSTot>
+      <vNFTot>15666.00</vNFTot>
+    </total>
+    <transp>
+      <modFrete>1</modFrete>
+      <vol>
+        <qVol>20</qVol>
+        <esp>VOL</esp>
+        <pesoB>725.000</pesoB>
+      </vol>
+    </transp>
+    <cobr>
+      <fat>
+        <nFat>116452</nFat>
+        <vOrig>15666.00</vOrig>
+        <vDesc>0.00</vDesc>
+        <vLiq>15666.00</vLiq>
+      </fat>
+      <dup>
+        <nDup>001</nDup>
+        <dVenc>2026-08-11</dVenc>
+        <vDup>15666.00</vDup>
+      </dup>
+    </cobr>
+    <pag>
+      <detPag>
+        <indPag>1</indPag>
+        <tPag>90</tPag>
+        <vPag>0.00</vPag>
+      </detPag>
+    </pag>
+    <infAdic>
+      <infCpl>DEVOLUCAO REFERENTE ACORDO COMERCIAL</infCpl>
+    </infAdic>
+    <infRespTec>
+      <CNPJ>26314062000161</CNPJ>
+      <xContato>Fabio Tulio Felippe</xContato>
+      <email>marketing@sankhya.com.br</email>
+      <fone>3432390700</fone>
+    </infRespTec>
+  </infNFe>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <Reference URI="#NFe52260702437341000154550550001164521467990728">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+          <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <DigestValue>czwfH4+fb8820Q8tORUBKsrQiuI=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>TFQaQY5ONfPJGEct6cpnMQDdz0wkbBLtLPk9eYAd06XrbCSNL7GbKpLixP0pkdJmboe1WVc8dkwJNp9MwCca+o5GhaZib4CH8dn3GgjMOQV9a+RlUJFsDnTtgR9mRxIYi0D2WmeOKQjsEM8SIKeLEGhtO5TGGWeQHIc2jKRkRKbVOvld7AiWCUm/5FKRSrfWzsrIbREZK+PMthuDGJDF+vKkFaHvBVh1pnLgtl80LW3zIxRg/D10zKnf4EO85e4tqqHJUwa0mYpm1dPT07H6sPXZBlwwbU6mKROwzJZdetMm20e/8NLdDPVsNcfvbw5mBZJsmVTzydxlZHjQ1RgHLw==</SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509Certificate>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</X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</NFe>
+
