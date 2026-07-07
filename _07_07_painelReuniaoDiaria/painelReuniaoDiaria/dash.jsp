@@ -88,20 +88,6 @@
                             overflow-x: auto;
                         }
 
-                        .card{
-                            background:#FFF;
-                            border-radius:8px;
-                            padding:15px;
-                            box-shadow:0 2px 6px rgba(0,0,0,.15);
-                            height:350px;
-                        }
-
-                        .card h3{
-                            margin-bottom:10px;
-                            text-align:center;
-                            font-size:18px;
-                        }
-
                         .span-5 {
                             grid-column: span 5;
                         }
@@ -901,59 +887,10 @@
                             </div>
                         </section>
 
-                        <!-- DISPONIBILIDADE -->
-                        <section class="card">
-                            <div class="card-header">
-                                <h3>Alocação de Tempo X Disponibilidade</h3>
-                                <canvas id="graficoDisponibilidade"></canvas>
-                            </div>
-                        </section>
-
-                        <!-- OCORRÊNCIAS -->
-                        <section class="card">
-                            <div class="card-header">
-                                <h3>Ocorrências na OP</h3>
-                            </div>
-                            <div class="card-body">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Classificação</th>
-                                            <th>Freq.</th>
-                                            <th>Tempo</th>
-                                            <th>%</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- loop JSP -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-
-                        <!-- RANKING -->
-                        <section class="card">
-                            <div class="card-header">
-                                <h3>Ranking de O.S.</h3>
-                            </div>
-                            <div class="card-body">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Descrição</th>
-                                            <th>OS Mês</th>
-                                            <th>OS Ano</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!-- loop JSP -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
-
+                                                
                         <!-- QUALIDADE -->
-                        <section class="card span-6">
+
+                        <section class="card span-3">
                             <div class="card-header">
                                 <h3>Qualidade</h3>
                             </div>
@@ -963,9 +900,81 @@
                             </div>
                         </section>
 
+                        <!-- OCORRÊNCIAS -->
+
+                        <section class="card span-3">
+                            <div class="card-header">
+                                <h3>Ocorrências na OP</h3>
+                            </div>
+
+                            <div class="card-body">
+
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Classificação</th>
+                                            <th>Freq.</th>
+                                            <th>Tempo</th>
+                                            <th>%</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <c:forEach items="${ocorrenciaOPQuery.rows}" var="row">
+                                            <tr>
+                                                <td><c:out value="${row.descricao}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.freq}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.tempo}" /></td>
+                                                <td style="text-align:right;"><c:out value="${row.percentual}" />%</td>
+                                            </tr>
+                                        </c:forEach>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </section>
+
+                        <!-- RANKING -->
+
+                        <section class="card span-3">
+                            <div class="card-header">
+                                <h3>Ranking de O.S.</h3>
+                            </div>
+
+                            <div class="card-body">
+
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Descrição</th>
+                                            <th>OS Mês</th>
+                                            <th>OS Ano</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <c:forEach items="${rankingOSQuery.rows}" var="row">
+                                        
+                                            <tr>
+                                                <td><c:out value="${row.descritem}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.mes}" /></td>
+                                                <td style="text-align:center;"><c:out value="${row.ano}" /></td>
+                                            </tr>
+
+                                        </c:forEach>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </section>
+
                         <!-- PLANO DE AÇÃO -->
 
-                        <section class="card span-6">
+                        <section class="card span-3">
                             <div class="card-header">
                                 <h3>Plano de Ação</h3>
                             </div>
@@ -1414,106 +1423,6 @@
                                 }
                             }
                         );
-                        
-                        //DISPONIBILIDADE
-
-                        const dias = [
-                            '1','2','3','4','5','6','7','8','9','10',
-                            '11','12','13','14','15','16','17','18','19','20',
-                            '21','22','23','24','25','26','27','28','29'
-                        ];
-
-                        const producao = [
-                        454,467,437,405,386,337,445,369,363,381,
-                        383,383,360,470,419,427,435,362,352,444,
-                        461,397,406,428,379,414,450,372,350
-                        ];
-
-                        const cnc = [
-                        64,47,73,73,111,114,45,90,91,62,
-                        58,72,86,46,79,91,53,119,89,61,
-                        48,96,50,85,93,82,57,107,104
-                        ];
-
-                        const manutencao = [
-                        10,14,18,50,31,77,38,69,74,85,
-                        87,73,82,12,30,10,40,47,87,23,
-                        19,35,72,15,56,32,21,49,74
-                        ];
-
-                        new Chart(document.getElementById("graficoProducao"), {
-                            type: 'bar',
-                            data: {
-                                labels: dias,
-
-                                datasets: [
-                                    {
-                                        label: 'MANUTENÇÃO',
-                                        data: manutencao,
-                                        backgroundColor: '#ED7D31',
-                                        stack: 'Stack 0'
-                                    },
-                                    {
-                                        label: 'CNC',
-                                        data: cnc,
-                                        backgroundColor: '#BFBFBF',
-                                        stack: 'Stack 0'
-                                    },
-                                    {
-                                        label: 'PRODUÇÃO',
-                                        data: producao,
-                                        backgroundColor: '#FFC000',
-                                        stack: 'Stack 0'
-                                    }
-                                ]
-                            },
-
-                            options: {
-                                responsive: true,
-                                maintainAspectRatio: false,
-                                plugins: {
-                                    legend: {
-                                        position: 'bottom'
-                                    },
-                                    tooltip: {
-                                        mode: 'index',
-                                        intersect: false
-                                    }
-
-                                },
-
-                                interaction: {
-                                    mode: 'index',
-                                    intersect: false
-                                },
-
-                                scales: {
-                                    x: {
-                                        stacked: true,
-                                        grid: {
-                                            display: false
-                                        },
-
-                                        ticks: {
-                                            color: '#444',
-                                            font: {
-                                                size: 11
-                                            }
-                                        }
-                                    },
-
-                                    y: {
-                                        stacked: true,
-                                        beginAtZero: true,
-                                        suggestedMax: 600,
-                                        ticks: {
-                                            stepSize: 100,
-                                            color: '#444'
-                                        }
-                                    }
-                                }
-                            }
-                        });
 
                         // QUALIDADE
                         const labels = [
