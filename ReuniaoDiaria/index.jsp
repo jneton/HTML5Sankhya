@@ -157,23 +157,21 @@ body{
                 POSIÇÕES
 *****************************************************/
 
-.eficiencia{
-
-grid-column:span 4;
-
+.eficiencia {
+  grid-column: span 4;
+  max-height: 600px;   /* aumente a altura máxima */
 }
 
 .semana{
 
 grid-column:span 4;
-
+  max-height: 600px;   /* aumente a altura máxima */
 }
 
 .diaria{
 
 grid-column:span 4;
-max-height: 400px;     /* limite de altura */
-  
+  max-height: 600px;   /* aumente a altura máxima */
 }
 
 .tempo{
@@ -1183,7 +1181,7 @@ ALOCAÇÃO DE TEMPO X DISPONIBILIDADE
 
 <div class="card-body">
 
-<canvas id="grafTempo"></canvas>
+<canvas id="graficoProducao"></canvas>
 
 </div>
 
@@ -1557,22 +1555,6 @@ function criarGrafico(idCanvas, labels, dados, cor) {
  * EFICIÊNCIA
  ******************************************************/
 
-/*criarGrafico(
-
-"grafEficiencia",
-
-["S1","S2","S3","S4"],
-
-[89,93,91,97],
-
-[
-"#42A5F5",
-"#42A5F5",
-"#42A5F5",
-"#42A5F5"
-]
-
-);*/
 const efilabels = [
 <c:forEach items="${eficienciaQuery.rows}" var="row" varStatus="loop">
 '${row.mesano}'<c:if test="${!loop.last}">,</c:if>
@@ -1873,22 +1855,89 @@ new Chart(
  * ALOCAÇÃO DE TEMPO
  ******************************************************/
 
-criarGrafico(
+const dias = [
+    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
+        '${row.d}'<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
 
-"grafTempo",
+const producao = [
+    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
+        '${row.prod}'<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
+const cnc = [
+    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
+        '${row.cnc}'<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
+const manutencao = [
+    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
+        '${row.manu}'<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+];
 
-["Prod.","Setup","Paradas","Manut."],
+const ctx = document.getElementById('graficoProducao').getContext('2d');
+new Chart(ctx, {
+    type: 'bar',
+    data: {
+    labels: dias,
+    datasets: [
+        {
+        label: 'Produção',
+        data: producao,
+        backgroundColor: '#FFD700', // amarelo
+        borderColor: '#E6B800',
+        borderWidth: 1
+        },
+        {
+        label: 'CNC',
+        data: cnc,
+        backgroundColor: '#B0B0B0', // cinza
+        borderColor: '#909090',
+        borderWidth: 1
+        },
+        {
+        label: 'Manutenção',
+        data: manutencao,
+        backgroundColor: '#FF8C00', // laranja
+        borderColor: '#CC7000',
+        borderWidth: 1
+        }
+    ]
+    },
+    options: {
+    responsive: true,
+    plugins: {
+        title: {
+        display: true,
+        font: { size: 18 }
+        },
+        legend: {
+        position: 'bottom'
+        }
+    },
+    scales: {
+        x: {
+        stacked: true,
+        title: {
+            display: true,
+            text: 'Dia do Mês'
+        }
+        },
+        y: {
+        stacked: true,
+        title: {
+            display: true,
+            text: 'Quantidade'
+        },
+        beginAtZero: true,
+        max: 600
+        }
+    }
+    }
+});
 
-[78,8,9,5],
-
-[
-"#26A69A",
-"#26A69A",
-"#26A69A",
-"#26A69A"
-]
-
-);
 
 /******************************************************
  * QUALIDADE
