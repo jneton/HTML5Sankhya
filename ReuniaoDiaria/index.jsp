@@ -71,11 +71,8 @@ body{
 .dashboard{
 
     display:grid;
-
     gap:10px;
-
     grid-template-columns:
-
     repeat(12,1fr);
 
 }
@@ -87,23 +84,14 @@ body{
 .card{
 
     background:white;
-
     border:2px solid #4DA3F4;
-
     border-radius:5px;
-
     display:flex;
-
     flex-direction:column;
-
     min-height:250px;
-
     overflow:hidden;
-
     box-shadow:
-
     0 3px 8px rgba(0,0,0,.12);
-
     transition:.25s;
 
 }
@@ -111,9 +99,7 @@ body{
 .card:hover{
 
     transform:translateY(-2px);
-
     box-shadow:
-
     0 8px 18px rgba(0,0,0,.20);
 
 }
@@ -156,10 +142,9 @@ body{
 *****************************************************/
 
 .eficiencia{
-    grid-column: span 4;
+    grid-column: span 6;
     grid-row: span 2;
-    height:300px;
-
+    height:600px;
     display:flex;
     flex-direction:column;
 }
@@ -176,10 +161,9 @@ body{
 }
 
 .semana{
-    grid-column: span 4;
+    grid-column: span 6;
     grid-row: span 2;
-    height:300px;
-
+    height:600px;
     display:flex;
     flex-direction:column;
 }
@@ -195,10 +179,9 @@ body{
     height:100% !important;
 }
 .diaria{
-    grid-column: span 4;
+    grid-column: span 6;
     grid-row: span 2;
-    height:300px;
-
+    height:600px;
     display:flex;
     flex-direction:column;
 }
@@ -214,16 +197,30 @@ body{
     height:100% !important;
 }
 
-
 .tempo{
-
-grid-column:span 4;
-
+    grid-column: span 6;
+    grid-row: span 2;
+    height:600px;
+    display:flex;
+    flex-direction:column;
 }
 
+.tempo .card-body{
+    flex:1;
+    position:relative;
+    min-height:0;
+}
+
+.tempo canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
+
 .ocorrencia {
-  grid-column: span 4;
-  max-height: 400px;     /* limite de altura */
+  grid-column: span 6;
+  grid-row: span 2;
+  max-height: 600px;     /* limite de altura */
   overflow-y: auto;      /* rolagem vertical */
   overflow-x: auto;      /* rolagem horizontal */
   box-sizing: border-box;
@@ -252,9 +249,9 @@ grid-column:span 4;
 
 
 .plano {
-  grid-column: span 4;
+  grid-column: span 6;
   grid-row: span 2;      /* ocupa altura de dois cards */
-  max-height: 800px;     /* limite de altura */
+  max-height: 600px;     /* limite de altura */
   overflow-y: auto;      /* rolagem vertical */
   overflow-x: auto;      /* rolagem horizontal */
   box-sizing: border-box;
@@ -271,8 +268,9 @@ grid-column:span 4;
 }
 
 .qualidade{
-    grid-column: span 4;
-    height:400px;
+    grid-column: span 6;
+    grid-row: span 2;
+    height:600px;
     display:flex;
     flex-direction:column;
 }
@@ -291,8 +289,9 @@ grid-column:span 4;
 
 .perdas{
 
-  grid-column:span 4;
-  max-height: 400px;     /* limite de altura */
+  grid-column:span 6;
+  grid-row: span 2;
+  max-height: 600px;     /* limite de altura */
   overflow-y: auto;      /* rolagem vertical */
   overflow-x: auto;      /* rolagem horizontal */
   box-sizing: border-box;
@@ -312,7 +311,8 @@ grid-column:span 4;
 .ranking{
 
   grid-column:span 6;
-  max-height: 400px;     /* limite de altura */
+  grid-row: span 2;
+  max-height: 600px;     /* limite de altura */
   overflow-y: auto;      /* rolagem vertical */
   overflow-x: auto;      /* rolagem horizontal */
   box-sizing: border-box;
@@ -333,7 +333,8 @@ grid-column:span 4;
 .manutencao{
 
   grid-column:span 6;
-  max-height: 400px;     /* limite de altura */
+  grid-row: span 2;
+  max-height: 600px;     /* limite de altura */
   overflow-y: auto;      /* rolagem vertical */
   overflow-x: auto;      /* rolagem horizontal */
   box-sizing: border-box;
@@ -365,7 +366,6 @@ table{
 
 width:100%;
 border-collapse:collapse;
-
 font-size:13px;
 
 }
@@ -551,12 +551,12 @@ base_producao AS
      AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
    GROUP BY trunc(apo.dhapo),
             gol.golpes),
-producao_anual AS
+/*producao_anual AS
  (SELECT to_char(dhapo, 'YYYY') AS anomes,
          SUM(meta) AS meta,
          SUM(qtd) AS qtd
     FROM base_producao
-   GROUP BY to_char(dhapo, 'YYYY')),
+   GROUP BY to_char(dhapo, 'YYYY')),*/
 producao_mensal AS
  (SELECT to_char(dhapo, 'YYYYMM') AS anomes,
          SUM(meta) AS meta,
@@ -569,7 +569,7 @@ meses AS
     FROM dual
   CONNECT BY LEVEL <= 12),
 resultado AS
- (SELECT 1 AS ordem,
+ (/*SELECT 1 AS ordem,
          pa.anomes,
          'ANO' AS mesano,
          pa.meta,
@@ -590,7 +590,7 @@ resultado AS
          NULL AS qtd,
          NULL AS perc
     FROM dual
-  UNION ALL
+  UNION ALL*/
   -- Produção Mensal
   SELECT 3 AS ordem,
          m.anomes,
@@ -1072,7 +1072,7 @@ SELECT dm.dia AS d,
     WHERE trunc(x.dtprazo) < trunc(SYSDATE)
         AND x.status <> 5
     GROUP BY x.cod)
-    SELECT to_char(dtprazo, 'DD/MM/YY') AS dtprazo,
+    SELECT to_char(dtprazo, 'DD/MM/YYYY') AS dtprazo,
         acao,
         responsavel,
         setor,
@@ -1095,7 +1095,7 @@ SELECT dm.dia AS d,
                 trunc(SYSDATE) - gge.dtprazo dias,
                 CASE
                     WHEN (trunc(SYSDATE) - gge.dtprazo) > 0 THEN
-                    'VENC A ' || to_char(trunc(SYSDATE) - gge.dtprazo, 'FM990') || ' DIA(S)'
+                    'VENCIDA A ' || to_char(trunc(SYSDATE) - gge.dtprazo, 'FM990') || ' DIA(S)'
                     WHEN (trunc(SYSDATE) - gge.dtprazo) < 0 THEN
                     'NO PRAZO'
                     WHEN (trunc(SYSDATE) - gge.dtprazo) = 0 THEN
@@ -1198,7 +1198,7 @@ SELECT dia AS d,
 
 <div class="card-title">
 
->% EFICIÊNCIA (MENSAL)
+QUANTIDADE PRODUÇÃO (MENSAL)
 
 </div>
 
@@ -1331,8 +1331,8 @@ PLANO DE AÇÃO
 
 <tr>
 
-<th style="width:12%;">Prazo</th>
-<th style="width:28%;">Ação</th>
+<th style="width:10%;">Prazo</th>
+<th style="width:30%;">Ação</th>
 <th style="width:20%;">Responsavel</th>
 <th style="width:20%;">Setor</th>
 <th style="width:20%;">Status</th>
