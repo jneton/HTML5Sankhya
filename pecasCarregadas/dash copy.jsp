@@ -110,7 +110,6 @@
 body{
     background:var(--fundo);
     padding:10px;
-    font-size:10px;
 }
 
 /* ===============================
@@ -122,8 +121,7 @@ body{
 }
 
 .header h1{
-    font-size:10px;
-    font-weight:bold;
+    font-size:22px;
     color:#111827;
 }
 
@@ -136,12 +134,6 @@ body{
    CARDS
 ================================ */
 
-.resumo{
-    display:flex;
-    gap:10px;
-    align-items:flex-start;
-}
-
 .cards{
     display:flex;
     gap:10px;
@@ -149,18 +141,13 @@ body{
 }
 
 .card{
-    width:140px;
+    flex:1;
+    max-width:140px;
     background:var(--branco);
     border-radius:8px;
     padding:10px;
     min-height:60px;
     box-shadow:0 1px 4px rgba(0,0,0,.08);
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
 }
 
 .card-pecas{
@@ -172,21 +159,23 @@ body{
 }
 
 .card-titulo{
-    font-size:10px;
-    font-weight:bold;
-    color:var(--cinza);
-    margin-bottom:4px;
+    text-align:center;
+    font-size:11px;
+    font-weight:600;
+    color:#4b5563;
 }
 
 .card-valor{
-    font-size:10px;
+    text-align:center;
+    font-size:16px;
     font-weight:bold;
     color:#111827;
-    margin-bottom:4px;
+    margin:6px 0;
 }
 
 .card-info{
-    font-size:10px;
+    text-align:center;
+    font-size:9px;
     color:var(--cinza);
 }
 
@@ -195,7 +184,7 @@ body{
 ================================ */
 
 .tabela{
-    width:290px;
+    width:450px;
     background:var(--branco);
     border-radius:8px;
     overflow:hidden;
@@ -204,11 +193,10 @@ body{
 
 .tabela-titulo{
     background:var(--azul);
-    color:#fff;
-    padding:6px;
-    font-size:10px;
+    color:white;
+    padding:8px;
+    font-size:11px;
     font-weight:bold;
-    text-align:center;
 }
 
 table{
@@ -221,24 +209,40 @@ thead{
 }
 
 thead th{
-    padding:3px 4px;
+    padding:6px;
     font-size:10px;
-    font-weight:bold;
-    line-height:1.2;
     border-bottom:1px solid var(--borda);
-    text-align:center;
 }
 
 tbody td{
-    padding:3px 4px;
+    padding:6px;
     font-size:10px;
-    line-height:1.2;
     text-align:center;
     border-bottom:1px solid var(--borda);
 }
 
 .valor{
     font-weight:bold;
+}
+
+/* ===============================
+   RESPONSIVO
+================================ */
+
+@media(max-width:768px){
+
+    .cards{
+        flex-direction:column;
+    }
+
+    .card{
+        max-width:100%;
+    }
+
+    .tabela{
+        width:100%;
+    }
+
 }
 
 </style>
@@ -248,6 +252,8 @@ tbody td{
 <body>
 
 <div class="header">
+    <h1>Painel de Peças Carregadas</h1>
+    <p>Monitoramento Operacional</p>
 </div>
 
 <div class="cards">
