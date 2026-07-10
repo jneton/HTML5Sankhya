@@ -23,7 +23,6 @@
 
 <script>Chart.register(ChartDataLabels);</script>
 
-
 <style>
 
 /*****************************************************
@@ -58,13 +57,9 @@ body{
     text-align:center;
     font-size:28px;
     font-weight:bold;
-
     padding:12px;
-
     border-radius:6px;
-
     margin-bottom:10px;
-
     letter-spacing:2px;
 
 }
@@ -128,51 +123,97 @@ body{
 *****************************************************/
 
 .card-title{
-
-    background:#BFDDF8;
-
-    color:#184A76;
-
-    font-weight:bold;
-
-    text-align:center;
-
-    padding:8px;
-
-    font-size:14px;
-
-    border-bottom:2px solid #4DA3F4;
-
+    background-color: #4DA3F4;
+    color: #fff;
+    font-weight: bold;
+    padding:6px;
+    font-size:15px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position: sticky; /* fixa dentro do container */
+    top: 0;           /* gruda no topo do card */
+    z-index: 10;      /* fica acima do conteúdo */
 }
 
 .card-body{
-
     flex:1;
+    display:flex;
+    align-items:stretch;
+    justify-content:center;
+    padding:8px;
+    position:relative;
+}
 
-    padding:12px;
-
+.card-body canvas{
+    width:100% !important;
+    height:100% !important;
 }
 
 /*****************************************************
                 POSIÇÕES
 *****************************************************/
 
-.eficiencia {
-  grid-column: span 4;
-  max-height: 600px;   /* aumente a altura máxima */
+.eficiencia{
+    grid-column: span 4;
+    grid-row: span 2;
+    height:300px;
+
+    display:flex;
+    flex-direction:column;
+}
+
+.eficiencia .card-body{
+    flex:1;
+    position:relative;
+    min-height:0;
+}
+
+.eficiencia canvas{
+    width:100% !important;
+    height:100% !important;
 }
 
 .semana{
+    grid-column: span 4;
+    grid-row: span 2;
+    height:300px;
 
-grid-column:span 4;
-  max-height: 600px;   /* aumente a altura máxima */
+    display:flex;
+    flex-direction:column;
 }
 
+.semana .card-body{
+    flex:1;
+    position:relative;
+    min-height:0;
+}
+
+.semana canvas{
+    width:100% !important;
+    height:100% !important;
+}
 .diaria{
+    grid-column: span 4;
+    grid-row: span 2;
+    height:300px;
 
-grid-column:span 4;
-  max-height: 600px;   /* aumente a altura máxima */
+    display:flex;
+    flex-direction:column;
 }
+
+.diaria .card-body{
+    flex:1;
+    position:relative;
+    min-height:0;
+}
+
+.diaria canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
 
 .tempo{
 
@@ -205,7 +246,7 @@ grid-column:span 4;
 .ocorrencia thead th {
   position: sticky;
   top: 0;                      /* fixa no topo do container */
-  background-color: #184A76;   /* cor de fundo para destacar */
+  background-color: #4DA3F4;   /* cor de fundo para destacar */
   z-index: 2;                  /* garante que fique acima das células */
 }
 
@@ -229,13 +270,24 @@ grid-column:span 4;
   white-space: normal;
 }
 
-
 .qualidade{
-
-  grid-column:span 4;
-  max-height: 400px;     /* limite de altura */
-
+    grid-column: span 4;
+    height:400px;
+    display:flex;
+    flex-direction:column;
 }
+
+.qualidade .card-body{
+    flex:1;
+    position:relative;
+    min-height:0;
+}
+
+.qualidade canvas{
+    width:100% !important;
+    height:100% !important;
+}
+
 
 .perdas{
 
@@ -465,194 +517,230 @@ grid-column:span 12;
 </snk:query>
 
 <snk:query var="eficienciaQuery">
-    WITH base_producao AS
-    (SELECT trunc(apo.dhapo) AS dhapo,
-            SUM(apf.qtd) AS qtd,
-            coalesce((SELECT mpc.meta
-                        FROM ad_metapcp mpc
-                    WHERE mpc.dataprod = trunc(apo.dhapo)
-                        AND to_char(mpc.setor, 'FM00') = :XSETOR), 0) AS meta
-        FROM tpriproc ord
-    INNER JOIN tpriatv atv
-        ON ord.idiproc = atv.idiproc
-    INNER JOIN tpripa ipa
-        ON atv.idiproc = ipa.idiproc
-    INNER JOIN tprapo apo
-        ON atv.idiatv = apo.idiatv
-    INNER JOIN tprapf apf
-        ON apo.nuapo = apf.nuapo
-    INNER JOIN tgfpro pro
-        ON ipa.codprodpa = pro.codprod
-    WHERE to_char(apo.dhapo, 'YYYY') = to_char(TRUNC(:P_XDT), 'YYYY')
-        AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
-    GROUP BY trunc(apo.dhapo)),
-    producao_anual AS
-    (SELECT to_char(dhapo, 'YYYY') AS anomes,
-            SUM(meta) AS meta,
-            SUM(qtd) AS qtd
-        FROM base_producao
-    GROUP BY to_char(dhapo, 'YYYY')),
-    producao_mensal AS
-    (SELECT to_char(dhapo, 'YYYYMM') AS anomes,
-            SUM(meta) AS meta,
-            SUM(qtd) AS qtd
-        FROM base_producao
-    GROUP BY to_char(dhapo, 'YYYYMM')),
-    meses AS
-    (SELECT to_char(TRUNC(:P_XDT), 'YYYY') || to_char(LEVEL, 'FM00') AS anomes,
-            to_char(to_date(LEVEL, 'MM'), 'MON') AS mesano
-        FROM dual
-    CONNECT BY LEVEL <= 12),
-    resultado AS
-    (SELECT 1 AS ordem,
-            pa.anomes,
-            'ANO' AS mesano,
-            pa.meta,
-            pa.qtd,
-            CASE
-                WHEN pa.meta = 0 THEN
-                0
-                ELSE
-                (pa.qtd / pa.meta) * 100
-            END AS perc
-        FROM producao_anual pa
-    UNION ALL
-    -- Separador
-    SELECT 2    AS ordem,
-            NULL AS anomes,
-            NULL AS mesano,
-            NULL AS meta,
-            NULL AS qtd,
-            NULL AS perc
-        FROM dual
-    UNION ALL
-    -- Produção Mensal
-    SELECT 3 AS ordem,
-            m.anomes,
-            m.mesano,
-            coalesce(pm.meta, 0) AS meta,
-            coalesce(pm.qtd, 0) AS qtd,
-            CASE
-                WHEN coalesce(pm.meta, 0) = 0 THEN
-                0
-                ELSE
-                (coalesce(pm.qtd, 0) / coalesce(pm.meta, 0)) * 100
-            END AS perc
-        FROM meses m
-        LEFT JOIN producao_mensal pm
-        ON m.anomes = pm.anomes)
-    SELECT mesano,
-        meta,
-        qtd,
-        perc
-    FROM resultado
-    ORDER BY ordem,
-            anomes
+WITH golpes AS
+ (SELECT pro.codprod,
+         pro.ad_golpes AS golpes
+    FROM tgfpro pro
+   WHERE coalesce(pro.ad_golpes, 0) > 0),
+base_producao AS
+ (SELECT trunc(apo.dhapo) AS dhapo,
+         CASE
+            WHEN :XSETOR = '04' THEN
+             SUM(apf.qtd) * gol.golpes
+            ELSE
+             SUM(apf.qtd)
+         END AS qtd,
+         coalesce((SELECT SUM(mpc.meta) AS meta
+                    FROM ad_metapcp mpc
+                   WHERE mpc.dataprod = trunc(apo.dhapo)
+                     AND to_char(mpc.setor, 'FM00') = :XSETOR), 0) AS meta
+    FROM tpriproc ord
+   INNER JOIN tpriatv atv
+      ON ord.idiproc = atv.idiproc
+   INNER JOIN tpripa ipa
+      ON atv.idiproc = ipa.idiproc
+   INNER JOIN tprapo apo
+      ON atv.idiatv = apo.idiatv
+   INNER JOIN tprapf apf
+      ON apo.nuapo = apf.nuapo
+   INNER JOIN tgfpro pro
+      ON ipa.codprodpa = pro.codprod
+    LEFT JOIN golpes gol
+      ON ipa.codprodpa = gol.codprod
+   WHERE to_char(apo.dhapo, 'YYYY') = to_char(trunc(:P_XDT), 'YYYY')
+     AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
+   GROUP BY trunc(apo.dhapo),
+            gol.golpes),
+producao_anual AS
+ (SELECT to_char(dhapo, 'YYYY') AS anomes,
+         SUM(meta) AS meta,
+         SUM(qtd) AS qtd
+    FROM base_producao
+   GROUP BY to_char(dhapo, 'YYYY')),
+producao_mensal AS
+ (SELECT to_char(dhapo, 'YYYYMM') AS anomes,
+         SUM(meta) AS meta,
+         SUM(qtd) AS qtd
+    FROM base_producao
+   GROUP BY to_char(dhapo, 'YYYYMM')),
+meses AS
+ (SELECT to_char(trunc(:P_XDT), 'YYYY') || to_char(LEVEL, 'FM00') AS anomes,
+         to_char(to_date(LEVEL, 'MM'), 'MON') AS mesano
+    FROM dual
+  CONNECT BY LEVEL <= 12),
+resultado AS
+ (SELECT 1 AS ordem,
+         pa.anomes,
+         'ANO' AS mesano,
+         pa.meta,
+         pa.qtd,
+         CASE
+            WHEN pa.meta = 0 THEN
+             0
+            ELSE
+             (pa.qtd / pa.meta) * 100
+         END AS perc
+    FROM producao_anual pa
+  UNION ALL
+  -- Separador
+  SELECT 2    AS ordem,
+         NULL AS anomes,
+         NULL AS mesano,
+         NULL AS meta,
+         NULL AS qtd,
+         NULL AS perc
+    FROM dual
+  UNION ALL
+  -- Produção Mensal
+  SELECT 3 AS ordem,
+         m.anomes,
+         m.mesano,
+         coalesce(pm.meta, 0) AS meta,
+         coalesce(pm.qtd, 0) AS qtd,
+         CASE
+            WHEN coalesce(pm.meta, 0) = 0 THEN
+             0
+            ELSE
+             (coalesce(pm.qtd, 0) / coalesce(pm.meta, 0)) * 100
+         END AS perc
+    FROM meses m
+    LEFT JOIN producao_mensal pm
+      ON m.anomes = pm.anomes)
+SELECT mesano,
+       meta,
+       qtd,
+       perc
+  FROM resultado
+ ORDER BY ordem,
+          anomes
 
 </snk:query>
 
 <snk:query var = "mediaSemanaQuery">
 
-    WITH semanas AS
-    (SELECT DISTINCT to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'IW') AS iw
-        FROM dual
-    CONNECT BY LEVEL <= to_number(to_char(last_day(trunc(:P_XDT)), 'DD'))),
-    dados_brutos AS
-    (SELECT to_char(apo.dhapo, 'IW') AS semana,
-            trunc(apo.dhapo) AS dia,
-            apf.qtd
-        FROM tpriproc ord
-    INNER JOIN tpriatv atv
-        ON ord.idiproc = atv.idiproc
-    INNER JOIN tpripa ipa
-        ON atv.idiproc = ipa.idiproc
-    INNER JOIN tprapo apo
-        ON atv.idiatv = apo.idiatv
-    INNER JOIN tprapf apf
-        ON apo.nuapo = apf.nuapo
-    INNER JOIN tgfpro pro
-        ON ipa.codprodpa = pro.codprod
-    WHERE trunc(apo.dhapo) BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
-        AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR),
-    dados_consolidados AS
-    (SELECT semana,
-            COUNT(DISTINCT dia) AS dias,
-            SUM(qtd) AS qtd
-        FROM dados_brutos
-    GROUP BY semana),
-    metas AS
-    (SELECT to_char(mpc.dataprod, 'IW') AS semana,
+    WITH golpes AS
+ (SELECT pro.codprod,
+         pro.ad_golpes AS golpes
+    FROM tgfpro pro
+   WHERE coalesce(pro.ad_golpes, 0) > 0),
+semanas AS
+ (SELECT DISTINCT to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'IW') AS iw FROM dual CONNECT BY LEVEL <= to_number(to_char(last_day(trunc(:P_XDT)), 'DD'))),
+dados_brutos AS
+ (SELECT to_char(apo.dhapo, 'IW') AS semana,
+         trunc(apo.dhapo) AS dia,
+         CASE
+            WHEN :XSETOR = '04' THEN
+             apf.qtd * gol.golpes
+            ELSE
+             apf.qtd
+         END AS qtd
+    FROM tpriproc ord
+   INNER JOIN tpriatv atv
+      ON ord.idiproc = atv.idiproc
+   INNER JOIN tpripa ipa
+      ON atv.idiproc = ipa.idiproc
+   INNER JOIN tprapo apo
+      ON atv.idiatv = apo.idiatv
+   INNER JOIN tprapf apf
+      ON apo.nuapo = apf.nuapo
+   INNER JOIN tgfpro pro
+      ON ipa.codprodpa = pro.codprod
+    LEFT JOIN golpes gol
+	   ON ipa.codprodpa = gol.codprod
+   WHERE trunc(apo.dhapo) BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
+     AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR),
+dados_consolidados AS
+ (SELECT semana,
+         COUNT(DISTINCT dia) AS dias,
+         SUM(qtd) AS qtd
+    FROM dados_brutos
+   GROUP BY semana),
+metas AS
+ (SELECT to_char(mpc.dataprod, 'IW') AS semana,
+         mpc.setor,
+         mpc.tipo,
+         mpc.pessoas,
+         SUM(mpc.meta) AS meta,
+         mpc.turno
+    FROM ad_metapcp mpc
+   WHERE mpc.dataprod BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
+     AND to_char(mpc.setor, 'FM00') = :XSETOR
+   GROUP BY to_char(mpc.dataprod, 'IW'),
             mpc.setor,
             mpc.tipo,
             mpc.pessoas,
-            SUM(mpc.meta) AS meta,
             mpc.turno
-        FROM ad_metapcp mpc
-    WHERE mpc.dataprod BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
-        AND to_char(mpc.setor, 'FM00') = :XSETOR
-    GROUP BY to_char(mpc.dataprod, 'IW'),
-                mpc.setor,
-                mpc.tipo,
-                mpc.pessoas,
-                mpc.turno
-    ORDER BY to_char(mpc.dataprod, 'IW'))
-    SELECT s.iw,
-        row_number() over (ORDER BY s.iw) || 'ª SEM' AS semana_label,
-        nvl(round(dc.qtd / nullif(dc.dias, 0), 2), 0) AS qtd_media,
-        nvl(round(mt.meta / nullif(dc.dias, 0), 2), 0) AS met_media
-    FROM semanas s
-    LEFT JOIN dados_consolidados dc
-        ON s.iw = dc.semana
-    LEFT JOIN metas mt
-        ON s.iw = mt.semana
-    ORDER BY s.iw
+   ORDER BY to_char(mpc.dataprod, 'IW'))
+SELECT s.iw,
+       row_number() over (ORDER BY s.iw) || 'ª SEM' AS semana_label,
+       nvl(round(dc.qtd / nullif(dc.dias, 0), 2), 0) AS qtd_media,
+       nvl(round(mt.meta / nullif(dc.dias, 0), 2), 0) AS met_media
+  FROM semanas s
+  LEFT JOIN dados_consolidados dc
+    ON s.iw = dc.semana
+  LEFT JOIN metas mt
+    ON s.iw = mt.semana
+ ORDER BY s.iw
 
 </snk:query>
 
 <snk:query var = "producaoDiariaQuery">
 
-    WITH dias_mes AS
-    (SELECT to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') AS d,
-            to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') || '-' || to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DY', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS dia
-        FROM dual
-    WHERE to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7) -- exclui domingo
-    CONNECT BY LEVEL <= to_number(to_char(last_day(trunc(:P_XDT)), 'DD'))),
-    dados_producao AS
-    (SELECT to_char(apo.dhapo, 'DD') AS dia,
-            SUM(apf.qtd) AS qtd
-        FROM tpriproc ord
-    INNER JOIN tpriatv atv
-        ON ord.idiproc = atv.idiproc
-    INNER JOIN tpripa ipa
-        ON atv.idiproc = ipa.idiproc
-    INNER JOIN tprapo apo
-        ON atv.idiatv = apo.idiatv
-    INNER JOIN tprapf apf
-        ON apo.nuapo = apf.nuapo
-    INNER JOIN tgfpro pro
-        ON ipa.codprodpa = pro.codprod
-    WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(trunc(:P_XDT), -1)) + 1) AND last_day(trunc(:P_XDT))
-        AND to_char(pro.ad_set_producao, 'FM00') = :xsetor
-    GROUP BY to_char(apo.dhapo, 'DD')),
-    metasdiaria AS
-    (SELECT to_char(mpc.dataprod, 'DD') AS dia,
-            mpc.setor,
-            mpc.tipo,
-            mpc.pessoas,
-            mpc.meta AS meta,
-            mpc.turno
-        FROM ad_metapcp mpc
-    WHERE mpc.dataprod BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
-        AND to_char(mpc.setor, 'FM00') = :XSETOR)	
-    SELECT dm.dia AS d,
-        coalesce(dp.qtd, 0) AS qtd,
-        coalesce(md.meta, 0) AS met
-    FROM dias_mes dm
-    LEFT JOIN dados_producao dp
-        ON dm.d = dp.dia
-    LEFT JOIN metasdiaria md
-        ON dm.d = md.dia
-    ORDER BY dm.d
+WITH golpes AS
+ (SELECT pro.codprod,
+         pro.ad_golpes AS golpes
+    FROM tgfpro pro
+   WHERE coalesce(pro.ad_golpes, 0) > 0),
+dias_mes AS
+ (SELECT to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') AS d,
+         to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') || '-' ||
+         to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DY', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS dia
+    FROM dual
+   WHERE to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7) -- exclui domingo
+  CONNECT BY LEVEL <= to_number(to_char(last_day(trunc(:P_XDT)), 'DD'))),
+dados_producao AS
+ (SELECT to_char(apo.dhapo, 'DD') AS dia,
+         CASE
+            WHEN :XSETOR = '04' THEN
+             SUM(apf.qtd * gol.golpes)
+            ELSE
+             SUM(apf.qtd)
+         END AS qtd
+    FROM tpriproc ord
+   INNER JOIN tpriatv atv
+      ON ord.idiproc = atv.idiproc
+   INNER JOIN tpripa ipa
+      ON atv.idiproc = ipa.idiproc
+   INNER JOIN tprapo apo
+      ON atv.idiatv = apo.idiatv
+   INNER JOIN tprapf apf
+      ON apo.nuapo = apf.nuapo
+   INNER JOIN tgfpro pro
+      ON ipa.codprodpa = pro.codprod
+    LEFT JOIN golpes gol
+      ON ipa.codprodpa = gol.codprod
+   WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(trunc(:P_XDT), -1)) + 1) AND last_day(trunc(:P_XDT))
+     AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
+   GROUP BY to_char(apo.dhapo, 'DD')),
+metasdiaria AS
+ (SELECT to_char(mpc.dataprod, 'DD') AS dia,
+         mpc.setor,
+         mpc.tipo,
+         mpc.pessoas,
+         mpc.meta AS meta,
+         mpc.turno
+    FROM ad_metapcp mpc
+   WHERE mpc.dataprod BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
+     AND to_char(mpc.setor, 'FM00') = :XSETOR)
+SELECT dm.dia AS d,
+       coalesce(dp.qtd, 0) AS qtd,
+       coalesce(md.meta, 0) AS met
+  FROM dias_mes dm
+  LEFT JOIN dados_producao dp
+    ON dm.d = dp.dia
+  LEFT JOIN metasdiaria md
+    ON dm.d = md.dia
+ ORDER BY dm.d
 
 </snk:query>
 
@@ -1007,7 +1095,7 @@ grid-column:span 12;
                 trunc(SYSDATE) - gge.dtprazo dias,
                 CASE
                     WHEN (trunc(SYSDATE) - gge.dtprazo) > 0 THEN
-                    'VENCIDA A ' || to_char(trunc(SYSDATE) - gge.dtprazo, 'FM990') || ' DIA(S)'
+                    'VENC A ' || to_char(trunc(SYSDATE) - gge.dtprazo, 'FM990') || ' DIA(S)'
                     WHEN (trunc(SYSDATE) - gge.dtprazo) < 0 THEN
                     'NO PRAZO'
                     WHEN (trunc(SYSDATE) - gge.dtprazo) = 0 THEN
@@ -1032,72 +1120,61 @@ grid-column:span 12;
 
 <snk:query var = "tempoQuery">
 
-    WITH dias_mes AS
-    (SELECT to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') AS d,
-            to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') || '-' ||
-            to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DY', 'NLS_DATE_LANGUAGE=PORTUGUESE') AS dia
-        FROM dual
-    WHERE to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'D') IN (2, 3, 4, 5, 6, 7) -- exclui domingo
-    CONNECT BY LEVEL <= to_number(to_char(last_day(trunc(:P_XDT)), 'DD'))),
-    cte_mtp AS
-    (SELECT CASE
-                WHEN mtp.codmtp = 14 THEN
-                1
-                ELSE
-                2
-            END x,
-            mtp.codmtp,
-            coalesce(REPLACE(REPLACE(REPLACE(mtp.descricao, ' DE MÁQUINA / FERRAMENTA / GABARITO', ''), ' NO ', ' '), ' DE ', ' '), 'TOTAIS') AS descricao
-        FROM tprmtp mtp
-    WHERE mtp.ativo = 'S'),
-    cte_mtp_formatado AS
-    (SELECT x,
-            codmtp,
-            initcap(descricao) AS descricao
-        FROM cte_mtp
-    ORDER BY codmtp),
-    cte_cnc AS
-    (SELECT to_char(apo.dhapo, 'DD') AS dhapo,
-            coalesce(cnc.codmtp, 100) AS codmtp,
-            SUM((cnc.dtfinal - cnc.dtinicio) * 24 * 60) AS tempo
-        FROM ad_cnc cnc
-        LEFT JOIN tpriatv atv
-        ON cnc.idiproc = atv.idiproc
-        LEFT JOIN tpripa ipa
-        ON cnc.idiproc = ipa.idiproc
-        LEFT JOIN tgfpro pro
-        ON ipa.codprodpa = pro.codprod
-        LEFT JOIN tprapo apo
-        ON atv.idiatv = apo.idiatv
-    WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(trunc(:P_XDT), -1)) + 1) AND last_day(trunc(:P_XDT))
-        AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
-    GROUP BY apo.dhapo,
-                cnc.codmtp)
-    SELECT d,
-           manu,
-           ncn,
-           (528 - (manu + ncn)) AS prd
-    FROM (SELECT c.d,
-                SUM(CASE
-                        WHEN a.x = 1 THEN
-                        b.tempo
-                        ELSE
-                        0
-                    END) AS manu,
-                SUM(CASE
-                        WHEN a.x = 2 THEN
-                        b.tempo
-                        ELSE
-                        0
-                    END) AS ncn
-            FROM dias_mes c
-            LEFT JOIN cte_cnc b
-                ON c.d = b.dhapo
-            LEFT JOIN cte_mtp_formatado a
-                ON a.codmtp = b.codmtp
-            GROUP BY ROLLUP((c.d))
-            ORDER BY c.d)
-    WHERE d IS NOT NULL
+WITH dias_mes AS
+ (SELECT trunc(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL) AS data_dia,
+         to_char(last_day(add_months(trunc(:P_XDT), -1)) + LEVEL, 'DD') AS dia
+    FROM dual
+  CONNECT BY LEVEL <= to_number(to_char(last_day(trunc(:P_XDT)), 'DD'))),
+mtp AS
+ (SELECT codmtp,
+         CASE
+            WHEN codmtp = 14 THEN
+             1
+            ELSE
+             2
+         END tipo,
+         initcap(REPLACE(REPLACE(REPLACE(descricao, ' DE MÁQUINA / FERRAMENTA / GABARITO', ''), ' NO ', ' '), ' DE ', ' ')) descricao
+    FROM tprmtp
+   WHERE ativo = 'S'),
+tempo_cnc AS
+ (SELECT trunc(apo.dhapo) data_dia,
+         nvl(cnc.codmtp, 100) codmtp,
+         SUM((cnc.dtfinal - cnc.dtinicio) * 24 * 60) tempo
+    FROM ad_cnc cnc
+    LEFT JOIN tpriatv atv
+      ON atv.idiproc = cnc.idiproc
+    LEFT JOIN tpripa ipa
+      ON ipa.idiproc = cnc.idiproc
+    LEFT JOIN tgfpro pro
+      ON pro.codprod = ipa.codprodpa
+    LEFT JOIN tprapo apo
+      ON apo.idiatv = atv.idiatv
+   WHERE trunc(apo.dhapo) BETWEEN trunc(:P_XDT, 'MM') AND last_day(:P_XDT)
+     AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
+   GROUP BY trunc(apo.dhapo),
+            nvl(cnc.codmtp, 100)),
+tempo_diario AS
+ (SELECT d.dia,
+         nvl(SUM(CASE
+                    WHEN m.tipo = 1 THEN
+                     c.tempo
+                 END), 0) manutencao,
+         nvl(SUM(CASE
+                    WHEN m.tipo = 2 THEN
+                     c.tempo
+                 END), 0) cnc
+    FROM dias_mes d
+    LEFT JOIN tempo_cnc c
+      ON c.data_dia = d.data_dia
+    LEFT JOIN mtp m
+      ON m.codmtp = c.codmtp
+   GROUP BY d.dia)
+SELECT dia AS d,
+       coalesce(manutencao, 0) AS manu,
+       coalesce(cnc, 0) AS cnc,
+       greatest(0, 528 - coalesce(manutencao, 0) - coalesce(cnc, 0)) AS prd
+  FROM tempo_diario
+ ORDER BY dia
 
 </snk:query>
 
@@ -1121,7 +1198,7 @@ grid-column:span 12;
 
 <div class="card-title">
 
-% EFICIÊNCIA (MENSAL)
+>% EFICIÊNCIA (MENSAL)
 
 </div>
 
@@ -1181,7 +1258,7 @@ ALOCAÇÃO DE TEMPO X DISPONIBILIDADE
 
 <div class="card-body">
 
-<canvas id="graficoProducao"></canvas>
+<canvas id="graficoTempo"></canvas>
 
 </div>
 
@@ -1254,15 +1331,11 @@ PLANO DE AÇÃO
 
 <tr>
 
-<th>Prazo</th>
-
-<th>Ação</th>
-
-<th>Responsavel</th>
-
-<th>Setor</th>
-
-<th>Status</th>
+<th style="width:12%;">Prazo</th>
+<th style="width:28%;">Ação</th>
+<th style="width:20%;">Responsavel</th>
+<th style="width:20%;">Setor</th>
+<th style="width:20%;">Status</th>
 
 </tr>
 
@@ -1323,12 +1396,12 @@ DESPERDÍCIOS / PERDAS
 
 <tr>
 
-<th>Codpro</th>
-<th>Descrição</th>
-<th>UN</th>
-<th>Custo</th>
-<th>Qtd</th>
-<th>Total</th>
+<th style="width:12%;">Codpro</th>
+<th style="width:42%;">Descrição</th>
+<th style="width:8%;">UN</th>
+<th style="width:12%;">Custo</th>
+<th style="width:12%;">Qtd</th>
+<th style="width:12%;">Total</th>
 
 </tr>
 
@@ -1372,13 +1445,10 @@ RANKING DE O.S.
 <table>
 
 <thead>
-
 <tr>
-
-<th>Descrição</th>
-<th>OS Mês</th>
-<th>OS Ano</th>
-
+    <th style="width:70%;">Descrição</th>
+    <th style="width:15%;">OS Mês</th>
+    <th style="width:15%;">OS Ano</th>
 </tr>
 
 </thead>
@@ -1421,12 +1491,12 @@ MANUTENÇÃO (ORDENS DE SERVIÇO)
 
 <tr>
 
-<th>Status</th>
-<th>Corretiva</th>
-<th>Melhoria</th>
-<th>Preventiva</th>
-<th>Programada</th>
-<th>Total</th>
+<th style="width:30%;">Status</th>
+<th style="width:14%;">Corretiva</th>
+<th style="width:14%;">Melhoria</th>
+<th style="width:14%;">Preventiva</th>
+<th style="width:14%;">Programada</th>
+<th style="width:14%;">Total</th>
 
 </tr>
 
@@ -1496,7 +1566,7 @@ ROTINAS NO SETOR
  */
 Chart.defaults.font.family = "Segoe UI";
 Chart.defaults.font.size = 12;
-Chart.defaults.plugins.legend.display = false;
+Chart.defaults.plugins.legend.display = true;
 Chart.defaults.plugins.tooltip.enabled = true;
 Chart.defaults.animation.duration = 1200;
 
@@ -1580,100 +1650,142 @@ ${row.perc}<c:if test="${!loop.last}">,</c:if>
 ];
 
 new Chart(document.getElementById('efficiencyChart'), {
+
     type: 'bar',
+
     data: {
         labels: efilabels,
+
         datasets: [
+
+            //=========================
+            // LINHA - METAS
+            //=========================
             {
                 label: 'Metas',
-                type: 'line',              // <-- Linha
+                type: 'line',
                 data: efimetas,
+
                 borderColor: '#4f81bd',
                 backgroundColor: '#4f81bd',
+
                 borderWidth: 3,
                 fill: false,
-                tension: 0.3,              // Suaviza a linha
+                tension: 0.30,
+
                 pointRadius: 4,
                 pointHoverRadius: 6,
                 pointBackgroundColor: '#4f81bd',
-                order: 1                   // Desenha por cima das barras
+
+                order: 1,
+
+                datalabels: {
+
+                    display: true,
+                    color: '#4f81bd',
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 10,
+                    rotation: 0,
+                    formatter: function(value){
+                        return value;
+                    },
+
+                    font: {
+                        family: 'Arial',
+                        size: 12,
+                        weight: 'bold'
+                    }
+                }
             },
+
+            //=========================
+            // BARRAS - EFICIÊNCIA
+            //=========================
             {
                 label: 'Qtds',
                 data: efiqtd,
                 backgroundColor: '#9bbb59',
-                order: 2
+                order: 2,
+                datalabels: {
+
+                    display: function(context){
+
+                        const meta = context.chart.data.datasets[0].data[context.dataIndex];
+                        const qtd  = context.dataset.data[context.dataIndex];
+
+                        return Math.abs(meta - qtd) >= 10;
+                    },
+
+                    color: 'black',
+
+                    anchor: 'center',
+
+                    align: 'center',
+                    rotation: -90,
+                    offset: 0,
+
+                    formatter: function(value){
+                        return value;
+                    },
+
+                    font: {
+                        family: 'Arial',
+                        size: 12,
+                        weight: 'bold'
+                    }
+                }
             }
         ]
     },
+
     options: {
-                responsive: true,
-                maintainAspectRatio: false,
 
-                plugins: {
+        responsive: true,
+        maintainAspectRatio: false,
 
-                    datalabels: {
+        plugins: {
 
-                        // ADICIONE AQUI
-                        display: function(context) {
+            legend: {
+                display: true
+            },
 
-                            if (context.dataset.type === 'line') {
-
-                                const meta = context.dataset.data[context.dataIndex];
-                                const qtd  = context.chart.data.datasets[1].data[context.dataIndex];
-
-                                if (Math.abs(meta - qtd) < 10) {
-                                    return false;
-                                }
-                            }
-
-                            return true;
-                        },
-
-                        color: function(context) {
-                            return context.dataset.type === 'line'
-                                ? '#4f81bd'
-                                : 'black';
-                        },
-
-                        anchor: function(context) {
-                            return context.dataset.type === 'line'
-                                ? 'end'
-                                : 'center';
-                        },
-
-                        align: function(context) {
-                            return context.dataset.type === 'line'
-                                ? 'top'
-                                : 'center';
-                        },
-
-                        offset: function(context) {
-                            return context.dataset.type === 'line'
-                                ? 10
-                                : 0;
-                        },
-
-                        rotation: function(context) {
-                            return context.dataset.type === 'line'
-                                ? 0
-                                : -90;
-                        },
-
-                        formatter: function(value) {
-                            return value;
-                        },
-
-                        font: {
-                            size: 14,        // tamanho da fonte
-                            weight: 'bold',  // negrito
-                            family: 'Arial'
-                        }
-                    
-                    }
-                    
-                }
+            tooltip: {
+                enabled: true
             }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                ticks: {
+                    font: {
+                        size: 12
+                    }
+                }
+
+            },
+
+            x: {
+
+                ticks: {
+                    font: {
+                        size: 12
+                    }
+                }
+
+            }
+
+        }
+
+    },
+
+    plugins: [ChartDataLabels]
+
 });
 
 
@@ -1715,7 +1827,7 @@ new Chart(document.getElementById('productionChart'), {
                     align: 'center',
                     rotation: -90,   // barras continuam na vertical
                     font: {
-                        size: 14,
+                        size: 12,
                         weight: 'bold'
                     }
                 }
@@ -1741,7 +1853,7 @@ new Chart(document.getElementById('productionChart'), {
                     rotation: 0,          // Horizontal
                     offset: 5,
                     font: {
-                        size: 13,
+                        size: 12,
                         weight: 'bold'
                     }
                 }
@@ -1802,7 +1914,7 @@ new Chart(
                         align: 'center',
                         rotation: -90,   // Valores das barras na vertical
                         font: {
-                            size: 14,
+                            size: 12,
                             weight: 'bold',
                             family: 'Arial'
                         }
@@ -1829,7 +1941,7 @@ new Chart(
                         rotation: 0,     // Horizontal
                         offset: 5,
                         font: {
-                            size: 13,
+                            size: 12,
                             weight: 'bold',
                             family: 'Arial'
                         }
@@ -1856,85 +1968,111 @@ new Chart(
  ******************************************************/
 
 const dias = [
-    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
+    <c:forEach items="${tempoQuery.rows}" var="row" varStatus="loop">
         '${row.d}'<c:if test="${!loop.last}">,</c:if>
     </c:forEach>
 ];
 
 const producao = [
-    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
-        '${row.prod}'<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
-];
-const cnc = [
-    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
-        '${row.cnc}'<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
-];
-const manutencao = [
-    <c:forEach items="${producaoDiariaQuery.rows}" var="row" varStatus="loop">
-        '${row.manu}'<c:if test="${!loop.last}">,</c:if>
-    </c:forEach>
+<c:forEach items="${tempoQuery.rows}" var="row" varStatus="loop">
+    ${row.prd}<c:if test="${!loop.last}">,</c:if>
+</c:forEach>
 ];
 
-const ctx = document.getElementById('graficoProducao').getContext('2d');
+const cnc = [
+<c:forEach items="${tempoQuery.rows}" var="row" varStatus="loop">
+    ${row.cnc}<c:if test="${!loop.last}">,</c:if>
+</c:forEach>
+];
+
+const manutencao = [
+<c:forEach items="${tempoQuery.rows}" var="row" varStatus="loop">
+    ${row.manu}<c:if test="${!loop.last}">,</c:if>
+</c:forEach>
+];
+
+const ctx = document.getElementById('graficoTempo').getContext('2d');
+console.table({
+    dias,
+    producao,
+    cnc,
+    manutencao
+});
+console.log(producao.reduce((a,b)=>a+b,0));
+console.log(cnc.reduce((a,b)=>a+b,0));
+console.log(manutencao.reduce((a,b)=>a+b,0));
 new Chart(ctx, {
     type: 'bar',
     data: {
-    labels: dias,
-    datasets: [
-        {
-        label: 'Produção',
-        data: producao,
-        backgroundColor: '#FFD700', // amarelo
-        borderColor: '#E6B800',
-        borderWidth: 1
-        },
-        {
-        label: 'CNC',
-        data: cnc,
-        backgroundColor: '#B0B0B0', // cinza
-        borderColor: '#909090',
-        borderWidth: 1
-        },
-        {
-        label: 'Manutenção',
-        data: manutencao,
-        backgroundColor: '#FF8C00', // laranja
-        borderColor: '#CC7000',
-        borderWidth: 1
-        }
-    ]
+        labels: dias,
+        datasets: [
+            {
+                label: 'Produção',
+                data: producao,
+                backgroundColor: '#FFD700',
+                borderColor: '#E6B800',
+                stack: 'total',
+                borderWidth: 1
+            },
+            {
+                label: 'CNC',
+                data: cnc,
+                backgroundColor: '#B0B0B0',
+                borderColor: '#909090',
+                stack: 'total',
+                borderWidth: 1
+            },
+            {
+                label: 'Manutenção',
+                data: manutencao,
+                backgroundColor: '#FF8C00',
+                borderColor: '#CC7000',
+                stack: 'total',
+                borderWidth: 1
+            }
+        ]
     },
     options: {
-    responsive: true,
-    plugins: {
-        title: {
-        display: true,
-        font: { size: 18 }
+        responsive: true,
+        plugins: {
+            title: {
+                display: true,
+                font: { size: 12 }
+            },
+            legend: {
+                position: 'bottom'
+            },
+            datalabels: {
+                color: '#000',
+                anchor: 'end',
+                align: 'start',
+                rotation: -90,
+                font: {
+                    weight: 'bold'
+                },
+                formatter: function(value) {
+                    return value;
+                }
+            }
         },
-        legend: {
-        position: 'bottom'
+        scales: {
+            x: {
+                stacked: true, // empilha no eixo X
+                title: {
+                    display: true,
+                    text: 'Dias'
+                }
+            },
+            y: {
+                stacked: true, // empilha no eixo Y
+                title: {
+                    display: true,
+                    text: 'Quantidade'
+                },
+                beginAtZero: true,
+                max: 600
+            }
         }
-    },
-    scales: {
-        x: {
-        stacked: true,
-        title: {
-            display: true,
-            text: 'Dia do Mês'
-        }
-        },
-        y: {
-        stacked: true,
-        title: {
-            display: true,
-            text: 'Quantidade'
-        },
-        beginAtZero: true,
-        max: 600
-        }
-    }
     }
 });
 
