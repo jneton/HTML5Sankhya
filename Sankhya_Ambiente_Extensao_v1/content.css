@@ -1,0 +1,4 @@
+
+#snk-env-banner{position:fixed;top:0;left:0;right:0;height:28px;z-index:2147483647;color:#fff;font:bold 14px Arial;display:flex;align-items:center;justify-content:center}
+html.snk-prd{border:6px solid #c00;box-sizing:border-box}
+html.snk-tst{border:6px solid #0a0;box-sizing:border-box}

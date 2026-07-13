@@ -1,0 +1,7 @@
+{
+"manifest_version":3,
+"name":"Sankhya Ambiente",
+"version":"1.0",
+"permissions":["tabs"],
+"content_scripts":[{"matches":["http://haiala.snk.ativy.com:40172/*","http://haiala.snk.ativy.com:50172/*","https://haiala.snk.ativy.com:40172/*","https://haiala.snk.ativy.com:50172/*"],"js":["content.js"],"css":["content.css"],"run_at":"document_idle"}]
+}

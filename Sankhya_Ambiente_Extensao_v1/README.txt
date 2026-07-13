@@ -1,0 +1,1 @@
+Ative o Modo do Desenvolvedor em chrome://extensions e carregue esta pasta descompactada.
