@@ -10,30 +10,32 @@ d.textContent = p ? '🔴 AMBIENTE DE PRODUÇÃO' : '🟢 AMBIENTE DE TESTE';
 // Estilo
 Object.assign(d.style, {
     position: 'fixed',
+    top: '0',
     left: '0',
-    top: '50%',
-    transform: 'translateY(-50%)',
-    width: '36px',
-    height: '400px',
+    right: '0',
+    width: '100%',
+    height: '36px',
+
     background: p ? '#c00' : '#0a0',
     color: '#fff',
+
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '14px',
-    fontWeight: 'bold',
+
+    height: '40px',
+    fontSize: '16px',
+    letterSpacing: '1px',
+
+    /*fontSize: '15px',
+    fontWeight: 'bold',*/
+
     zIndex: '999999',
-    borderRadius: '0 8px 8px 0',
-    boxShadow: '2px 0 6px rgba(0,0,0,.3)',
+    boxShadow: '0 2px 6px rgba(0,0,0,.3)',
     cursor: 'default',
 
-    // Texto na vertical
-    writingMode: 'vertical-lr',
-    textOrientation: 'upright',
-    letterSpacing: '2px',
     whiteSpace: 'nowrap',
 
-    // Efeito
     transition: 'opacity .3s ease',
     opacity: '1'
 });
