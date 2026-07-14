@@ -14,43 +14,42 @@ Object.assign(d.style, {
     left: '0',
     right: '0',
     width: '100%',
-    height: '36px',
+    height: '40px',
 
-    background: p ? '#c00' : '#0a0',
+    background: p ? 'rgb(58, 3, 255)' : '#0a0',
     color: '#fff',
 
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
 
-    height: '40px',
     fontSize: '16px',
     letterSpacing: '1px',
 
-    /*fontSize: '15px',
-    fontWeight: 'bold',*/
-
     zIndex: '999999',
     boxShadow: '0 2px 6px rgba(0,0,0,.3)',
-    cursor: 'default',
-
     whiteSpace: 'nowrap',
 
-    transition: 'opacity .3s ease',
-    opacity: '1'
-});
+    cursor: 'default',
 
-// Oculta ao passar o mouse
-d.addEventListener('mouseenter', () => {
-    d.style.opacity = '0';
-});
-
-// Exibe novamente quando o mouse sair
-d.addEventListener('mouseleave', () => {
-    d.style.opacity = '1';
+    transition: 'top .25s ease'
 });
 
 document.body.appendChild(d);
 
+// Esconde a faixa deixando apenas 4px visíveis
+d.addEventListener('mouseenter', () => {
+    d.style.top = '-36px';
+});
+
+// Quando o mouse voltar ao topo da tela, exibe novamente
+document.addEventListener('mousemove', (e) => {
+    if (e.clientY <= 4) {
+        d.style.top = '0';
+    }
+});
+
 // Ícone na aba
-document.title = (p ? '🔴 ' : '🟢 ') + document.title;
+if (!document.title.startsWith('🔴') && !document.title.startsWith('🟢')) {
+    document.title = (p ? '🔴 ' : '🟢 ') + document.title;
+}

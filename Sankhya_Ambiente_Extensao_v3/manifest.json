@@ -1,7 +1,7 @@
 {
 "manifest_version":3,
 "name":"Sankhya Environment Identifier",
-"version":"2.0.0",
+"version":"3.0.0",
 "description":"Identifica Produção e Teste automaticamente.",
 "permissions":["tabs"],
 "host_permissions":["http://haiala.snk.ativy.com:40172/*","https://haiala.snk.ativy.com:40172/*","http://haiala.snk.ativy.com:50172/*","https://haiala.snk.ativy.com:50172/*"],
