@@ -1,55 +1,57 @@
-const p = location.port === '40172';
+(() => {
+    'use strict';
 
-document.documentElement.classList.add(p ? 'prd' : 'tst');
+    const host = window.location.hostname.toLowerCase();
+    const porta = window.location.port;
 
-// Cria o indicador
-const d = document.createElement('div');
-d.id = 'snkbanner';
-d.textContent = p ? '🔴 AMBIENTE DE PRODUÇÃO' : '🟢 AMBIENTE DE TESTE';
+    let icone = "";
 
-// Estilo
-Object.assign(d.style, {
-    position: 'fixed',
-    top: '0',
-    left: '0',
-    right: '0',
-    width: '100%',
-    height: '40px',
-
-    background: p ? 'rgb(58, 3, 255)' : '#0a0',
-    color: '#fff',
-
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    fontSize: '16px',
-    letterSpacing: '1px',
-
-    zIndex: '999999',
-    boxShadow: '0 2px 6px rgba(0,0,0,.3)',
-    whiteSpace: 'nowrap',
-
-    cursor: 'default',
-
-    transition: 'top .25s ease'
-});
-
-document.body.appendChild(d);
-
-// Esconde a faixa deixando apenas 4px visíveis
-d.addEventListener('mouseenter', () => {
-    d.style.top = '-36px';
-});
-
-// Quando o mouse voltar ao topo da tela, exibe novamente
-document.addEventListener('mousemove', (e) => {
-    if (e.clientY <= 4) {
-        d.style.top = '0';
+    // Identifica o ambiente
+    if (host === "snkbrp01672.ativy.com" || porta === "40172") {
+        icone = "🔴";
+    } else if (host === "snkbrt01672.ativy.com" || porta === "50172") {
+        icone = "🟢";
+    } else {
+        return; // Não é um ambiente monitorado
     }
-});
 
-// Ícone na aba
-if (!document.title.startsWith('🔴') && !document.title.startsWith('🟢')) {
-    document.title = (p ? '🔴 ' : '🟢 ') + document.title;
-}
+    /**
+     * Remove qualquer indicador anterior do título.
+     */
+    function limparTitulo(titulo) {
+        return titulo.replace(/^(🔴|🟢|⚪|�)\s*/u, "");
+    }
+
+    /**
+     * Atualiza o título da aba apenas quando necessário.
+     */
+    function atualizarTitulo() {
+        const tituloLimpo = limparTitulo(document.title);
+        const novoTitulo = `${icone} ${tituloLimpo}`;
+
+        if (document.title !== novoTitulo) {
+            document.title = novoTitulo;
+        }
+    }
+
+    // Atualiza imediatamente
+    atualizarTitulo();
+
+    // Observa alterações no elemento <title>
+    const elementoTitle = document.querySelector("title");
+
+    if (elementoTitle) {
+        const observer = new MutationObserver(() => {
+            atualizarTitulo();
+        });
+
+        observer.observe(elementoTitle, {
+            childList: true,
+            characterData: true,
+            subtree: true
+        });
+    } else {
+        // Fallback caso o <title> ainda não exista
+        setInterval(atualizarTitulo, 1000);
+    }
+})();

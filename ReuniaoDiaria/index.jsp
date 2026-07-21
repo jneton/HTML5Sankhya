@@ -4,7 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib prefix="snk" uri="/WEB-INF/tld/sankhyaUtil.tld" %>
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -487,7 +486,8 @@ grid-column:span 12;
 
 <snk:query var="qualityQuery">
     WITH base AS
-    (SELECT coalesce(qld.qtdreprovada, 0) AS qtdreprovado,
+    (SELECT DISTINCT qld.idiproc,
+	        coalesce(qld.qtdreprovada, 0) AS qtdreprovado,
             coalesce(qld.qtdretida, 0) AS qtdretido,
             coalesce(qld.qtdnotificada, 0) AS qtdnotificado
         FROM ad_qualihaiala qld
@@ -747,16 +747,19 @@ SELECT dm.dia AS d,
 <snk:query var = "ocorrenciaOPQuery">
 
     WITH cte_mtp AS
-    (SELECT mtp.codmtp,
+    (SELECT 1 AS i,
+	         mtp.codmtp,
             coalesce(REPLACE(REPLACE(REPLACE(mtp.descricao, ' DE MÁQUINA / FERRAMENTA / GABARITO', ''), ' NO ', ' '), ' DE ', ' '), 'TOTAIS') AS descricao
         FROM tprmtp mtp
-    WHERE mtp.ativo = 'S'
-    UNION ALL
-    SELECT 100 AS codmtp,
+     WHERE mtp.ativo = 'S'
+     UNION ALL
+     SELECT 2 AS i,
+	         100 AS codmtp,
             'TOTAL ' AS descricao
         FROM dual),
     cte_mtp_formatado AS
-    (SELECT codmtp,
+    (SELECT i,
+	         codmtp,
             initcap(descricao) AS descricao
         FROM cte_mtp
     ORDER BY codmtp),
@@ -777,7 +780,8 @@ SELECT dm.dia AS d,
     WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(TRUNC(:P_XDT), -1)) + 1) AND last_day(TRUNC(:P_XDT))
         AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
     GROUP BY ROLLUP(cnc.codmtp))
-    SELECT a.codmtp,
+    SELECT a.i, 
+	     a.codmtp,
         a.descricao,
         coalesce(b.freq, 0) AS freq,
         lpad(coalesce(b.tempo, '0h:00m'), 8, ' ') AS tempo,
@@ -785,7 +789,7 @@ SELECT dm.dia AS d,
     FROM cte_mtp_formatado a
     LEFT JOIN cte_cnc b
         ON a.codmtp = b.codmtp
-    ORDER BY a.codmtp
+    ORDER BY a.i, coalesce(b.percentual, 0)
 
 </snk:query>
 
@@ -807,11 +811,16 @@ SELECT dm.dia AS d,
                                     FROM (SELECT x.codsetor,
                                                     translate(x.setdescricao, 'ÇÃÍÁ', 'CAIA') AS setdescricao
                                             FROM ad_msetor x)
-                                    WHERE setdescricao = (SELECT upper(w.opcao)
+                                    WHERE setdescricao = (SELECT CASE
+                                                                    WHEN upper(w.opcao) = 'DOBRA' THEN
+                                                                    'C.D.M.'
+                                                                    ELSE
+                                                                    upper(w.opcao)
+                                                                END
                                                             FROM tddopc w
                                                             WHERE w.nucampo = 9999990191
                                                             AND to_char(w.valor, 'FM00') = :XSETOR))
-                AND to_char(mos.dtos, 'YYYYMM') = to_char(TRUNC(:P_XDT), 'YYYYMM'))
+                AND to_char(mos.dtos, 'YYYYMM') = to_char(trunc(:P_XDT), 'YYYYMM'))
     GROUP BY coditem,
                 descritem),
     qtdano AS
@@ -830,24 +839,30 @@ SELECT dm.dia AS d,
                                     FROM (SELECT x.codsetor,
                                                     translate(x.setdescricao, 'ÇÃÍÁ', 'CAIA') AS setdescricao
                                             FROM ad_msetor x)
-                                    WHERE setdescricao = (SELECT upper(w.opcao)
+                                    WHERE setdescricao = (SELECT CASE
+                                                                    WHEN upper(w.opcao) = 'DOBRA' THEN
+                                                                    'C.D.M.'
+                                                                    ELSE
+                                                                    upper(w.opcao)
+                                                                END
                                                             FROM tddopc w
                                                             WHERE w.nucampo = 9999990191
                                                             AND to_char(w.valor, 'FM00') = :XSETOR))
-                AND to_char(mos.dtos, 'YYYY') = to_char(TRUNC(:P_XDT), 'YYYY'))
+                AND to_char(mos.dtos, 'YYYY') = to_char(trunc(:P_XDT), 'YYYY'))
     GROUP BY coditem,
                 descritem)
     SELECT REPLACE(REPLACE(mit.codmaq, '<', ' '), '>', ' ') || ' ' || REPLACE(REPLACE(mit.descmaquina, '<', ''), '>', '') AS descritem,
-            coalesce(m.mes, 0) AS mes,
-            coalesce(a.ano, 0) AS ano
-        FROM ad_mitens mit
-        LEFT JOIN qtdmes m
+        coalesce(m.mes, 0) AS mes,
+        coalesce(a.ano, 0) AS ano
+    FROM ad_mitens mit
+    LEFT JOIN qtdmes m
         ON mit.coditem = m.coditem
-        LEFT JOIN qtdano a
+    LEFT JOIN qtdano a
         ON mit.coditem = a.coditem
     WHERE (coalesce(m.mes, 0) + coalesce(a.ano, 0)) > 0
+    ORDER BY coalesce(a.ano, 0)
 
-</snk:query>
+    </snk:query>
 
 <snk:query var = "manutencaoOSQuery">
 
@@ -867,10 +882,15 @@ SELECT dm.dia AS d,
     (SELECT x.codsetor,
             translate(x.setdescricao, 'ÇÃÍÁ', 'CAIA') AS setdescricao
         FROM ad_msetor x
-    WHERE translate(x.setdescricao, 'ÇÃÍÁ', 'CAIA') = (SELECT w.opcao
-                                                            FROM tddopc w
+    WHERE translate(x.setdescricao, 'ÇÃÍÁ', 'CAIA') = (SELECT CASE
+                                                                WHEN upper(w.opcao) = 'DOBRA' THEN
+                                                                'C.D.M.'
+                                                                ELSE
+                                                                upper(w.opcao)
+                                                            END
+                                                        FROM tddopc w
                                                         WHERE w.nucampo = 9999990191
-                                                            AND to_char(w.valor, 'FM00') = :XSETOR)),
+                                                        AND to_char(w.valor, 'FM00') = :XSETOR)),
     ordens_servico AS
     (SELECT mos.statusordemservico,
             option_label('AD_MCABOS', 'STATUSORDEMSERVICO', mos.statusordemservico) AS stordemservico,
