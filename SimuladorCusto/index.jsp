@@ -226,13 +226,6 @@
         }
     </style>
 
-    <script type='text/javascript'>
-		function abrirDetalhes(codprod_mp){
-			var params = {'P_CODPRODN2' : P_CODPRODN2};
-		}	
-	</script>
-
-
 </head>
 <body>
 
@@ -798,7 +791,7 @@ WITH ult_estrutura AS
  (SELECT codprodpa,
          MAX(idefx) idefx
     FROM tprlmp
-	WHERE codprodpa = :P_CODPRODN2
+	WHERE codprodpa = ${r.codprod_mp}
    GROUP BY codprodpa)
 SELECT count(l.codprodmp) as qtd
   FROM tprlmp l
@@ -902,7 +895,7 @@ estrutura_base AS
       ON cp.codprod = mp.codprod
     LEFT JOIN qtde_estrutura qe
       ON qe.codprodpa = pa.codprod
-   WHERE pa.codprod IN (:P_CODPRODN2)
+   WHERE pa.codprod  = ${r.codprod_mp}
    GROUP BY gp.codgrupoprod,
             gp.descrgrupoprod,
             pa.codprod,
@@ -1172,7 +1165,7 @@ estrutura_base AS
       ON cp.codprod = mp.codprod
     LEFT JOIN qtde_estrutura qe
       ON qe.codprodpa = pa.codprod
-   WHERE pa.codprod IN (:P_CODPRODN2)
+   WHERE pa.codprod  = ${r.codprod_mp}
    GROUP BY gp.codgrupoprod,
             gp.descrgrupoprod,
             pa.codprod,
