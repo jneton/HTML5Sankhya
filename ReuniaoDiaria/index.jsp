@@ -658,7 +658,6 @@ dados_consolidados AS
 metas AS
  (SELECT to_char(mpc.dataprod, 'IW') AS semana,
          mpc.setor,
-         mpc.tipo,
          mpc.pessoas,
          SUM(mpc.meta) AS meta,
          mpc.turno
@@ -667,7 +666,6 @@ metas AS
      AND to_char(mpc.setor, 'FM00') = :XSETOR
    GROUP BY to_char(mpc.dataprod, 'IW'),
             mpc.setor,
-            mpc.tipo,
             mpc.pessoas,
             mpc.turno
    ORDER BY to_char(mpc.dataprod, 'IW'))
@@ -725,13 +723,14 @@ dados_producao AS
 metasdiaria AS
  (SELECT to_char(mpc.dataprod, 'DD') AS dia,
          mpc.setor,
-         mpc.tipo,
          mpc.pessoas,
-         mpc.meta AS meta,
-         mpc.turno
+         SUM(mpc.meta) AS meta
     FROM ad_metapcp mpc
    WHERE mpc.dataprod BETWEEN last_day(add_months(trunc(:P_XDT), -1)) + 1 AND last_day(trunc(:P_XDT))
-     AND to_char(mpc.setor, 'FM00') = :XSETOR)
+     AND to_char(mpc.setor, 'FM00') = :XSETOR
+   GROUP BY to_char(mpc.dataprod, 'DD'),
+            mpc.setor,
+            mpc.pessoas)
 SELECT dm.dia AS d,
        coalesce(dp.qtd, 0) AS qtd,
        coalesce(md.meta, 0) AS met
