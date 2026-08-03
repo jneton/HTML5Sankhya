@@ -1,5 +1,3 @@
-
-
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="UTF-8"  isELIgnored ="false"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.*" %>
@@ -17,7 +15,52 @@
 
     <script>
 
-    
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('#tabelaN1 tbody tr.linha-produto')
+                .forEach(function (linha) {
+                    linha.addEventListener('click', function () {
+                        const codigo = this.dataset.codprod;
+                        console.log('Nível 1');
+                        console.log('Código selecionado:', codigo);
+                        /*
+                        * Atualiza o componente NÍVEL 2
+                        */
+                        refreshDetails("NIVEL 2", {
+                            P_CODPROD_MP: codigo
+                        });
+                    });
+                });
+        });
+
+        document.querySelectorAll('#tabelaN2 tbody tr.linha-produto')
+            .forEach(function (linha) {
+
+                linha.addEventListener('click', function () {
+
+                    const codigo = this.dataset.codprod;
+
+                    console.log('Nível 2');
+                    console.log('Código selecionado:', codigo);
+
+                    refreshDetails("NIVEL 3", {
+                        P_CODPROD_MP: codigo
+                    });
+
+                });
+
+            });        
+
+        document.querySelectorAll('#tabelaN3 tbody tr.linha-produto')
+            .forEach(function (linha) {
+                linha.addEventListener('click', function () {
+                    const codigo = this.dataset.codprod;
+                    console.log('Nível 3');
+                    console.log('Código selecionado:', codigo);
+                    refreshDetails("NIVEL 4", {
+                        P_CODPROD_MP: codigo
+                    });
+                });
+            });
 
     </script>
 
@@ -93,13 +136,28 @@
             border-radius: 3px;
         }
 
-        /* Grid Principal com 4 colunas que ocupam a altura restante */
+        .badge-ativo {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-inativo {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Grid principal:
+           - 4 tabelas lado a lado em telas grandes
+           - Cada coluna pode encolher sem criar rolagem horizontal na página
+           - A altura disponível é aproveitada pelas quatro tabelas */
         .table-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            flex: 1; /* Preenche todo o espaço vertical disponível */
-            min-height: 0; /* Permite que o flexbox encolha e ative o scroll */
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px;
+            flex: 1;
+            min-height: 0;
+            min-width: 0;
+            width: 100%;
         }
 
         /* Card da Tabela */
@@ -134,11 +192,27 @@
             font-size: 0.75rem;
         }
 
+        .linha-produto {
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .linha-produto:hover {
+            background-color: #eaf2ff;
+        }
+
+        .linha-produto.selecionada {
+            background-color: #dbeafe;
+            font-weight: 600;
+        }
+
         /* Área com Rolagem (Scrollbar) da Tabela */
         .table-wrapper {
             flex: 1;
-            overflow-y: auto; /* Barra de rolagem vertical ativada */
-            overflow-x: auto; /* Barra de rolagem horizontal se a tela for estreita */
+            min-width: 0;
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: hidden; /* Evita rolagem horizontal das tabelas */
         }
 
         /* Estilização da Barra de Rolagem */
@@ -163,27 +237,64 @@
         /* Tabela */
         table {
             width: 100%;
+            max-width: 100%;
+            table-layout: fixed; /* Obriga a tabela a respeitar a largura do card */
             border-collapse: collapse;
-            font-size: 0.8rem;
+            font-size: 0.76rem;
             text-align: left;
         }
 
         th {
-            position: sticky; /* Mantém o cabeçalho visível durante o scroll */
+            position: sticky;
             top: 0;
             background-color: var(--header-bg);
             color: var(--primary-color);
             font-weight: 600;
-            padding: 8px;
+            padding: 6px 5px;
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             z-index: 10;
         }
 
         td {
-            padding: 6px 8px;
+            padding: 5px;
             border-bottom: 1px solid #f1f5f9;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Colunas proporcionais para as quatro tabelas */
+        table th:nth-child(1),
+        table td:nth-child(1) {
+            width: 12%;
+        }
+
+        table th:nth-child(2),
+        table td:nth-child(2) {
+            width: 50%;
+        }
+
+        table th:nth-child(3),
+        table td:nth-child(3) {
+            width: 18%;
+        }
+
+        table th:nth-child(4),
+        table td:nth-child(4) {
+            width: 20%;
+        }
+
+        /* Descrição do produto:
+           quebra de linha dentro da célula, sem aumentar a largura da tabela */
+        table td:nth-child(2) {
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.2;
+            vertical-align: top;
         }
 
         tbody tr:hover {
@@ -206,29 +317,69 @@
             color: var(--primary-color);
         }
 
-        /* Responsividade para Telas Menores */
+        /* Responsividade
+           Desktop: 4 tabelas
+           Tablet: 2 tabelas
+           Celular: 1 tabela */
         @media (max-width: 1200px) {
             html, body {
-                overflow: auto; /* Reativa scroll geral apenas em telas menores */
+                overflow: auto;
                 height: auto;
             }
+
             .app-container {
                 height: auto;
+                min-height: 100vh;
             }
+
             .table-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, minmax(0, 1fr));
             }
+
             .table-card {
-                height: 400px; /* Altura fixa quando empilhado em tablets */
+                height: 400px;
             }
         }
 
         @media (max-width: 768px) {
+            .app-container {
+                padding: 8px;
+                gap: 8px;
+            }
+
             .table-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .table-card {
+                height: 350px;
+            }
+
+            table {
+                font-size: 0.74rem;
+            }
+
+            th,
+            td {
+                padding: 5px 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-header {
                 grid-template-columns: 1fr;
             }
-            .table-card {
-                height: 350px; /* Altura fixa para smartphones */
+
+            .product-header .header-item {
+                grid-column: auto !important;
+            }
+
+            .card-header {
+                padding: 7px 8px;
+            }
+
+            table {
+                font-size: 0.72rem;
             }
         }
         
@@ -236,6 +387,54 @@
 
 </head>
 
+<script>
+    /*document.addEventListener('DOMContentLoaded', function () {
+        const linhas = document.querySelectorAll(
+            '#tabelaN1 tbody tr, #tabelaN2 tbody tr, #tabelaN3 tbody tr'
+        );
+        linhas.forEach(function (linha) {
+            linha.addEventListener('click', function () {
+                const codprod = this.dataset.codprod;
+                console.log('Código selecionado:', codprod);
+                // Marca a linha selecionada
+                linhas.forEach(function (item) {
+                    item.classList.remove('selecionada');
+                });
+                this.classList.add('selecionada');
+            });
+        });
+    });*/
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.linha-produto').forEach(function (linha) {
+            linha.addEventListener('click', function () {
+                const nivel = this.dataset.nivel;
+                const codprod = this.dataset.codprod;
+                console.log('Nível:', nivel);
+                console.log('Código:', codprod);
+                // Remove seleção anterior
+                document.querySelectorAll('.linha-produto')
+                    .forEach(function (item) {
+                        item.classList.remove('selecionada');
+                    });
+                // Seleciona a linha clicada
+                this.classList.add('selecionada');
+                // Próximo nível
+                if (nivel === '1') {
+                    // Aqui entra a atualização do Nível 2
+                    console.log('Atualizar Nível 2 com:', codprod);
+                } else if (nivel === '2') {
+                    // Aqui entra a atualização do Nível 3
+                    console.log('Atualizar Nível 3 com:', codprod);
+                } else if (nivel === '3') {
+                    // Aqui entra a atualização do Nível 4
+                    console.log('Atualizar Nível 4 com:', codprod);
+                }
+            });
+        });
+    });
+
+</script>
 
 <body>
 
@@ -277,7 +476,861 @@ SELECT count(l.codprodmp) as qtd
 	AND l.codprodpa = ue.codprodpa
 </snk:query>
 
+<snk:query var="ultQtdN2">
+WITH ult_estrutura AS
+(
+    SELECT codprodpa,
+           MAX(idefx) idefx
+      FROM tprlmp
+     WHERE codprodpa = :P_CODPROD_MP
+     GROUP BY codprodpa
+)   
+SELECT count(l.codprodmp) as qtd
+  FROM tprlmp l
+ INNER JOIN ult_estrutura ue
+    ON l.idefx = ue.idefx
+	AND l.codprodpa = ue.codprodpa
+</snk:query>
+
+<snk:query var="ultQtdN3">
+WITH ult_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+	WHERE codprodpa = :P_CODPROD
+   GROUP BY codprodpa)
+SELECT count(l.codprodmp) as qtd
+  FROM tprlmp l
+ INNER JOIN ult_estrutura ue
+    ON l.idefx = ue.idefx
+	AND l.codprodpa = ue.codprodpa
+</snk:query>
+
+<snk:query var="ultQtdN4">
+WITH ult_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+	WHERE codprodpa = :P_CODPROD
+   GROUP BY codprodpa)
+SELECT count(l.codprodmp) as qtd
+  FROM tprlmp l
+ INNER JOIN ult_estrutura ue
+    ON l.idefx = ue.idefx
+	AND l.codprodpa = ue.codprodpa
+</snk:query>
+
 <snk:query var="custoN1">
+
+WITH parametros AS
+ (SELECT trunc(:P_XDT) dt_referencia,
+         :P_TP tp_custo
+    FROM dual),
+ultimo_custo AS
+ (SELECT c.codprod,
+         MAX(c.dtatual) dtatual
+    FROM tgfcus c
+   CROSS JOIN parametros p
+   WHERE c.dtatual <= p.dt_referencia
+   GROUP BY c.codprod),
+custo_produto AS
+ (SELECT c.codprod,
+         CASE p.tp_custo
+            WHEN '0' THEN
+             c.cusmedicm
+            WHEN '1' THEN
+             c.cussemicm
+            WHEN '2' THEN
+             c.cusrep
+            WHEN '3' THEN
+             c.cusvariavel
+            WHEN '4' THEN
+             c.cusger
+            WHEN '5' THEN
+             c.cusmed
+            WHEN '6' THEN
+             pr.ad_custo_objetivo
+            ELSE
+             0
+         END vl_custo
+    FROM tgfcus c
+   INNER JOIN ultimo_custo u
+      ON u.codprod = c.codprod
+     AND u.dtatual = c.dtatual
+   INNER JOIN tgfpro pr
+      ON pr.codprod = c.codprod
+   CROSS JOIN parametros p),
+ultima_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+   GROUP BY codprodpa),
+qtde_estrutura AS
+ (SELECT l.codprodpa,
+         COUNT(*) AS qt_componentes,
+         COUNT(DISTINCT l.codprodmp) AS qt_itens
+    FROM tprlmp l
+   INNER JOIN ultima_estrutura u
+      ON u.codprodpa = l.codprodpa
+     AND u.idefx = l.idefx
+   GROUP BY l.codprodpa),
+estrutura_base AS
+ (SELECT gp.codgrupoprod,
+         gp.descrgrupoprod,
+         pa.codprod,
+         pa.referencia,
+         pa.descrprod || pa.compldesc AS descrprod,
+         pa.pesobruto,
+         qe.qt_componentes,
+         qe.qt_itens,
+         mp.codprod AS codprod_mp,
+         mp.descrprod || mp.compldesc AS descrprod_mp,
+         mp.codgrupoprod AS codgrupo_mp,
+         mp.usoprod,
+         lmp.codvol,
+         voa.quantidade,
+         voa.dividemultiplica,
+         SUM(lmp.qtdmistura) AS qtdmistura,
+         CASE
+            WHEN voa.dividemultiplica = 'M' THEN
+             SUM(lmp.qtdmistura * nvl(voa.quantidade, 1))
+            ELSE
+             SUM(lmp.qtdmistura / nvl(voa.quantidade, 1))
+         END AS qtd,
+         cp.vl_custo
+    FROM tgfpro pa
+   INNER JOIN tgfgru gp
+      ON gp.codgrupoprod = pa.codgrupoprod
+    LEFT JOIN ultima_estrutura ue
+      ON ue.codprodpa = pa.codprod
+    LEFT JOIN tprlmp lmp
+      ON lmp.codprodpa = ue.codprodpa
+     AND lmp.idefx = ue.idefx
+    LEFT JOIN tgfpro mp
+      ON mp.codprod = lmp.codprodmp
+    LEFT JOIN tgfvoa voa
+      ON voa.codprod = lmp.codprodmp
+     AND voa.codvol = lmp.codvol
+    LEFT JOIN custo_produto cp
+      ON cp.codprod = mp.codprod
+    LEFT JOIN qtde_estrutura qe
+      ON qe.codprodpa = pa.codprod
+   WHERE pa.codprod IN (:P_CODPROD)
+   GROUP BY gp.codgrupoprod,
+            gp.descrgrupoprod,
+            pa.codprod,
+            pa.referencia,
+            pa.descrprod,
+            pa.compldesc,
+            pa.pesobruto,
+            qe.qt_componentes,
+            qe.qt_itens,
+            mp.codprod,
+            mp.descrprod,
+            mp.compldesc,
+            mp.codgrupoprod,
+            mp.usoprod,
+            lmp.codvol,
+            voa.quantidade,
+            voa.dividemultiplica,
+            cp.vl_custo),
+nivel_1 AS
+ (SELECT e.codgrupoprod,
+         e.descrgrupoprod,
+         e.codprod,
+         e.referencia,
+         e.descrprod,
+         e.pesobruto,
+         e.codprod_mp,
+         e.descrprod_mp,
+			e.qt_componentes,
+         e.qtd            AS qtd0,
+         e.vl_custo       AS custo0
+    FROM estrutura_base e),
+nivel_2 AS
+ (SELECT n1.*,
+         e.codprod_mp   AS codcomposicao1,
+         e.descrprod_mp AS descricaoprod1,
+         e.qtd          AS qtd1,
+         e.vl_custo     AS custo1
+    FROM nivel_1 n1
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n1.codprod_mp),
+nivel_3 AS
+ (SELECT n2.*,
+         e.codprod_mp   AS codcomposicao2,
+         e.descrprod_mp AS descricaoprod2,
+         e.qtd          AS qtd2,
+         e.vl_custo     AS custo2
+    FROM nivel_2 n2
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n2.codcomposicao1),
+nivel_4 AS
+ (SELECT n3.*,
+         e.codprod_mp   AS codcomposicao3,
+         e.descrprod_mp AS descricaoprod3,
+         e.qtd          AS qtd3,
+         e.vl_custo     AS custo3
+    FROM nivel_3 n3
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n3.codcomposicao2),
+nivel_5 AS
+ (SELECT n4.*,
+         e.codprod_mp   AS codcomposicao4,
+         e.descrprod_mp AS descricaoprod4,
+         e.qtd          AS qtd4,
+         e.vl_custo     AS custo4
+    FROM nivel_4 n4
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n4.codcomposicao3),
+custos_calculados AS
+ (SELECT n5.codgrupoprod,
+         n5.descrgrupoprod,
+         n5.codprod,
+         n5.referencia,
+         n5.descrprod,
+         n5.pesobruto,
+         n5.codprod_mp,
+         n5.descrprod_mp,
+         ----------------------------------------------------------------------------
+         -- Quantidade do componente principal
+         ----------------------------------------------------------------------------
+         n5.qtd0,
+         ----------------------------------------------------------------------------
+         -- Nível 1
+         ----------------------------------------------------------------------------
+         n5.codcomposicao1,
+         n5.descricaoprod1,
+         n5.qtd1,
+         ----------------------------------------------------------------------------
+         -- Nível 2
+         ----------------------------------------------------------------------------
+         n5.codcomposicao2,
+         n5.descricaoprod2,
+         n5.qtd2,
+         ----------------------------------------------------------------------------
+         -- Nível 3
+         ----------------------------------------------------------------------------
+         n5.codcomposicao3,
+         n5.descricaoprod3,
+         n5.qtd3,
+         ----------------------------------------------------------------------------
+         -- Nível 4
+         ----------------------------------------------------------------------------
+         n5.codcomposicao4,
+         n5.descricaoprod4,
+         n5.qtd4,
+         ----------------------------------------------------------------------------
+         -- Custos efetivos
+         ----------------------------------------------------------------------------
+         coalesce(n5.custo4, n5.custo3) custo4_real,
+         coalesce(n5.custo3, n5.custo4, n5.custo2) custo3_real,
+         coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) custo2_real,
+         coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0) custo1_real,
+         ----------------------------------------------------------------------------
+         -- Regra especial do grupo 403
+         ----------------------------------------------------------------------------
+         CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END custo0_real,
+         ----------------------------------------------------------------------------
+         -- Custos Totais
+         ----------------------------------------------------------------------------
+         n5.qtd3 * coalesce(n5.custo4, n5.custo3) AS tcusto3,
+         n5.qtd2 * coalesce(n5.custo3, n5.custo4, n5.custo2) AS tcusto2,
+         n5.qtd1 * coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) AS tcusto1,
+         n5.qtd0 * CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END AS tcusto0
+    FROM nivel_5 n5),
+resultado AS
+ (SELECT codgrupoprod,
+         descrgrupoprod,
+         codprod,
+         referencia,
+         descrprod,
+         pesobruto,
+         codprod_mp,
+         descrprod_mp,
+         qtd0,
+         custo0_real,
+         tcusto0
+    FROM custos_calculados)
+SELECT r.codgrupoprod,
+       r.descrgrupoprod,
+       r.codprod,
+	   qer.qt_componentes,
+       r.referencia,
+       r.descrprod,
+       r.pesobruto,
+       r.codprod_mp,
+       r.descrprod_mp,
+       LPAD(to_char(SUM(r.qtd0), 'FM9G990D0000'), 8, ' ' ) AS qtd0,
+       LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
+  FROM resultado r
+  LEFT JOIN qtde_estrutura qer
+    ON r.codprod = qer.codprodpa
+ GROUP BY r.codgrupoprod,
+          r.descrgrupoprod,
+          r.codprod,
+		  qer.qt_componentes,
+          r.referencia,
+          r.descrprod,
+          r.pesobruto,
+          r.codprod_mp,
+          r.descrprod_mp,
+          r.qtd0
+ ORDER BY r.codprod_mp
+
+</snk:query>
+
+<snk:query var="custoN2">
+
+WITH parametros AS
+ (SELECT trunc(:P_XDT) dt_referencia,
+         :P_TP tp_custo
+    FROM dual),
+ultimo_custo AS
+ (SELECT c.codprod,
+         MAX(c.dtatual) dtatual
+    FROM tgfcus c
+   CROSS JOIN parametros p
+   WHERE c.dtatual <= p.dt_referencia
+   GROUP BY c.codprod),
+custo_produto AS
+ (SELECT c.codprod,
+         CASE p.tp_custo
+            WHEN '0' THEN
+             c.cusmedicm
+            WHEN '1' THEN
+             c.cussemicm
+            WHEN '2' THEN
+             c.cusrep
+            WHEN '3' THEN
+             c.cusvariavel
+            WHEN '4' THEN
+             c.cusger
+            WHEN '5' THEN
+             c.cusmed
+            WHEN '6' THEN
+             pr.ad_custo_objetivo
+            ELSE
+             0
+         END vl_custo
+    FROM tgfcus c
+   INNER JOIN ultimo_custo u
+      ON u.codprod = c.codprod
+     AND u.dtatual = c.dtatual
+   INNER JOIN tgfpro pr
+      ON pr.codprod = c.codprod
+   CROSS JOIN parametros p),
+ultima_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+   GROUP BY codprodpa),
+qtde_estrutura AS
+ (SELECT l.codprodpa,
+         COUNT(*) AS qt_componentes,
+         COUNT(DISTINCT l.codprodmp) AS qt_itens
+    FROM tprlmp l
+   INNER JOIN ultima_estrutura u
+      ON u.codprodpa = l.codprodpa
+     AND u.idefx = l.idefx
+   GROUP BY l.codprodpa),
+estrutura_base AS
+ (SELECT gp.codgrupoprod,
+         gp.descrgrupoprod,
+         pa.codprod,
+         pa.referencia,
+         pa.descrprod || pa.compldesc AS descrprod,
+         pa.pesobruto,
+         qe.qt_componentes,
+         qe.qt_itens,
+         mp.codprod AS codprod_mp,
+         mp.descrprod || mp.compldesc AS descrprod_mp,
+         mp.codgrupoprod AS codgrupo_mp,
+         mp.usoprod,
+         lmp.codvol,
+         voa.quantidade,
+         voa.dividemultiplica,
+         SUM(lmp.qtdmistura) AS qtdmistura,
+         CASE
+            WHEN voa.dividemultiplica = 'M' THEN
+             SUM(lmp.qtdmistura * nvl(voa.quantidade, 1))
+            ELSE
+             SUM(lmp.qtdmistura / nvl(voa.quantidade, 1))
+         END AS qtd,
+         cp.vl_custo
+    FROM tgfpro pa
+   INNER JOIN tgfgru gp
+      ON gp.codgrupoprod = pa.codgrupoprod
+    LEFT JOIN ultima_estrutura ue
+      ON ue.codprodpa = pa.codprod
+    LEFT JOIN tprlmp lmp
+      ON lmp.codprodpa = ue.codprodpa
+     AND lmp.idefx = ue.idefx
+    LEFT JOIN tgfpro mp
+      ON mp.codprod = lmp.codprodmp
+    LEFT JOIN tgfvoa voa
+      ON voa.codprod = lmp.codprodmp
+     AND voa.codvol = lmp.codvol
+    LEFT JOIN custo_produto cp
+      ON cp.codprod = mp.codprod
+    LEFT JOIN qtde_estrutura qe
+      ON qe.codprodpa = pa.codprod
+   WHERE pa.codprod IN (:P_CODPROD)
+   GROUP BY gp.codgrupoprod,
+            gp.descrgrupoprod,
+            pa.codprod,
+            pa.referencia,
+            pa.descrprod,
+            pa.compldesc,
+            pa.pesobruto,
+            qe.qt_componentes,
+            qe.qt_itens,
+            mp.codprod,
+            mp.descrprod,
+            mp.compldesc,
+            mp.codgrupoprod,
+            mp.usoprod,
+            lmp.codvol,
+            voa.quantidade,
+            voa.dividemultiplica,
+            cp.vl_custo),
+nivel_1 AS
+ (SELECT e.codgrupoprod,
+         e.descrgrupoprod,
+         e.codprod,
+         e.referencia,
+         e.descrprod,
+         e.pesobruto,
+         e.codprod_mp,
+         e.descrprod_mp,
+			e.qt_componentes,
+         e.qtd            AS qtd0,
+         e.vl_custo       AS custo0
+    FROM estrutura_base e),
+nivel_2 AS
+ (SELECT n1.*,
+         e.codprod_mp   AS codcomposicao1,
+         e.descrprod_mp AS descricaoprod1,
+         e.qtd          AS qtd1,
+         e.vl_custo     AS custo1
+    FROM nivel_1 n1
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n1.codprod_mp),
+nivel_3 AS
+ (SELECT n2.*,
+         e.codprod_mp   AS codcomposicao2,
+         e.descrprod_mp AS descricaoprod2,
+         e.qtd          AS qtd2,
+         e.vl_custo     AS custo2
+    FROM nivel_2 n2
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n2.codcomposicao1),
+nivel_4 AS
+ (SELECT n3.*,
+         e.codprod_mp   AS codcomposicao3,
+         e.descrprod_mp AS descricaoprod3,
+         e.qtd          AS qtd3,
+         e.vl_custo     AS custo3
+    FROM nivel_3 n3
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n3.codcomposicao2),
+nivel_5 AS
+ (SELECT n4.*,
+         e.codprod_mp   AS codcomposicao4,
+         e.descrprod_mp AS descricaoprod4,
+         e.qtd          AS qtd4,
+         e.vl_custo     AS custo4
+    FROM nivel_4 n4
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n4.codcomposicao3),
+custos_calculados AS
+ (SELECT n5.codgrupoprod,
+         n5.descrgrupoprod,
+         n5.codprod,
+         n5.referencia,
+         n5.descrprod,
+         n5.pesobruto,
+         n5.codprod_mp,
+         n5.descrprod_mp,
+         ----------------------------------------------------------------------------
+         -- Quantidade do componente principal
+         ----------------------------------------------------------------------------
+         n5.qtd0,
+         ----------------------------------------------------------------------------
+         -- Nível 1
+         ----------------------------------------------------------------------------
+         n5.codcomposicao1,
+         n5.descricaoprod1,
+         n5.qtd1,
+         ----------------------------------------------------------------------------
+         -- Nível 2
+         ----------------------------------------------------------------------------
+         n5.codcomposicao2,
+         n5.descricaoprod2,
+         n5.qtd2,
+         ----------------------------------------------------------------------------
+         -- Nível 3
+         ----------------------------------------------------------------------------
+         n5.codcomposicao3,
+         n5.descricaoprod3,
+         n5.qtd3,
+         ----------------------------------------------------------------------------
+         -- Nível 4
+         ----------------------------------------------------------------------------
+         n5.codcomposicao4,
+         n5.descricaoprod4,
+         n5.qtd4,
+         ----------------------------------------------------------------------------
+         -- Custos efetivos
+         ----------------------------------------------------------------------------
+         coalesce(n5.custo4, n5.custo3) custo4_real,
+         coalesce(n5.custo3, n5.custo4, n5.custo2) custo3_real,
+         coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) custo2_real,
+         coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0) custo1_real,
+         ----------------------------------------------------------------------------
+         -- Regra especial do grupo 403
+         ----------------------------------------------------------------------------
+         CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END custo0_real,
+         ----------------------------------------------------------------------------
+         -- Custos Totais
+         ----------------------------------------------------------------------------
+         n5.qtd3 * coalesce(n5.custo4, n5.custo3) AS tcusto3,
+         n5.qtd2 * coalesce(n5.custo3, n5.custo4, n5.custo2) AS tcusto2,
+         n5.qtd1 * coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) AS tcusto1,
+         n5.qtd0 * CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END AS tcusto0
+    FROM nivel_5 n5),
+resultado AS
+ (SELECT codgrupoprod,
+         descrgrupoprod,
+         codprod,
+         referencia,
+         descrprod,
+         pesobruto,
+         codprod_mp,
+         descrprod_mp,
+         qtd0,
+         custo0_real,
+         tcusto0
+    FROM custos_calculados)
+SELECT r.codgrupoprod,
+       r.descrgrupoprod,
+       r.codprod,
+	   qer.qt_componentes,
+       r.referencia,
+       r.descrprod,
+       r.pesobruto,
+       r.codprod_mp,
+       r.descrprod_mp,
+       LPAD(to_char(SUM(r.qtd0), 'FM9G990D0000'), 8, ' ' ) AS qtd0,
+       LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
+  FROM resultado r
+  LEFT JOIN qtde_estrutura qer
+    ON r.codprod = qer.codprodpa
+ GROUP BY r.codgrupoprod,
+          r.descrgrupoprod,
+          r.codprod,
+		  qer.qt_componentes,
+          r.referencia,
+          r.descrprod,
+          r.pesobruto,
+          r.codprod_mp,
+          r.descrprod_mp,
+          r.qtd0
+ ORDER BY r.codprod_mp
+
+</snk:query>
+
+<snk:query var="custoN3">
+
+WITH parametros AS
+ (SELECT trunc(:P_XDT) dt_referencia,
+         :P_TP tp_custo
+    FROM dual),
+ultimo_custo AS
+ (SELECT c.codprod,
+         MAX(c.dtatual) dtatual
+    FROM tgfcus c
+   CROSS JOIN parametros p
+   WHERE c.dtatual <= p.dt_referencia
+   GROUP BY c.codprod),
+custo_produto AS
+ (SELECT c.codprod,
+         CASE p.tp_custo
+            WHEN '0' THEN
+             c.cusmedicm
+            WHEN '1' THEN
+             c.cussemicm
+            WHEN '2' THEN
+             c.cusrep
+            WHEN '3' THEN
+             c.cusvariavel
+            WHEN '4' THEN
+             c.cusger
+            WHEN '5' THEN
+             c.cusmed
+            WHEN '6' THEN
+             pr.ad_custo_objetivo
+            ELSE
+             0
+         END vl_custo
+    FROM tgfcus c
+   INNER JOIN ultimo_custo u
+      ON u.codprod = c.codprod
+     AND u.dtatual = c.dtatual
+   INNER JOIN tgfpro pr
+      ON pr.codprod = c.codprod
+   CROSS JOIN parametros p),
+ultima_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+   GROUP BY codprodpa),
+qtde_estrutura AS
+ (SELECT l.codprodpa,
+         COUNT(*) AS qt_componentes,
+         COUNT(DISTINCT l.codprodmp) AS qt_itens
+    FROM tprlmp l
+   INNER JOIN ultima_estrutura u
+      ON u.codprodpa = l.codprodpa
+     AND u.idefx = l.idefx
+   GROUP BY l.codprodpa),
+estrutura_base AS
+ (SELECT gp.codgrupoprod,
+         gp.descrgrupoprod,
+         pa.codprod,
+         pa.referencia,
+         pa.descrprod || pa.compldesc AS descrprod,
+         pa.pesobruto,
+         qe.qt_componentes,
+         qe.qt_itens,
+         mp.codprod AS codprod_mp,
+         mp.descrprod || mp.compldesc AS descrprod_mp,
+         mp.codgrupoprod AS codgrupo_mp,
+         mp.usoprod,
+         lmp.codvol,
+         voa.quantidade,
+         voa.dividemultiplica,
+         SUM(lmp.qtdmistura) AS qtdmistura,
+         CASE
+            WHEN voa.dividemultiplica = 'M' THEN
+             SUM(lmp.qtdmistura * nvl(voa.quantidade, 1))
+            ELSE
+             SUM(lmp.qtdmistura / nvl(voa.quantidade, 1))
+         END AS qtd,
+         cp.vl_custo
+    FROM tgfpro pa
+   INNER JOIN tgfgru gp
+      ON gp.codgrupoprod = pa.codgrupoprod
+    LEFT JOIN ultima_estrutura ue
+      ON ue.codprodpa = pa.codprod
+    LEFT JOIN tprlmp lmp
+      ON lmp.codprodpa = ue.codprodpa
+     AND lmp.idefx = ue.idefx
+    LEFT JOIN tgfpro mp
+      ON mp.codprod = lmp.codprodmp
+    LEFT JOIN tgfvoa voa
+      ON voa.codprod = lmp.codprodmp
+     AND voa.codvol = lmp.codvol
+    LEFT JOIN custo_produto cp
+      ON cp.codprod = mp.codprod
+    LEFT JOIN qtde_estrutura qe
+      ON qe.codprodpa = pa.codprod
+   WHERE pa.codprod IN (:P_CODPROD)
+   GROUP BY gp.codgrupoprod,
+            gp.descrgrupoprod,
+            pa.codprod,
+            pa.referencia,
+            pa.descrprod,
+            pa.compldesc,
+            pa.pesobruto,
+            qe.qt_componentes,
+            qe.qt_itens,
+            mp.codprod,
+            mp.descrprod,
+            mp.compldesc,
+            mp.codgrupoprod,
+            mp.usoprod,
+            lmp.codvol,
+            voa.quantidade,
+            voa.dividemultiplica,
+            cp.vl_custo),
+nivel_1 AS
+ (SELECT e.codgrupoprod,
+         e.descrgrupoprod,
+         e.codprod,
+         e.referencia,
+         e.descrprod,
+         e.pesobruto,
+         e.codprod_mp,
+         e.descrprod_mp,
+			e.qt_componentes,
+         e.qtd            AS qtd0,
+         e.vl_custo       AS custo0
+    FROM estrutura_base e),
+nivel_2 AS
+ (SELECT n1.*,
+         e.codprod_mp   AS codcomposicao1,
+         e.descrprod_mp AS descricaoprod1,
+         e.qtd          AS qtd1,
+         e.vl_custo     AS custo1
+    FROM nivel_1 n1
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n1.codprod_mp),
+nivel_3 AS
+ (SELECT n2.*,
+         e.codprod_mp   AS codcomposicao2,
+         e.descrprod_mp AS descricaoprod2,
+         e.qtd          AS qtd2,
+         e.vl_custo     AS custo2
+    FROM nivel_2 n2
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n2.codcomposicao1),
+nivel_4 AS
+ (SELECT n3.*,
+         e.codprod_mp   AS codcomposicao3,
+         e.descrprod_mp AS descricaoprod3,
+         e.qtd          AS qtd3,
+         e.vl_custo     AS custo3
+    FROM nivel_3 n3
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n3.codcomposicao2),
+nivel_5 AS
+ (SELECT n4.*,
+         e.codprod_mp   AS codcomposicao4,
+         e.descrprod_mp AS descricaoprod4,
+         e.qtd          AS qtd4,
+         e.vl_custo     AS custo4
+    FROM nivel_4 n4
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n4.codcomposicao3),
+custos_calculados AS
+ (SELECT n5.codgrupoprod,
+         n5.descrgrupoprod,
+         n5.codprod,
+         n5.referencia,
+         n5.descrprod,
+         n5.pesobruto,
+         n5.codprod_mp,
+         n5.descrprod_mp,
+         ----------------------------------------------------------------------------
+         -- Quantidade do componente principal
+         ----------------------------------------------------------------------------
+         n5.qtd0,
+         ----------------------------------------------------------------------------
+         -- Nível 1
+         ----------------------------------------------------------------------------
+         n5.codcomposicao1,
+         n5.descricaoprod1,
+         n5.qtd1,
+         ----------------------------------------------------------------------------
+         -- Nível 2
+         ----------------------------------------------------------------------------
+         n5.codcomposicao2,
+         n5.descricaoprod2,
+         n5.qtd2,
+         ----------------------------------------------------------------------------
+         -- Nível 3
+         ----------------------------------------------------------------------------
+         n5.codcomposicao3,
+         n5.descricaoprod3,
+         n5.qtd3,
+         ----------------------------------------------------------------------------
+         -- Nível 4
+         ----------------------------------------------------------------------------
+         n5.codcomposicao4,
+         n5.descricaoprod4,
+         n5.qtd4,
+         ----------------------------------------------------------------------------
+         -- Custos efetivos
+         ----------------------------------------------------------------------------
+         coalesce(n5.custo4, n5.custo3) custo4_real,
+         coalesce(n5.custo3, n5.custo4, n5.custo2) custo3_real,
+         coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) custo2_real,
+         coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0) custo1_real,
+         ----------------------------------------------------------------------------
+         -- Regra especial do grupo 403
+         ----------------------------------------------------------------------------
+         CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END custo0_real,
+         ----------------------------------------------------------------------------
+         -- Custos Totais
+         ----------------------------------------------------------------------------
+         n5.qtd3 * coalesce(n5.custo4, n5.custo3) AS tcusto3,
+         n5.qtd2 * coalesce(n5.custo3, n5.custo4, n5.custo2) AS tcusto2,
+         n5.qtd1 * coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) AS tcusto1,
+         n5.qtd0 * CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END AS tcusto0
+    FROM nivel_5 n5),
+resultado AS
+ (SELECT codgrupoprod,
+         descrgrupoprod,
+         codprod,
+         referencia,
+         descrprod,
+         pesobruto,
+         codprod_mp,
+         descrprod_mp,
+         qtd0,
+         custo0_real,
+         tcusto0
+    FROM custos_calculados)
+SELECT r.codgrupoprod,
+       r.descrgrupoprod,
+       r.codprod,
+	   qer.qt_componentes,
+       r.referencia,
+       r.descrprod,
+       r.pesobruto,
+       r.codprod_mp,
+       r.descrprod_mp,
+       LPAD(to_char(SUM(r.qtd0), 'FM9G990D0000'), 8, ' ' ) AS qtd0,
+       LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
+  FROM resultado r
+  LEFT JOIN qtde_estrutura qer
+    ON r.codprod = qer.codprodpa
+ GROUP BY r.codgrupoprod,
+          r.descrgrupoprod,
+          r.codprod,
+		  qer.qt_componentes,
+          r.referencia,
+          r.descrprod,
+          r.pesobruto,
+          r.codprod_mp,
+          r.descrprod_mp,
+          r.qtd0
+ ORDER BY r.codprod_mp
+
+</snk:query>
+
+<snk:query var="custoN4">
 
 WITH parametros AS
  (SELECT trunc(:P_XDT) dt_referencia,
@@ -796,23 +1849,753 @@ SELECT LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
 
 </snk:query>
 
-<snk:query var="ultQtdN2">
+<snk:query var="totalCustoN2">
 
-WITH ult_estrutura AS
-(
-    SELECT codprodpa,
-           MAX(idefx) idefx
-      FROM tprlmp
-     WHERE codprodpa = ${P_CODPROD_MP}
-     GROUP BY codprodpa
-)
-SELECT COUNT(l.codprodmp) qtd
-FROM tprlmp l
-JOIN ult_estrutura ue
-  ON ue.codprodpa = l.codprodpa
- AND ue.idefx      = l.idefx
+WITH parametros AS
+ (SELECT trunc(:P_XDT) dt_referencia,
+         :P_TP tp_custo
+    FROM dual),
+ultimo_custo AS
+ (SELECT c.codprod,
+         MAX(c.dtatual) dtatual
+    FROM tgfcus c
+   CROSS JOIN parametros p
+   WHERE c.dtatual <= p.dt_referencia
+   GROUP BY c.codprod),
+custo_produto AS
+ (SELECT c.codprod,
+         CASE p.tp_custo
+            WHEN '0' THEN
+             c.cusmedicm
+            WHEN '1' THEN
+             c.cussemicm
+            WHEN '2' THEN
+             c.cusrep
+            WHEN '3' THEN
+             c.cusvariavel
+            WHEN '4' THEN
+             c.cusger
+            WHEN '5' THEN
+             c.cusmed
+            WHEN '6' THEN
+             pr.ad_custo_objetivo
+            ELSE
+             0
+         END vl_custo
+    FROM tgfcus c
+   INNER JOIN ultimo_custo u
+      ON u.codprod = c.codprod
+     AND u.dtatual = c.dtatual
+   INNER JOIN tgfpro pr
+      ON pr.codprod = c.codprod
+   CROSS JOIN parametros p),
+ultima_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+   GROUP BY codprodpa),
+qtde_estrutura AS
+ (SELECT l.codprodpa,
+         COUNT(*) AS qt_componentes,
+         COUNT(DISTINCT l.codprodmp) AS qt_itens
+    FROM tprlmp l
+   INNER JOIN ultima_estrutura u
+      ON u.codprodpa = l.codprodpa
+     AND u.idefx = l.idefx
+   GROUP BY l.codprodpa),
+estrutura_base AS
+ (SELECT gp.codgrupoprod,
+         gp.descrgrupoprod,
+         pa.codprod,
+         pa.referencia,
+         pa.descrprod || pa.compldesc AS descrprod,
+         pa.pesobruto,
+         qe.qt_componentes,
+         qe.qt_itens,
+         mp.codprod AS codprod_mp,
+         mp.descrprod || mp.compldesc AS descrprod_mp,
+         mp.codgrupoprod AS codgrupo_mp,
+         mp.usoprod,
+         lmp.codvol,
+         voa.quantidade,
+         voa.dividemultiplica,
+         SUM(lmp.qtdmistura) AS qtdmistura,
+         CASE
+            WHEN voa.dividemultiplica = 'M' THEN
+             SUM(lmp.qtdmistura * nvl(voa.quantidade, 1))
+            ELSE
+             SUM(lmp.qtdmistura / nvl(voa.quantidade, 1))
+         END AS qtd,
+         cp.vl_custo
+    FROM tgfpro pa
+   INNER JOIN tgfgru gp
+      ON gp.codgrupoprod = pa.codgrupoprod
+    LEFT JOIN ultima_estrutura ue
+      ON ue.codprodpa = pa.codprod
+    LEFT JOIN tprlmp lmp
+      ON lmp.codprodpa = ue.codprodpa
+     AND lmp.idefx = ue.idefx
+    LEFT JOIN tgfpro mp
+      ON mp.codprod = lmp.codprodmp
+    LEFT JOIN tgfvoa voa
+      ON voa.codprod = lmp.codprodmp
+     AND voa.codvol = lmp.codvol
+    LEFT JOIN custo_produto cp
+      ON cp.codprod = mp.codprod
+    LEFT JOIN qtde_estrutura qe
+      ON qe.codprodpa = pa.codprod
+   WHERE pa.codprod IN (:P_CODPROD)
+   GROUP BY gp.codgrupoprod,
+            gp.descrgrupoprod,
+            pa.codprod,
+            pa.referencia,
+            pa.descrprod,
+            pa.compldesc,
+            pa.pesobruto,
+            qe.qt_componentes,
+            qe.qt_itens,
+            mp.codprod,
+            mp.descrprod,
+            mp.compldesc,
+            mp.codgrupoprod,
+            mp.usoprod,
+            lmp.codvol,
+            voa.quantidade,
+            voa.dividemultiplica,
+            cp.vl_custo),
+nivel_1 AS
+ (SELECT e.codgrupoprod,
+         e.descrgrupoprod,
+         e.codprod,
+         e.referencia,
+         e.descrprod,
+         e.pesobruto,
+         e.codprod_mp,
+         e.descrprod_mp,
+			e.qt_componentes,
+         e.qtd            AS qtd0,
+         e.vl_custo       AS custo0
+    FROM estrutura_base e),
+nivel_2 AS
+ (SELECT n1.*,
+         e.codprod_mp   AS codcomposicao1,
+         e.descrprod_mp AS descricaoprod1,
+         e.qtd          AS qtd1,
+         e.vl_custo     AS custo1
+    FROM nivel_1 n1
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n1.codprod_mp),
+nivel_3 AS
+ (SELECT n2.*,
+         e.codprod_mp   AS codcomposicao2,
+         e.descrprod_mp AS descricaoprod2,
+         e.qtd          AS qtd2,
+         e.vl_custo     AS custo2
+    FROM nivel_2 n2
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n2.codcomposicao1),
+nivel_4 AS
+ (SELECT n3.*,
+         e.codprod_mp   AS codcomposicao3,
+         e.descrprod_mp AS descricaoprod3,
+         e.qtd          AS qtd3,
+         e.vl_custo     AS custo3
+    FROM nivel_3 n3
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n3.codcomposicao2),
+nivel_5 AS
+ (SELECT n4.*,
+         e.codprod_mp   AS codcomposicao4,
+         e.descrprod_mp AS descricaoprod4,
+         e.qtd          AS qtd4,
+         e.vl_custo     AS custo4
+    FROM nivel_4 n4
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n4.codcomposicao3),
+custos_calculados AS
+ (SELECT n5.codgrupoprod,
+         n5.descrgrupoprod,
+         n5.codprod,
+         n5.referencia,
+         n5.descrprod,
+         n5.pesobruto,
+         n5.codprod_mp,
+         n5.descrprod_mp,
+         ----------------------------------------------------------------------------
+         -- Quantidade do componente principal
+         ----------------------------------------------------------------------------
+         n5.qtd0,
+         ----------------------------------------------------------------------------
+         -- Nível 1
+         ----------------------------------------------------------------------------
+         n5.codcomposicao1,
+         n5.descricaoprod1,
+         n5.qtd1,
+         ----------------------------------------------------------------------------
+         -- Nível 2
+         ----------------------------------------------------------------------------
+         n5.codcomposicao2,
+         n5.descricaoprod2,
+         n5.qtd2,
+         ----------------------------------------------------------------------------
+         -- Nível 3
+         ----------------------------------------------------------------------------
+         n5.codcomposicao3,
+         n5.descricaoprod3,
+         n5.qtd3,
+         ----------------------------------------------------------------------------
+         -- Nível 4
+         ----------------------------------------------------------------------------
+         n5.codcomposicao4,
+         n5.descricaoprod4,
+         n5.qtd4,
+         ----------------------------------------------------------------------------
+         -- Custos efetivos
+         ----------------------------------------------------------------------------
+         coalesce(n5.custo4, n5.custo3) custo4_real,
+         coalesce(n5.custo3, n5.custo4, n5.custo2) custo3_real,
+         coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) custo2_real,
+         coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0) custo1_real,
+         ----------------------------------------------------------------------------
+         -- Regra especial do grupo 403
+         ----------------------------------------------------------------------------
+         CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END custo0_real,
+         ----------------------------------------------------------------------------
+         -- Custos Totais
+         ----------------------------------------------------------------------------
+         n5.qtd3 * coalesce(n5.custo4, n5.custo3) AS tcusto3,
+         n5.qtd2 * coalesce(n5.custo3, n5.custo4, n5.custo2) AS tcusto2,
+         n5.qtd1 * coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) AS tcusto1,
+         n5.qtd0 * CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END AS tcusto0
+    FROM nivel_5 n5),
+resultado AS
+ (SELECT codgrupoprod,
+         descrgrupoprod,
+         codprod,
+         referencia,
+         descrprod,
+         pesobruto,
+         codprod_mp,
+         descrprod_mp,
+         qtd0,
+         custo0_real,
+         tcusto0
+    FROM custos_calculados)	 
+SELECT LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
+  FROM resultado r
+  LEFT JOIN qtde_estrutura qer
+    ON r.codprod = qer.codprodpa
 
 </snk:query>
+
+<snk:query var="totalCustoN3">
+
+WITH parametros AS
+ (SELECT trunc(:P_XDT) dt_referencia,
+         :P_TP tp_custo
+    FROM dual),
+ultimo_custo AS
+ (SELECT c.codprod,
+         MAX(c.dtatual) dtatual
+    FROM tgfcus c
+   CROSS JOIN parametros p
+   WHERE c.dtatual <= p.dt_referencia
+   GROUP BY c.codprod),
+custo_produto AS
+ (SELECT c.codprod,
+         CASE p.tp_custo
+            WHEN '0' THEN
+             c.cusmedicm
+            WHEN '1' THEN
+             c.cussemicm
+            WHEN '2' THEN
+             c.cusrep
+            WHEN '3' THEN
+             c.cusvariavel
+            WHEN '4' THEN
+             c.cusger
+            WHEN '5' THEN
+             c.cusmed
+            WHEN '6' THEN
+             pr.ad_custo_objetivo
+            ELSE
+             0
+         END vl_custo
+    FROM tgfcus c
+   INNER JOIN ultimo_custo u
+      ON u.codprod = c.codprod
+     AND u.dtatual = c.dtatual
+   INNER JOIN tgfpro pr
+      ON pr.codprod = c.codprod
+   CROSS JOIN parametros p),
+ultima_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+   GROUP BY codprodpa),
+qtde_estrutura AS
+ (SELECT l.codprodpa,
+         COUNT(*) AS qt_componentes,
+         COUNT(DISTINCT l.codprodmp) AS qt_itens
+    FROM tprlmp l
+   INNER JOIN ultima_estrutura u
+      ON u.codprodpa = l.codprodpa
+     AND u.idefx = l.idefx
+   GROUP BY l.codprodpa),
+estrutura_base AS
+ (SELECT gp.codgrupoprod,
+         gp.descrgrupoprod,
+         pa.codprod,
+         pa.referencia,
+         pa.descrprod || pa.compldesc AS descrprod,
+         pa.pesobruto,
+         qe.qt_componentes,
+         qe.qt_itens,
+         mp.codprod AS codprod_mp,
+         mp.descrprod || mp.compldesc AS descrprod_mp,
+         mp.codgrupoprod AS codgrupo_mp,
+         mp.usoprod,
+         lmp.codvol,
+         voa.quantidade,
+         voa.dividemultiplica,
+         SUM(lmp.qtdmistura) AS qtdmistura,
+         CASE
+            WHEN voa.dividemultiplica = 'M' THEN
+             SUM(lmp.qtdmistura * nvl(voa.quantidade, 1))
+            ELSE
+             SUM(lmp.qtdmistura / nvl(voa.quantidade, 1))
+         END AS qtd,
+         cp.vl_custo
+    FROM tgfpro pa
+   INNER JOIN tgfgru gp
+      ON gp.codgrupoprod = pa.codgrupoprod
+    LEFT JOIN ultima_estrutura ue
+      ON ue.codprodpa = pa.codprod
+    LEFT JOIN tprlmp lmp
+      ON lmp.codprodpa = ue.codprodpa
+     AND lmp.idefx = ue.idefx
+    LEFT JOIN tgfpro mp
+      ON mp.codprod = lmp.codprodmp
+    LEFT JOIN tgfvoa voa
+      ON voa.codprod = lmp.codprodmp
+     AND voa.codvol = lmp.codvol
+    LEFT JOIN custo_produto cp
+      ON cp.codprod = mp.codprod
+    LEFT JOIN qtde_estrutura qe
+      ON qe.codprodpa = pa.codprod
+   WHERE pa.codprod IN (:P_CODPROD)
+   GROUP BY gp.codgrupoprod,
+            gp.descrgrupoprod,
+            pa.codprod,
+            pa.referencia,
+            pa.descrprod,
+            pa.compldesc,
+            pa.pesobruto,
+            qe.qt_componentes,
+            qe.qt_itens,
+            mp.codprod,
+            mp.descrprod,
+            mp.compldesc,
+            mp.codgrupoprod,
+            mp.usoprod,
+            lmp.codvol,
+            voa.quantidade,
+            voa.dividemultiplica,
+            cp.vl_custo),
+nivel_1 AS
+ (SELECT e.codgrupoprod,
+         e.descrgrupoprod,
+         e.codprod,
+         e.referencia,
+         e.descrprod,
+         e.pesobruto,
+         e.codprod_mp,
+         e.descrprod_mp,
+			e.qt_componentes,
+         e.qtd            AS qtd0,
+         e.vl_custo       AS custo0
+    FROM estrutura_base e),
+nivel_2 AS
+ (SELECT n1.*,
+         e.codprod_mp   AS codcomposicao1,
+         e.descrprod_mp AS descricaoprod1,
+         e.qtd          AS qtd1,
+         e.vl_custo     AS custo1
+    FROM nivel_1 n1
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n1.codprod_mp),
+nivel_3 AS
+ (SELECT n2.*,
+         e.codprod_mp   AS codcomposicao2,
+         e.descrprod_mp AS descricaoprod2,
+         e.qtd          AS qtd2,
+         e.vl_custo     AS custo2
+    FROM nivel_2 n2
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n2.codcomposicao1),
+nivel_4 AS
+ (SELECT n3.*,
+         e.codprod_mp   AS codcomposicao3,
+         e.descrprod_mp AS descricaoprod3,
+         e.qtd          AS qtd3,
+         e.vl_custo     AS custo3
+    FROM nivel_3 n3
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n3.codcomposicao2),
+nivel_5 AS
+ (SELECT n4.*,
+         e.codprod_mp   AS codcomposicao4,
+         e.descrprod_mp AS descricaoprod4,
+         e.qtd          AS qtd4,
+         e.vl_custo     AS custo4
+    FROM nivel_4 n4
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n4.codcomposicao3),
+custos_calculados AS
+ (SELECT n5.codgrupoprod,
+         n5.descrgrupoprod,
+         n5.codprod,
+         n5.referencia,
+         n5.descrprod,
+         n5.pesobruto,
+         n5.codprod_mp,
+         n5.descrprod_mp,
+         ----------------------------------------------------------------------------
+         -- Quantidade do componente principal
+         ----------------------------------------------------------------------------
+         n5.qtd0,
+         ----------------------------------------------------------------------------
+         -- Nível 1
+         ----------------------------------------------------------------------------
+         n5.codcomposicao1,
+         n5.descricaoprod1,
+         n5.qtd1,
+         ----------------------------------------------------------------------------
+         -- Nível 2
+         ----------------------------------------------------------------------------
+         n5.codcomposicao2,
+         n5.descricaoprod2,
+         n5.qtd2,
+         ----------------------------------------------------------------------------
+         -- Nível 3
+         ----------------------------------------------------------------------------
+         n5.codcomposicao3,
+         n5.descricaoprod3,
+         n5.qtd3,
+         ----------------------------------------------------------------------------
+         -- Nível 4
+         ----------------------------------------------------------------------------
+         n5.codcomposicao4,
+         n5.descricaoprod4,
+         n5.qtd4,
+         ----------------------------------------------------------------------------
+         -- Custos efetivos
+         ----------------------------------------------------------------------------
+         coalesce(n5.custo4, n5.custo3) custo4_real,
+         coalesce(n5.custo3, n5.custo4, n5.custo2) custo3_real,
+         coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) custo2_real,
+         coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0) custo1_real,
+         ----------------------------------------------------------------------------
+         -- Regra especial do grupo 403
+         ----------------------------------------------------------------------------
+         CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END custo0_real,
+         ----------------------------------------------------------------------------
+         -- Custos Totais
+         ----------------------------------------------------------------------------
+         n5.qtd3 * coalesce(n5.custo4, n5.custo3) AS tcusto3,
+         n5.qtd2 * coalesce(n5.custo3, n5.custo4, n5.custo2) AS tcusto2,
+         n5.qtd1 * coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) AS tcusto1,
+         n5.qtd0 * CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END AS tcusto0
+    FROM nivel_5 n5),
+resultado AS
+ (SELECT codgrupoprod,
+         descrgrupoprod,
+         codprod,
+         referencia,
+         descrprod,
+         pesobruto,
+         codprod_mp,
+         descrprod_mp,
+         qtd0,
+         custo0_real,
+         tcusto0
+    FROM custos_calculados)	 
+SELECT LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
+  FROM resultado r
+  LEFT JOIN qtde_estrutura qer
+    ON r.codprod = qer.codprodpa
+
+</snk:query>
+
+<snk:query var="totalCustoN4">
+
+WITH parametros AS
+ (SELECT trunc(:P_XDT) dt_referencia,
+         :P_TP tp_custo
+    FROM dual),
+ultimo_custo AS
+ (SELECT c.codprod,
+         MAX(c.dtatual) dtatual
+    FROM tgfcus c
+   CROSS JOIN parametros p
+   WHERE c.dtatual <= p.dt_referencia
+   GROUP BY c.codprod),
+custo_produto AS
+ (SELECT c.codprod,
+         CASE p.tp_custo
+            WHEN '0' THEN
+             c.cusmedicm
+            WHEN '1' THEN
+             c.cussemicm
+            WHEN '2' THEN
+             c.cusrep
+            WHEN '3' THEN
+             c.cusvariavel
+            WHEN '4' THEN
+             c.cusger
+            WHEN '5' THEN
+             c.cusmed
+            WHEN '6' THEN
+             pr.ad_custo_objetivo
+            ELSE
+             0
+         END vl_custo
+    FROM tgfcus c
+   INNER JOIN ultimo_custo u
+      ON u.codprod = c.codprod
+     AND u.dtatual = c.dtatual
+   INNER JOIN tgfpro pr
+      ON pr.codprod = c.codprod
+   CROSS JOIN parametros p),
+ultima_estrutura AS
+ (SELECT codprodpa,
+         MAX(idefx) idefx
+    FROM tprlmp
+   GROUP BY codprodpa),
+qtde_estrutura AS
+ (SELECT l.codprodpa,
+         COUNT(*) AS qt_componentes,
+         COUNT(DISTINCT l.codprodmp) AS qt_itens
+    FROM tprlmp l
+   INNER JOIN ultima_estrutura u
+      ON u.codprodpa = l.codprodpa
+     AND u.idefx = l.idefx
+   GROUP BY l.codprodpa),
+estrutura_base AS
+ (SELECT gp.codgrupoprod,
+         gp.descrgrupoprod,
+         pa.codprod,
+         pa.referencia,
+         pa.descrprod || pa.compldesc AS descrprod,
+         pa.pesobruto,
+         qe.qt_componentes,
+         qe.qt_itens,
+         mp.codprod AS codprod_mp,
+         mp.descrprod || mp.compldesc AS descrprod_mp,
+         mp.codgrupoprod AS codgrupo_mp,
+         mp.usoprod,
+         lmp.codvol,
+         voa.quantidade,
+         voa.dividemultiplica,
+         SUM(lmp.qtdmistura) AS qtdmistura,
+         CASE
+            WHEN voa.dividemultiplica = 'M' THEN
+             SUM(lmp.qtdmistura * nvl(voa.quantidade, 1))
+            ELSE
+             SUM(lmp.qtdmistura / nvl(voa.quantidade, 1))
+         END AS qtd,
+         cp.vl_custo
+    FROM tgfpro pa
+   INNER JOIN tgfgru gp
+      ON gp.codgrupoprod = pa.codgrupoprod
+    LEFT JOIN ultima_estrutura ue
+      ON ue.codprodpa = pa.codprod
+    LEFT JOIN tprlmp lmp
+      ON lmp.codprodpa = ue.codprodpa
+     AND lmp.idefx = ue.idefx
+    LEFT JOIN tgfpro mp
+      ON mp.codprod = lmp.codprodmp
+    LEFT JOIN tgfvoa voa
+      ON voa.codprod = lmp.codprodmp
+     AND voa.codvol = lmp.codvol
+    LEFT JOIN custo_produto cp
+      ON cp.codprod = mp.codprod
+    LEFT JOIN qtde_estrutura qe
+      ON qe.codprodpa = pa.codprod
+   WHERE pa.codprod IN (:P_CODPROD)
+   GROUP BY gp.codgrupoprod,
+            gp.descrgrupoprod,
+            pa.codprod,
+            pa.referencia,
+            pa.descrprod,
+            pa.compldesc,
+            pa.pesobruto,
+            qe.qt_componentes,
+            qe.qt_itens,
+            mp.codprod,
+            mp.descrprod,
+            mp.compldesc,
+            mp.codgrupoprod,
+            mp.usoprod,
+            lmp.codvol,
+            voa.quantidade,
+            voa.dividemultiplica,
+            cp.vl_custo),
+nivel_1 AS
+ (SELECT e.codgrupoprod,
+         e.descrgrupoprod,
+         e.codprod,
+         e.referencia,
+         e.descrprod,
+         e.pesobruto,
+         e.codprod_mp,
+         e.descrprod_mp,
+			e.qt_componentes,
+         e.qtd            AS qtd0,
+         e.vl_custo       AS custo0
+    FROM estrutura_base e),
+nivel_2 AS
+ (SELECT n1.*,
+         e.codprod_mp   AS codcomposicao1,
+         e.descrprod_mp AS descricaoprod1,
+         e.qtd          AS qtd1,
+         e.vl_custo     AS custo1
+    FROM nivel_1 n1
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n1.codprod_mp),
+nivel_3 AS
+ (SELECT n2.*,
+         e.codprod_mp   AS codcomposicao2,
+         e.descrprod_mp AS descricaoprod2,
+         e.qtd          AS qtd2,
+         e.vl_custo     AS custo2
+    FROM nivel_2 n2
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n2.codcomposicao1),
+nivel_4 AS
+ (SELECT n3.*,
+         e.codprod_mp   AS codcomposicao3,
+         e.descrprod_mp AS descricaoprod3,
+         e.qtd          AS qtd3,
+         e.vl_custo     AS custo3
+    FROM nivel_3 n3
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n3.codcomposicao2),
+nivel_5 AS
+ (SELECT n4.*,
+         e.codprod_mp   AS codcomposicao4,
+         e.descrprod_mp AS descricaoprod4,
+         e.qtd          AS qtd4,
+         e.vl_custo     AS custo4
+    FROM nivel_4 n4
+    LEFT JOIN estrutura_base e
+      ON e.codprod = n4.codcomposicao3),
+custos_calculados AS
+ (SELECT n5.codgrupoprod,
+         n5.descrgrupoprod,
+         n5.codprod,
+         n5.referencia,
+         n5.descrprod,
+         n5.pesobruto,
+         n5.codprod_mp,
+         n5.descrprod_mp,
+         ----------------------------------------------------------------------------
+         -- Quantidade do componente principal
+         ----------------------------------------------------------------------------
+         n5.qtd0,
+         ----------------------------------------------------------------------------
+         -- Nível 1
+         ----------------------------------------------------------------------------
+         n5.codcomposicao1,
+         n5.descricaoprod1,
+         n5.qtd1,
+         ----------------------------------------------------------------------------
+         -- Nível 2
+         ----------------------------------------------------------------------------
+         n5.codcomposicao2,
+         n5.descricaoprod2,
+         n5.qtd2,
+         ----------------------------------------------------------------------------
+         -- Nível 3
+         ----------------------------------------------------------------------------
+         n5.codcomposicao3,
+         n5.descricaoprod3,
+         n5.qtd3,
+         ----------------------------------------------------------------------------
+         -- Nível 4
+         ----------------------------------------------------------------------------
+         n5.codcomposicao4,
+         n5.descricaoprod4,
+         n5.qtd4,
+         ----------------------------------------------------------------------------
+         -- Custos efetivos
+         ----------------------------------------------------------------------------
+         coalesce(n5.custo4, n5.custo3) custo4_real,
+         coalesce(n5.custo3, n5.custo4, n5.custo2) custo3_real,
+         coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) custo2_real,
+         coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0) custo1_real,
+         ----------------------------------------------------------------------------
+         -- Regra especial do grupo 403
+         ----------------------------------------------------------------------------
+         CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END custo0_real,
+         ----------------------------------------------------------------------------
+         -- Custos Totais
+         ----------------------------------------------------------------------------
+         n5.qtd3 * coalesce(n5.custo4, n5.custo3) AS tcusto3,
+         n5.qtd2 * coalesce(n5.custo3, n5.custo4, n5.custo2) AS tcusto2,
+         n5.qtd1 * coalesce(n5.custo2, n5.custo3, n5.custo4, n5.custo1) AS tcusto1,
+         n5.qtd0 * CASE
+            WHEN substr(n5.codgrupoprod, 1, 3) = '403' THEN
+             n5.custo0
+            ELSE
+             coalesce(n5.custo1, n5.custo2, n5.custo3, n5.custo4, n5.custo0)
+         END AS tcusto0
+    FROM nivel_5 n5),
+resultado AS
+ (SELECT codgrupoprod,
+         descrgrupoprod,
+         codprod,
+         referencia,
+         descrprod,
+         pesobruto,
+         codprod_mp,
+         descrprod_mp,
+         qtd0,
+         custo0_real,
+         tcusto0
+    FROM custos_calculados)	 
+SELECT LPAD(to_char(SUM(r.tcusto0), 'FM99G990D0000'), 10, ' ' ) AS custo
+  FROM resultado r
+  LEFT JOIN qtde_estrutura qer
+    ON r.codprod = qer.codprodpa
+
+</snk:query>
+
 
     <div class="app-container">
         <!-- Detalhes do Produto -->
@@ -827,8 +2610,11 @@ JOIN ult_estrutura ue
                     <strong>Descrição: </strong> <c:out value="${row.descricao_produto}" />
                 </div>
                 <div class="header-item">
-                    <strong>Ativo: </strong> <span class="badge"><c:out value="${row.ativo}" /></span>
-                </div>
+                    <strong>Ativo: </strong>
+                    <span class="badge ${row.ativo == 'SIM' ? 'badge-ativo' : 'badge-inativo'}">
+                        <c:out value="${row.ativo}" />
+                    </span>
+                </div>                
             </c:forEach>
         </div>
 
@@ -855,46 +2641,30 @@ JOIN ult_estrutura ue
                         </thead>
                         <tbody>
                             <c:forEach items="${custoN1.rows}" var="row">
-                                <tr><td><c:out value="${row.codprod_mp}" /></td>
-                                    <td><c:out value="${row.descrprod_mp}" /></td>
-                                    <td class="num-col"><c:out value="${row.qtd0}" /></td>
-                                    <td class="num-col"><c:out value="${row.custo}" /></td>
+                                <tr class="linha-produto"
+                                    data-nivel="1"
+                                    data-codprod="${row.codprod_mp}">
+
+                                    <td>
+                                        <c:out value="${row.codprod_mp}" />
+                                    </td>
+
+                                    <td>
+                                        <c:out value="${row.descrprod_mp}" />
+                                    </td>
+
+                                    <td class="num-col">
+                                        <c:out value="${row.qtd0}" />
+                                    </td>
+
+                                    <td class="num-col">
+                                        <c:out value="${row.custo}" />
+                                    </td>
+
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
-
-                    <script>
-
-                        /*document.querySelectorAll("#tabelaN1 tbody tr").forEach(function(tr){
-                            tr.addEventListener("click", function(){
-                                var codprod = this.cells[0].textContent.trim();
-                                carregarNivel2(codprod);
-                            });
-                        });*/
-                        document.querySelectorAll("#tabelaN1 tbody tr").forEach(tr => {
-                            tr.addEventListener("click", function () {
-                                const codprod_mp = this.cells[0].innerText.trim();
-                                {
-                                    P_CODPROD_MP: codprod_mp
-                                });
-                            });
-                        });
-
-                        /*document.querySelectorAll("#tabelaN1 tbody tr").forEach(tr => {
-                            tr.addEventListener("click", () => {
-                                const codprod_mp = tr.cells[0].innerText;
-                                // Exemplo: enviar para o backend via fetch
-                                fetch("/ultQtdN2?codprod_mp2=" + encodeURIComponent(codprod_mp))
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        console.log("Resultado da query:", data);
-                                        // aqui você pode atualizar a tela com os dados retornados
-                                    })
-                                    .catch(error => console.error("Erro na query:", error));
-                            });
-                        });*/
-                    </script>
 
                 </div>
                 <div class="table-footer">
@@ -914,7 +2684,7 @@ JOIN ult_estrutura ue
                     </c:forEach>
                 </div>
                 <div class="table-wrapper">
-                    <table>
+                    <table id="tabelaN2">
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -924,18 +2694,30 @@ JOIN ult_estrutura ue
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${custoN1.rows}" var="row">
-                                <tr><td><c:out value="${row.codprod_mp}" /></td>
-                                    <td><c:out value="${row.descrprod_mp}" /></td>
-                                    <td class="num-col"><c:out value="${row.qtd0}" /></td>
-                                    <td class="num-col"><c:out value="${row.custo}" /></td>
+                            <c:forEach items="${custoN2.rows}" var="row">
+                                <tr class="linha-produto"
+                                    data-nivel="2"
+                                    data-codprod="${row.codprod_mp}">
+                                    <td>
+                                        <c:out value="${row.codprod_mp}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${row.descrprod_mp}" />
+                                    </td>
+                                    <td class="num-col">
+                                        <c:out value="${row.qtd0}" />
+                                    </td>
+                                    <td class="num-col">
+                                        <c:out value="${row.custo}" />
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
+
                 </div>
                 <div class="table-footer">
-                    <c:forEach items="${totalCustoN1.rows}" var="row">
+                    <c:forEach items="${totalCustoN2.rows}" var="row">
                         <span>Total:</span>
                         <span>R$ <c:out value="${row.custo}" /></span>
                     </c:forEach>
@@ -945,11 +2727,13 @@ JOIN ult_estrutura ue
             <!-- Tabela Nível 3 -->
             <div class="table-card">
                 <div class="card-header">
-                    <span>Nível 3</span>
-                    <span class="item-count">16 itens</span>
+                    <c:forEach items="${ultQtdN3.rows}" var="row">
+                        <span>Nível 3</span>
+                        <span class="item-count"><c:out value="${row.qtd}" /> itens</span>
+                    </c:forEach>
                 </div>
                 <div class="table-wrapper">
-                    <table>
+                    <table id="tabelaN3">
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -959,39 +2743,46 @@ JOIN ult_estrutura ue
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>464</td><td>DOBRADICA CARREGACAO 3 "</td><td class="num-col">3,0000</td><td class="num-col">1,9200</td></tr>
-                            <tr><td>500</td><td>CONTRA TESTA</td><td class="num-col">1,0000</td><td class="num-col">0,3800</td></tr>
-                            <tr><td>598</td><td>PORTAL DOB 2150X200 #26 ( P.S.REQ12 )</td><td class="num-col">1,0000</td><td class="num-col">8,1700</td></tr>
-                            <tr><td>599</td><td>PORTAL DIR 2150X200 #26 ( P.S.REQ12 )</td><td class="num-col">1,0000</td><td class="num-col">8,1700</td></tr>
-                            <tr><td>622</td><td>PORTAL TRAV 810X200 #26 ( P.S.REQ12 )</td><td class="num-col">1,0000</td><td class="num-col">3,0780</td></tr>
-                            <tr><td>647</td><td>CAD EST 2085X229 #26</td><td class="num-col">1,0000</td><td class="num-col">9,0725</td></tr>
-                            <tr><td>648</td><td>CAD DOB 2085X229 #26</td><td class="num-col">1,0000</td><td class="num-col">9,0725</td></tr>
-                            <tr><td>671</td><td>CAD TRAV FECHADA 790X229 #26</td><td class="num-col">2,0000</td><td class="num-col">6,8400</td></tr>
-                            <tr><td>725</td><td>PERFIL U TRAVAMENTO 780X35 #24</td><td class="num-col">1,0000</td><td class="num-col">0,5975</td></tr>
-                            <tr><td>726</td><td>PERFIL U TRAVAMENTO 810X35 #24</td><td class="num-col">1,0000</td><td class="num-col">0,6205</td></tr>
-                            <tr><td>799</td><td>COXINHO 193X56 #26</td><td class="num-col">1,0000</td><td class="num-col">0,2304</td></tr>
-                            <tr><td>804</td><td>CHAPA TRAVAMENTO 118X38 #24</td><td class="num-col">1,0000</td><td class="num-col">0,0920</td></tr>
-                            <tr><td>836</td><td>SUPORTE PORTA 110X130 #24</td><td class="num-col">1,0000</td><td class="num-col">0,3156</td></tr>
-                            <tr><td>913</td><td>PALHETA CANELADA 2275X670 #26</td><td class="num-col">1,0000</td><td class="num-col">29,4657</td></tr>
-                            <tr><td>1590</td><td>PERFIL U TRAVAMENTO 118X35 #24</td><td class="num-col">5,0000</td><td class="num-col">0,4347</td></tr>
-                            <tr><td>2641</td><td>PERFIL ZEE DA ALÇA 117X47 #24</td><td class="num-col">3,0000</td><td class="num-col">0,3629</td></tr>
+                            <c:forEach items="${custoN3.rows}" var="row">
+                                <tr class="linha-produto"
+                                    data-nivel="3"
+                                    data-codprod="${row.codprod_mp}">
+                                    <td>
+                                        <c:out value="${row.codprod_mp}" />
+                                    </td>
+                                    <td>
+                                        <c:out value="${row.descrprod_mp}" />
+                                    </td>
+                                    <td class="num-col">
+                                        <c:out value="${row.qtd0}" />
+                                    </td>
+                                    <td class="num-col">
+                                        <c:out value="${row.custo}" />
+                                    </td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
+
                 </div>
                 <div class="table-footer">
-                    <span>Total:</span>
-                    <span>R$ 78,8224</span>
+                    <c:forEach items="${totalCustoN3.rows}" var="row">
+                        <span>Total:</span>
+                        <span>R$ <c:out value="${row.custo}" /></span>
+                    </c:forEach>
                 </div>
             </div>
 
             <!-- Tabela Nível 4 -->
             <div class="table-card">
                 <div class="card-header">
-                    <span>Nível 4</span>
-                    <span class="item-count">1 item</span>
+                    <c:forEach items="${ultQtdN4.rows}" var="row">
+                        <span>Nível 4</span>
+                        <span class="item-count"><c:out value="${row.qtd}" /> itens</span>
+                    </c:forEach>
                 </div>
                 <div class="table-wrapper">
-                    <table>
+                    <table id="tabelaN4">
                         <thead>
                             <tr>
                                 <th>Código</th>
@@ -1001,13 +2792,22 @@ JOIN ult_estrutura ue
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>1438</td><td>CHAPA ELETROGAL 0,60X35 ( #24 )</td><td class="num-col">0,1349</td><td class="num-col">0,6205</td></tr>
+                            <c:forEach items="${custoN4.rows}" var="row">
+                                <tr><td><c:out value="${row.codprod_mp}" /></td>
+                                    <td><c:out value="${row.descrprod_mp}" /></td>
+                                    <td class="num-col"><c:out value="${row.qtd0}" /></td>
+                                    <td class="num-col"><c:out value="${row.custo}" /></td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
+
                 </div>
                 <div class="table-footer">
-                    <span>Total:</span>
-                    <span>R$ 0,6205</span>
+                    <c:forEach items="${totalCustoN4.rows}" var="row">
+                        <span>Total:</span>
+                        <span>R$ <c:out value="${row.custo}" /></span>
+                    </c:forEach>
                 </div>
             </div>
 
