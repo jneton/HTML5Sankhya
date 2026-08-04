@@ -4,7 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib prefix="snk" uri="/WEB-INF/tld/sankhyaUtil.tld" %>
 
-<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -25,7 +24,7 @@
                         /*
                         * Atualiza o componente NÍVEL 2
                         */
-                        refreshDetails("NIVEL 2", {
+                        refreshDetails("NIVEL2", {
                             P_CODPROD_MP: codigo
                         });
                     });
@@ -39,10 +38,10 @@
 
                     const codigo = this.dataset.codprod;
 
-                    console.log('Nível 2');
+                    console.log('Nível2');
                     console.log('Código selecionado:', codigo);
 
-                    refreshDetails("NIVEL 3", {
+                    refreshDetails("NIVEL3", {
                         P_CODPROD_MP: codigo
                     });
 
@@ -54,9 +53,9 @@
             .forEach(function (linha) {
                 linha.addEventListener('click', function () {
                     const codigo = this.dataset.codprod;
-                    console.log('Nível 3');
+                    console.log('Nível3');
                     console.log('Código selecionado:', codigo);
-                    refreshDetails("NIVEL 4", {
+                    refreshDetails("NIVEL4", {
                         P_CODPROD_MP: codigo
                     });
                 });
