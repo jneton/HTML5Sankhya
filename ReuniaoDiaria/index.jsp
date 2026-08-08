@@ -216,34 +216,280 @@ body{
 }
 
 
+/* ==========================================================
+   OCORRÊNCIAS NA OP
+   Tabela responsiva com rolagem horizontal.
+   COD e DESCRIÇÃO ficam fixos à esquerda.
+   TOTAL fica fixo à direita.
+   ========================================================== */
+
 .ocorrencia {
-  grid-column: span 6;
-  grid-row: span 2;
-  max-height: 600px;     /* limite de altura */
-  overflow-y: auto;      /* rolagem vertical */
-  overflow-x: auto;      /* rolagem horizontal */
-  box-sizing: border-box;
-  position: relative;    /* necessário para o sticky funcionar */  
+    grid-column: span 6;
+    grid-row: span 2;
+    height: 600px;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.ocorrencia .card-body {
+    flex: 1;
+    min-height: 0;
+    display: block;
+    padding: 0;
+    overflow: hidden;
+}
+
+.ocorrencia-tabela-scroll {
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
 }
 
 .ocorrencia table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;   /* força ajuste das colunas */
+    width: max-content;
+    min-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+    font-size: 11px;
+    color: #333;
 }
 
-.ocorrencia th, .ocorrencia td {
-  word-wrap: break-word;
-  white-space: normal;
-  padding: 8px;
+.ocorrencia th {
+    height: 25px;
+    padding: 3px 4px;
+    background: #4DA3F4;
+    color: #FFF;
+    font-weight: bold;
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid rgba(255,255,255,.55);
+    border-bottom: 1px solid #FFF;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
-/* Cabeçalho fixo */
-.ocorrencia thead th {
-  position: sticky;
-  top: 0;                      /* fixa no topo do container */
-  background-color: #4DA3F4;   /* cor de fundo para destacar */
-  z-index: 2;                  /* garante que fique acima das células */
+.ocorrencia td {
+    height: 23px;
+    padding: 2px 4px;
+    text-align: center;
+    white-space: nowrap;
+    border-right: 1px solid #E0E0E0;
+    border-bottom: 1px solid #E0E0E0;
+    background: #FFF;
+}
+
+.ocorrencia tbody tr:nth-child(even):not(.linha-total) td {
+    background: #F5F5F5;
+}
+
+.ocorrencia tbody tr:not(.linha-total):hover td {
+    background: #EAF4FD;
+}
+
+.ocorrencia .col-cod {
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
+}
+
+.ocorrencia .col-descricao {
+    width: 175px;
+    min-width: 175px;
+    max-width: 175px;
+    text-align: left;
+}
+
+.ocorrencia .col-dia {
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+}
+
+.ocorrencia .col-total {
+    width: 70px;
+    min-width: 70px;
+    max-width: 70px;
+}
+
+.ocorrencia .fixo-cod {
+    position: sticky;
+    left: 0;
+    z-index: 8;
+}
+
+.ocorrencia .fixo-descricao {
+    position: sticky;
+    left: 40px;
+    z-index: 8;
+    box-shadow: 3px 0 5px rgba(0,0,0,.06);
+}
+
+.ocorrencia thead tr:nth-child(2) th {
+    top: 25px;
+}
+
+.ocorrencia thead .fixo-cod,
+.ocorrencia thead .fixo-descricao,
+.ocorrencia thead .fixo-total {
+    background: #4DA3F4;
+    z-index: 20;
+}
+
+.ocorrencia .fixo-total {
+    position: sticky;
+    right: 0;
+    z-index: 8;
+    box-shadow: -3px 0 5px rgba(0,0,0,.08);
+}
+
+.ocorrencia .linha-total td {
+    background: #4DA3F4 !important;
+    color: #FFF;
+    font-weight: bold;
+    border-color: #FFF;
+}
+
+.ocorrencia .linha-total .fixo-cod,
+.ocorrencia .linha-total .fixo-descricao,
+.ocorrencia .linha-total .fixo-total {
+    background: #4DA3F4 !important;
+}
+
+.ocorrencia .dados-ocorrencia {
+    display: none;
+}
+
+/* ==========================================================
+   CARD - OCORRÊNCIAS
+   ========================================================== */
+
+.card-ocorrencias {
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* ==========================================================
+   CORPO DO CARD
+   ========================================================== */
+
+.card-ocorrencias .card-body {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 0;
+}
+
+
+/* ==========================================================
+   CONTAINER DA TABELA
+   ========================================================== */
+
+.card-ocorrencias .tabela-container {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   ÁREA DE ROLAGEM
+   ========================================================== */
+
+.card-ocorrencias .tabela-scroll {
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+
+/* ==========================================================
+   TABELA
+   ========================================================== */
+
+.card-ocorrencias .tabela-minutos {
+    width: max-content;
+    min-width: 100%;
+}
+
+@media (max-width: 768px) {
+
+    .ocorrencia {
+        height: 600px;
+    }
+
+    .ocorrencia table {
+        font-size: 10px;
+    }
+
+    .ocorrencia .col-cod {
+        width: 35px;
+        min-width: 35px;
+        max-width: 35px;
+    }
+
+    .ocorrencia .col-descricao {
+        width: 145px;
+        min-width: 145px;
+        max-width: 145px;
+    }
+
+    .ocorrencia .col-dia {
+        width: 28px;
+        min-width: 28px;
+        max-width: 28px;
+    }
+
+    .ocorrencia .col-total {
+        width: 65px;
+        min-width: 65px;
+        max-width: 65px;
+    }
+
+    .ocorrencia .fixo-descricao {
+        left: 35px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .ocorrencia .col-descricao {
+        width: 130px;
+        min-width: 130px;
+        max-width: 130px;
+    }
+
+    .ocorrencia .fixo-descricao {
+        left: 35px;
+    }
 }
 
 
@@ -743,52 +989,294 @@ SELECT dm.dia AS d,
 
 </snk:query>
 
-<snk:query var = "ocorrenciaOPQuery">
+<snk:query var="ocorrenciaOPQuery">
 
-    WITH cte_mtp AS
-    (SELECT 1 AS i,
-	         mtp.codmtp,
-            coalesce(REPLACE(REPLACE(REPLACE(mtp.descricao, ' DE MÁQUINA / FERRAMENTA / GABARITO', ''), ' NO ', ' '), ' DE ', ' '), 'TOTAIS') AS descricao
-        FROM tprmtp mtp
-     WHERE mtp.ativo = 'S'
-     UNION ALL
-     SELECT 2 AS i,
-	         100 AS codmtp,
-            'TOTAL ' AS descricao
-        FROM dual),
-    cte_mtp_formatado AS
-    (SELECT i,
-	         codmtp,
-            initcap(descricao) AS descricao
-        FROM cte_mtp
-    ORDER BY codmtp),
-    cte_cnc AS
-    (SELECT coalesce(cnc.codmtp, 100) AS codmtp,
-            COUNT(cnc.codmtp) AS freq,
-            to_char(trunc(SUM((cnc.dtfinal - cnc.dtinicio) * 24)), 'FM9990') || 'h:' || to_char(trunc(MOD(SUM((cnc.dtfinal - cnc.dtinicio) * 24 * 60), 60)), 'FM00') || 'm' AS tempo,
-            (round((SUM((cnc.dtfinal - cnc.dtinicio) * 24) / SUM(SUM((cnc.dtfinal - cnc.dtinicio) * 24)) over()) * 100, 2) * 2) AS percentual
-        FROM ad_cnc cnc
-        LEFT JOIN tpriatv atv
-        ON cnc.idiproc = atv.idiproc
-        LEFT JOIN tpripa ipa
-        ON cnc.idiproc = ipa.idiproc
-        LEFT JOIN tgfpro pro
-        ON ipa.codprodpa = pro.codprod
-        LEFT JOIN tprapo apo
-        ON atv.idiatv = apo.idiatv
-    WHERE trunc(apo.dhapo) BETWEEN (last_day(add_months(TRUNC(:P_XDT), -1)) + 1) AND last_day(TRUNC(:P_XDT))
-        AND to_char(pro.ad_set_producao, 'FM00') = :XSETOR
-    GROUP BY ROLLUP(cnc.codmtp))
-    SELECT a.i, 
-	     a.codmtp,
-        a.descricao,
-        coalesce(b.freq, 0) AS freq,
-        lpad(coalesce(b.tempo, '0h:00m'), 8, ' ') AS tempo,
-        lpad(to_char(coalesce(b.percentual, 0), 'FM990D0'), 5, ' ') AS percentual
-    FROM cte_mtp_formatado a
-    LEFT JOIN cte_cnc b
-        ON a.codmtp = b.codmtp
-    ORDER BY a.i, coalesce(b.percentual, 0)
+    /*
+     * ============================================================
+     * OCORRÊNCIAS NA OP - QTE MINUTOS POR DIA
+     *
+     * Retorna uma linha por classificação, com os minutos
+     * distribuídos nas colunas correspondentes ao dia do mês.
+     * ============================================================
+     */
+    WITH
+    parametros AS
+    (
+        SELECT TRUNC(:P_XDT, 'MM') AS dt_inicio,
+               LAST_DAY(:P_XDT) AS dt_fim,
+               :XSETOR AS setor
+          FROM dual
+    ),
+
+    dias_mes AS
+    (
+        SELECT p.dt_inicio + LEVEL - 1 AS dt_dia,
+               TO_CHAR(
+                   p.dt_inicio + LEVEL - 1,
+                   'DD'
+               ) AS dia,
+               TO_CHAR(
+                   p.dt_inicio + LEVEL - 1,
+                   'DD'
+               ) || '-' ||
+               TO_CHAR(
+                   p.dt_inicio + LEVEL - 1,
+                   'DY',
+                   'NLS_DATE_LANGUAGE=PORTUGUESE'
+               ) AS dia_descricao
+          FROM parametros p
+        CONNECT BY LEVEL <= (p.dt_fim - p.dt_inicio + 1)
+    ),
+
+    mtp_ativos AS
+    (
+        SELECT mtp.codmtp,
+               COALESCE(
+                   REPLACE(
+                       REPLACE(
+                           REPLACE(
+                               mtp.descricao,
+                               ' DE MÁQUINA / FERRAMENTA / GABARITO',
+                               ''
+                           ),
+                           ' NO ',
+                           ' '
+                       ),
+                       ' DE ',
+                       ' '
+                   ),
+                   'TOTAIS'
+               ) AS descricao
+          FROM tprmtp mtp
+         WHERE mtp.ativo = 'S'
+    ),
+
+    mtp_formatado AS
+    (
+        SELECT codmtp,
+               INITCAP(descricao) AS descricao
+          FROM mtp_ativos
+    ),
+
+    cnc_apontamentos AS
+    (
+        SELECT TRUNC(apo.dhapo) AS dt_dia,
+               COALESCE(cnc.codmtp, 100) AS codmtp,
+
+               SUM(
+                   (cnc.dtfinal - cnc.dtinicio) * 24 * 60
+               ) AS minutos
+
+          FROM ad_cnc cnc
+
+          LEFT JOIN tpriatv atv
+            ON atv.idiproc = cnc.idiproc
+
+          LEFT JOIN tpripa ipa
+            ON ipa.idiproc = cnc.idiproc
+
+          LEFT JOIN tgfpro pro
+            ON pro.codprod = ipa.codprodpa
+
+          LEFT JOIN tprapo apo
+            ON apo.idiatv = atv.idiatv
+
+         CROSS JOIN parametros p
+
+         WHERE apo.dhapo >= p.dt_inicio
+           AND apo.dhapo < p.dt_fim + 1
+
+           /* Exclui domingo */
+           AND TRUNC(apo.dhapo)
+               - TRUNC(apo.dhapo, 'IW') <> 6
+
+           AND TO_CHAR(
+                   pro.ad_set_producao,
+                   'FM00'
+               ) = p.setor
+
+         GROUP BY TRUNC(apo.dhapo),
+                  COALESCE(cnc.codmtp, 100)
+    ),
+
+    cnc_por_dia AS
+    (
+        SELECT dm.dia,
+               ca.codmtp,
+               ca.minutos
+          FROM dias_mes dm
+
+          LEFT JOIN cnc_apontamentos ca
+            ON ca.dt_dia = dm.dt_dia
+    ),
+
+    minutos_pivot AS
+    (
+        SELECT codmtp,
+               d01_m,
+               d02_m,
+               d03_m,
+               d04_m,
+               d05_m,
+               d06_m,
+               d07_m,
+               d08_m,
+               d09_m,
+               d10_m,
+               d11_m,
+               d12_m,
+               d13_m,
+               d14_m,
+               d15_m,
+               d16_m,
+               d17_m,
+               d18_m,
+               d19_m,
+               d20_m,
+               d21_m,
+               d22_m,
+               d23_m,
+               d24_m,
+               d25_m,
+               d26_m,
+               d27_m,
+               d28_m,
+               d29_m,
+               d30_m,
+               d31_m
+
+          FROM cnc_por_dia
+
+        PIVOT
+        (
+            SUM(minutos)
+            FOR dia IN
+            (
+                '01' AS d01_m,
+                '02' AS d02_m,
+                '03' AS d03_m,
+                '04' AS d04_m,
+                '05' AS d05_m,
+                '06' AS d06_m,
+                '07' AS d07_m,
+                '08' AS d08_m,
+                '09' AS d09_m,
+                '10' AS d10_m,
+                '11' AS d11_m,
+                '12' AS d12_m,
+                '13' AS d13_m,
+                '14' AS d14_m,
+                '15' AS d15_m,
+                '16' AS d16_m,
+                '17' AS d17_m,
+                '18' AS d18_m,
+                '19' AS d19_m,
+                '20' AS d20_m,
+                '21' AS d21_m,
+                '22' AS d22_m,
+                '23' AS d23_m,
+                '24' AS d24_m,
+                '25' AS d25_m,
+                '26' AS d26_m,
+                '27' AS d27_m,
+                '28' AS d28_m,
+                '29' AS d29_m,
+                '30' AS d30_m,
+                '31' AS d31_m
+            )
+        )
+    )
+
+    SELECT x1.codmtp,
+           UPPER(x1.descricao) AS descricao,
+
+           /* ====================================================
+              MINUTOS POR DIA
+              ==================================================== */
+
+           SUM(COALESCE(x2.d01_m, 0)) AS d01,
+           SUM(COALESCE(x2.d02_m, 0)) AS d02,
+           SUM(COALESCE(x2.d03_m, 0)) AS d03,
+           SUM(COALESCE(x2.d04_m, 0)) AS d04,
+           SUM(COALESCE(x2.d05_m, 0)) AS d05,
+           SUM(COALESCE(x2.d06_m, 0)) AS d06,
+           SUM(COALESCE(x2.d07_m, 0)) AS d07,
+           SUM(COALESCE(x2.d08_m, 0)) AS d08,
+           SUM(COALESCE(x2.d09_m, 0)) AS d09,
+           SUM(COALESCE(x2.d10_m, 0)) AS d10,
+           SUM(COALESCE(x2.d11_m, 0)) AS d11,
+           SUM(COALESCE(x2.d12_m, 0)) AS d12,
+           SUM(COALESCE(x2.d13_m, 0)) AS d13,
+           SUM(COALESCE(x2.d14_m, 0)) AS d14,
+           SUM(COALESCE(x2.d15_m, 0)) AS d15,
+           SUM(COALESCE(x2.d16_m, 0)) AS d16,
+           SUM(COALESCE(x2.d17_m, 0)) AS d17,
+           SUM(COALESCE(x2.d18_m, 0)) AS d18,
+           SUM(COALESCE(x2.d19_m, 0)) AS d19,
+           SUM(COALESCE(x2.d20_m, 0)) AS d20,
+           SUM(COALESCE(x2.d21_m, 0)) AS d21,
+           SUM(COALESCE(x2.d22_m, 0)) AS d22,
+           SUM(COALESCE(x2.d23_m, 0)) AS d23,
+           SUM(COALESCE(x2.d24_m, 0)) AS d24,
+           SUM(COALESCE(x2.d25_m, 0)) AS d25,
+           SUM(COALESCE(x2.d26_m, 0)) AS d26,
+           SUM(COALESCE(x2.d27_m, 0)) AS d27,
+           SUM(COALESCE(x2.d28_m, 0)) AS d28,
+           SUM(COALESCE(x2.d29_m, 0)) AS d29,
+           SUM(COALESCE(x2.d30_m, 0)) AS d30,
+           SUM(COALESCE(x2.d31_m, 0)) AS d31,
+
+           /* ====================================================
+              TOTAL DE MINUTOS DO MÊS
+              ==================================================== */
+
+           SUM(
+               COALESCE(x2.d01_m, 0) +
+               COALESCE(x2.d02_m, 0) +
+               COALESCE(x2.d03_m, 0) +
+               COALESCE(x2.d04_m, 0) +
+               COALESCE(x2.d05_m, 0) +
+               COALESCE(x2.d06_m, 0) +
+               COALESCE(x2.d07_m, 0) +
+               COALESCE(x2.d08_m, 0) +
+               COALESCE(x2.d09_m, 0) +
+               COALESCE(x2.d10_m, 0) +
+               COALESCE(x2.d11_m, 0) +
+               COALESCE(x2.d12_m, 0) +
+               COALESCE(x2.d13_m, 0) +
+               COALESCE(x2.d14_m, 0) +
+               COALESCE(x2.d15_m, 0) +
+               COALESCE(x2.d16_m, 0) +
+               COALESCE(x2.d17_m, 0) +
+               COALESCE(x2.d18_m, 0) +
+               COALESCE(x2.d19_m, 0) +
+               COALESCE(x2.d20_m, 0) +
+               COALESCE(x2.d21_m, 0) +
+               COALESCE(x2.d22_m, 0) +
+               COALESCE(x2.d23_m, 0) +
+               COALESCE(x2.d24_m, 0) +
+               COALESCE(x2.d25_m, 0) +
+               COALESCE(x2.d26_m, 0) +
+               COALESCE(x2.d27_m, 0) +
+               COALESCE(x2.d28_m, 0) +
+               COALESCE(x2.d29_m, 0) +
+               COALESCE(x2.d30_m, 0) +
+               COALESCE(x2.d31_m, 0)
+           ) AS total
+
+      FROM mtp_formatado x1
+
+      LEFT JOIN minutos_pivot x2
+        ON x2.codmtp = x1.codmtp
+
+     GROUP BY ROLLUP(
+         (
+             x1.codmtp,
+             UPPER(x1.descricao)
+         )
+     )
+
+     ORDER BY x1.codmtp
 
 </snk:query>
 
@@ -1288,45 +1776,117 @@ ALOCAÇÃO DE TEMPO X DISPONIBILIDADE
 <div class="card ocorrencia">
 
 <div class="card-title">
-
-OCORRÊNCIAS NA OP
-
+    OCORRÊNCIAS NA OP
 </div>
 
 <div class="card-body">
 
-<table>
+    <div class="ocorrencia-tabela-scroll">
 
-<thead>
+        <table id="tabelaOcorrenciaMinutos">
 
-<tr>
+            <thead>
 
-<th>Classificação</th>
+                <!-- Título -->
+                <tr>
 
-<th>Freq.</th>
+                    <th colspan="2" class="titulo-minutos">
+                    </th>
 
-<th>Tempo</th>
+                    <th id="tituloDias"
+                        class="titulo-minutos">
+                        QTE MINUTOS
+                    </th>
 
-<th>%</th>
+                    <th class="col-total fixo-total titulo-minutos">
+                    </th>
 
-</tr>
+                </tr>
 
-</thead>
+                <!-- Cabeçalho das colunas -->
+                <tr id="cabecalhoOcorrencia">
 
-<tbody>
+                    <th class="col-cod fixo-cod">
+                        COD
+                    </th>
 
-    <c:forEach items="${ocorrenciaOPQuery.rows}" var="row">
-        <tr>
-            <td><c:out value="${row.descricao}" /></td>
-            <td style="text-align:center;"><c:out value="${row.freq}" /></td>
-            <td style="text-align:right;"><c:out value="${row.tempo}" /></td>
-            <td style="text-align:right;"><c:out value="${row.percentual}" />%</td>
-        </tr>
-    </c:forEach>
+                    <th class="col-descricao fixo-descricao">
+                        DESCRIÇÃO
+                    </th>
 
-</tbody>
+                    <th class="col-total fixo-total">
+                        TOTAL
+                    </th>
 
-</table>
+                </tr>
+
+            </thead>
+
+            <tbody id="corpoOcorrenciaMinutos">
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!--
+         Dados vindos do Oracle.
+
+         A query agora retorna UMA LINHA POR CLASSIFICAÇÃO,
+         contendo d01 ... d31 e total.
+
+         O JavaScript utiliza esses campos diretamente para
+         montar a matriz responsiva.
+    -->
+    <div id="dadosOcorrenciaMinutos"
+         class="dados-ocorrencia">
+
+        <c:forEach items="${ocorrenciaOPQuery.rows}" var="row">
+
+            <span
+                class="ocorrencia-dado"
+
+                data-cod="<c:out value='${row.codmtp}' />"
+                data-descricao="<c:out value='${row.descricao}' />"
+
+                data-d01="<c:out value='${row.d01}' />"
+                data-d02="<c:out value='${row.d02}' />"
+                data-d03="<c:out value='${row.d03}' />"
+                data-d04="<c:out value='${row.d04}' />"
+                data-d05="<c:out value='${row.d05}' />"
+                data-d06="<c:out value='${row.d06}' />"
+                data-d07="<c:out value='${row.d07}' />"
+                data-d08="<c:out value='${row.d08}' />"
+                data-d09="<c:out value='${row.d09}' />"
+                data-d10="<c:out value='${row.d10}' />"
+                data-d11="<c:out value='${row.d11}' />"
+                data-d12="<c:out value='${row.d12}' />"
+                data-d13="<c:out value='${row.d13}' />"
+                data-d14="<c:out value='${row.d14}' />"
+                data-d15="<c:out value='${row.d15}' />"
+                data-d16="<c:out value='${row.d16}' />"
+                data-d17="<c:out value='${row.d17}' />"
+                data-d18="<c:out value='${row.d18}' />"
+                data-d19="<c:out value='${row.d19}' />"
+                data-d20="<c:out value='${row.d20}' />"
+                data-d21="<c:out value='${row.d21}' />"
+                data-d22="<c:out value='${row.d22}' />"
+                data-d23="<c:out value='${row.d23}' />"
+                data-d24="<c:out value='${row.d24}' />"
+                data-d25="<c:out value='${row.d25}' />"
+                data-d26="<c:out value='${row.d26}' />"
+                data-d27="<c:out value='${row.d27}' />"
+                data-d28="<c:out value='${row.d28}' />"
+                data-d29="<c:out value='${row.d29}' />"
+                data-d30="<c:out value='${row.d30}' />"
+                data-d31="<c:out value='${row.d31}' />"
+
+                data-total="<c:out value='${row.total}' />">
+            </span>
+
+        </c:forEach>
+
+    </div>
 
 </div>
 
@@ -2250,6 +2810,11 @@ function preencherTabela(idTabela, dados, colunas) {
 
     const tbody = document.getElementById(idTabela);
 
+    /* Algumas tabelas antigas podem não existir nesta versão. */
+    if (!tbody) {
+        return;
+    }
+
     tbody.innerHTML = "";
 
     dados.forEach(item => {
@@ -2309,4 +2874,369 @@ preencherTabela(
     ["os","equipamento","responsavel","status"]
 );
 
+</script>
+<script>
+/**************************************************************
+ * OCORRÊNCIAS NA OP
+ *
+ * A query retorna uma linha por classificação:
+ *
+ * COD | DESCRIÇÃO | D01 | D02 | ... | D31 | TOTAL
+ *
+ * O JavaScript somente transforma esse resultado em uma
+ * tabela responsiva.
+ **************************************************************/
+
+(function montarTabelaOcorrenciaMinutos() {
+
+    const origem = document.querySelectorAll(
+        "#dadosOcorrenciaMinutos .ocorrencia-dado"
+    );
+
+    const cabecalho = document.getElementById(
+        "cabecalhoOcorrencia"
+    );
+
+    const corpo = document.getElementById(
+        "corpoOcorrenciaMinutos"
+    );
+
+    const tituloDias = document.getElementById(
+        "tituloDias"
+    );
+
+    if (!origem.length || !cabecalho || !corpo) {
+        console.warn(
+            "OCORRÊNCIAS NA OP: nenhum registro retornado pela query."
+        );
+        return;
+    }
+
+
+    /* ==========================================================
+       Converte número retornado pelo Oracle/JSTL para JavaScript.
+       Aceita:
+         123
+         123.45
+         123,45
+         vazio / null
+       ========================================================== */
+
+    function numero(valor) {
+
+        if (
+            valor === null ||
+            valor === undefined ||
+            valor === ""
+        ) {
+            return 0;
+        }
+
+        const texto = String(valor)
+            .trim()
+            .replace(",", ".");
+
+        const resultado = Number(texto);
+
+        return Number.isFinite(resultado)
+            ? resultado
+            : 0;
+    }
+
+
+    /* ==========================================================
+       Campos de dias retornados pela query
+       ========================================================== */
+
+    const camposDias = [];
+
+    for (let dia = 1; dia <= 31; dia++) {
+
+        camposDias.push(
+            "d" +
+            String(dia).padStart(2, "0")
+        );
+
+    }
+
+
+    /* ==========================================================
+       Transforma cada linha do Oracle em objeto JS
+       ========================================================== */
+
+    const dados = Array.from(origem).map(item => {
+
+        const registro = {
+
+            cod:
+                item.dataset.cod === ""
+                    ? null
+                    : numero(item.dataset.cod),
+
+            descricao:
+                item.dataset.descricao || "",
+
+            total:
+                numero(item.dataset.total),
+
+            dias: {}
+
+        };
+
+
+        camposDias.forEach(campo => {
+
+            registro.dias[campo] =
+                numero(item.dataset[campo]);
+
+        });
+
+
+        return registro;
+
+    });
+
+
+    console.log(
+        "OCORRÊNCIAS NA OP - registros:",
+        dados.length,
+        dados
+    );
+
+
+    /* ==========================================================
+       O ROLLUP retorna COD/descrição nulos na linha TOTAL.
+       Essa linha será apresentada como XX / TOTAL.
+       ========================================================== */
+
+    dados.forEach(registro => {
+
+        if (registro.cod === null) {
+
+            registro.cod = 999999;
+            registro.descricao = "TOTAL";
+
+        }
+
+    });
+
+
+    /* ==========================================================
+       Ordenação:
+       classificações primeiro;
+       TOTAL sempre por último.
+       ========================================================== */
+
+    dados.sort((a, b) => {
+
+        if (a.cod === 999999) return 1;
+
+        if (b.cod === 999999) return -1;
+
+        return a.cod - b.cod;
+
+    });
+
+
+    /* ==========================================================
+       Limpa linhas antigas criadas pelo JavaScript
+       ========================================================== */
+
+    while (
+        cabecalho.querySelector(".col-dia")
+    ) {
+
+        cabecalho
+            .querySelector(".col-dia")
+            .remove();
+
+    }
+
+
+    corpo.innerHTML = "";
+
+
+    /* ==========================================================
+       Cria as 31 colunas dos dias.
+       A query já possui d01 até d31.
+       ========================================================== */
+
+    for (let dia = 1; dia <= 31; dia++) {
+
+        const th =
+            document.createElement("th");
+
+        th.className =
+            "col-dia";
+
+        th.textContent =
+            dia;
+
+        cabecalho.insertBefore(
+            th,
+            cabecalho.querySelector(".col-total")
+        );
+
+    }
+
+
+    if (tituloDias) {
+
+        tituloDias.colSpan = 31;
+
+        tituloDias.textContent =
+            "QTE MINUTOS";
+
+    }
+
+
+    /* ==========================================================
+       Formatação dos minutos
+       ========================================================== */
+
+    function formatarMinutos(valor) {
+
+        valor = numero(valor);
+
+        if (Math.abs(valor) < 0.005) {
+
+            return "";
+
+        }
+
+        return valor.toLocaleString(
+            "pt-BR",
+            {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }
+        );
+
+    }
+
+
+    /* ==========================================================
+       Cria célula
+       ========================================================== */
+
+    function criarCelula(
+        valor,
+        classe
+    ) {
+
+        const td =
+            document.createElement("td");
+
+        td.className =
+            classe || "";
+
+        td.textContent =
+            formatarMinutos(valor);
+
+        return td;
+
+    }
+
+
+    /* ==========================================================
+       Cria cada linha
+       ========================================================== */
+
+    dados.forEach(registro => {
+
+        const tr =
+            document.createElement("tr");
+
+
+        /* ------------------------------------------------------
+           Código
+           ------------------------------------------------------ */
+
+        const tdCodigo =
+            document.createElement("td");
+
+        tdCodigo.className =
+            "col-cod fixo-cod";
+
+        tdCodigo.textContent =
+            registro.cod === 999999
+                ? "XX"
+                : registro.cod;
+
+        tr.appendChild(tdCodigo);
+
+
+        /* ------------------------------------------------------
+           Descrição
+           ------------------------------------------------------ */
+
+        const tdDescricao =
+            document.createElement("td");
+
+        tdDescricao.className =
+            "col-descricao fixo-descricao";
+
+        tdDescricao.textContent =
+            registro.cod === 999999
+                ? "TOTAL"
+                : registro.descricao;
+
+        tr.appendChild(tdDescricao);
+
+
+        /* ------------------------------------------------------
+           Dias 1 até 31
+           ------------------------------------------------------ */
+
+        for (let dia = 1; dia <= 31; dia++) {
+
+            const campo =
+                "d" +
+                String(dia).padStart(2, "0");
+
+            tr.appendChild(
+                criarCelula(
+                    registro.dias[campo],
+                    "col-dia"
+                )
+            );
+
+        }
+
+
+        /* ------------------------------------------------------
+           Total
+           ------------------------------------------------------ */
+
+        tr.appendChild(
+            criarCelula(
+                registro.total,
+                "col-total fixo-total"
+            )
+        );
+
+
+        /* ------------------------------------------------------
+           Linha TOTAL
+           ------------------------------------------------------ */
+
+        if (registro.cod === 999999) {
+
+            tr.classList.add(
+                "linha-total"
+            );
+
+        }
+
+
+        corpo.appendChild(tr);
+
+    });
+
+
+    console.log(
+        "OCORRÊNCIAS NA OP - tabela montada com sucesso."
+    );
+
+})();
 </script>
