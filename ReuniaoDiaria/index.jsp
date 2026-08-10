@@ -253,11 +253,26 @@ body{
 .ocorrencia table {
     width: max-content;
     min-width: 100%;
+    height: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    table-layout: fixed;
+    table-layout: auto;
     font-size: 11px;
     color: #333;
+}
+
+/*
+ * As linhas são ajustadas pelo JavaScript para ocupar
+ * toda a altura disponível do card quando houver poucas linhas.
+ * Quando houver muitas linhas, a rolagem vertical permanece ativa.
+ */
+.ocorrencia tbody tr {
+    height: 23px;
+}
+
+.ocorrencia tbody td {
+    height: inherit;
+    vertical-align: middle;
 }
 
 .ocorrencia th {
@@ -307,9 +322,12 @@ body{
 }
 
 .ocorrencia .col-dia {
-    width: 30px;
-    min-width: 30px;
-    max-width: 30px;
+    width: auto;
+    min-width: 28px;
+    max-width: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    white-space: nowrap;
 }
 
 .ocorrencia .col-total {
@@ -463,9 +481,9 @@ body{
     }
 
     .ocorrencia .col-dia {
-        width: 28px;
-        min-width: 28px;
-        max-width: 28px;
+        width: auto;
+        min-width: 26px;
+        max-width: none;
     }
 
     .ocorrencia .col-total {
@@ -3233,6 +3251,88 @@ preencherTabela(
 
     });
 
+
+    /* ==========================================================
+       Ajusta a altura das linhas para preencher todo o card.
+
+       - Poucas linhas: distribui o espaço vertical disponível.
+       - Muitas linhas: mantém altura mínima e permite rolagem.
+       - Recalcula ao redimensionar a janela.
+       ========================================================== */
+
+    function ajustarAlturaLinhas() {
+
+        const scroll = document.querySelector(
+            ".ocorrencia-tabela-scroll"
+        );
+
+        const tabela = document.getElementById(
+            "tabelaOcorrenciaMinutos"
+        );
+
+        if (!scroll || !tabela) {
+            return;
+        }
+
+        const linhas = Array.from(
+            corpo.querySelectorAll("tr")
+        );
+
+        if (!linhas.length) {
+            return;
+        }
+
+        /* Altura disponível para o corpo da tabela. */
+        const alturaCabecalho =
+            tabela.tHead
+                ? tabela.tHead.getBoundingClientRect().height
+                : 0;
+
+        const alturaDisponivel =
+            scroll.clientHeight - alturaCabecalho;
+
+        if (alturaDisponivel <= 0) {
+            return;
+        }
+
+        /* Altura ideal para distribuir todas as linhas. */
+        const alturaCalculada =
+            Math.floor(
+                alturaDisponivel / linhas.length
+            );
+
+        /*
+         * 23px é a altura mínima atual das linhas.
+         * Se houver mais linhas do que cabe no card,
+         * o overflow-y do container assume a rolagem.
+         */
+        const alturaLinha =
+            Math.max(23, alturaCalculada);
+
+        linhas.forEach(linha => {
+
+            linha.style.height =
+                alturaLinha + "px";
+
+        });
+
+    }
+
+    /*
+     * Executa após a tabela estar totalmente montada.
+     */
+    requestAnimationFrame(
+        ajustarAlturaLinhas
+    );
+
+    /*
+     * Mantém o preenchimento correto quando o card
+     * mudar de tamanho.
+     */
+    window.addEventListener(
+        "resize",
+        ajustarAlturaLinhas
+    );
 
     console.log(
         "OCORRÊNCIAS NA OP - tabela montada com sucesso."
