@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Ciclo de Gestão Industrial">
+<title>Ciclo de Gestão Industrial</title>
+
+<style>
+    :root {
+        --bg: #ffffff;
+        --text: #050505;
+        --card: #e9e9eb;
+        --card-hover: #dedee1;
+        --radius: 12px;
+        --max-width: 1240px;
+        --gap: 20px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Arial, Helvetica, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    .page {
+        width: min(100% - 40px, var(--max-width));
+        margin: 0 auto;
+        padding: 22px 0 32px;
+    }
+
+    /* Cabeçalho */
+    .header {
+        position: relative;
+        min-height: 58px;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+    }
+
+    .title {
+        margin: 5px 0 0;
+        font-size: clamp(21px, 2vw, 27px);
+        line-height: 1.2;
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        text-align: center;
+    }
+
+    /* Mantém a área escura da referência no canto superior direito.
+       Pode ser substituída por uma logo real futuramente. */
+    /*.header-mark {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 102px;
+        height: 36px;
+        background: #000;
+        border-radius: 0 0 0 2px;
+    }*/
+
+    /* Grade principal */
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 48px;
+        align-items: start;
+        margin-top: 3px;
+    }
+
+    .section-title {
+        margin: 0 0 14px 10px;
+        font-size: 15px;
+        line-height: 1.2;
+        font-weight: 800;
+    }
+
+    .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 17px;
+    }
+
+    .card {
+        min-height: 70px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 12px 13px;
+        border-radius: var(--radius);
+        background: var(--card);
+        color: var(--text);
+        text-decoration: none;
+        cursor: pointer;
+        transition:
+            background-color 160ms ease,
+            transform 160ms ease,
+            box-shadow 160ms ease;
+        outline: none;
+    }
+
+    .card:hover {
+        background: var(--card-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card:focus-visible {
+        box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-title {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.25;
+        font-weight: 800;
+    }
+
+    .card-icon {
+        flex: 0 0 78px;
+        width: 78px;
+        height: 52px;
+        display: block;
+    }
+
+    /* SVG dos ícones é mantido inline para que o arquivo seja 100% independente. */
+    .card-icon .blue {
+        fill: #087bc1;
+    }
+
+    .card-icon .blue-dark {
+        fill: #0c4e83;
+    }
+
+    .card-icon .orange {
+        fill: #ff7040;
+    }
+
+    .card-icon .orange-dark {
+        fill: #ef5429;
+    }
+
+    .card-icon .green {
+        fill: #08a75b;
+    }
+
+    .card-icon .teal {
+        fill: #008f91;
+    }
+
+    .card-icon .yellow {
+        fill: #ffc400;
+    }
+
+    .card-icon .line {
+        fill: none;
+        stroke: #15598a;
+        stroke-width: 4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    /* Estado visual quando o item é acionado */
+    .card.is-active {
+        transform: scale(0.985);
+    }
+
+    /* Tablet */
+    @media (max-width: 1000px) {
+        .page {
+            width: min(100% - 30px, 850px);
+        }
+
+        .dashboard {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            column-gap: 28px;
+            row-gap: 30px;
+        }
+
+        .header-mark {
+            width: 76px;
+            height: 30px;
+        }
+    }
+
+    /* Celular */
+    @media (max-width: 620px) {
+        .page {
+            width: min(100% - 24px, 480px);
+            padding-top: 16px;
+        }
+
+        .header {
+            min-height: 64px;
+            padding-right: 0;
+        }
+
+        .title {
+            max-width: 75%;
+            margin-top: 3px;
+            font-size: 20px;
+        }
+
+        .header-mark {
+            width: 55px;
+            height: 25px;
+        }
+
+        .dashboard {
+            grid-template-columns: 1fr;
+            gap: 28px;
+            margin-top: 5px;
+        }
+
+        .section-title {
+            margin-left: 7px;
+            margin-bottom: 11px;
+        }
+
+        .cards {
+            gap: 12px;
+        }
+
+        .card {
+            min-height: 68px;
+            padding: 11px 12px;
+        }
+
+        .card-title {
+            font-size: 14px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        .card {
+            transition: none;
+        }
+    }
+</style>
+</head>
+
+<body>
+<main class="page">
+
+    <header class="header">
+        <h1 class="title">CICLO DE GESTÃO INDUSTRIAL</h1>
+        <div class="header-mark" aria-hidden="true"></div>
+    </header>
+
+    <section class="dashboard" aria-label="Menu principal">
+
+        <!-- PAINÉIS -->
+        <section class="menu-section">
+            <h2 class="section-title">Painéis</h2>
+
+            <div class="cards">
+                <a class="card" href="#" data-name="Painel Reunião DIÁRIA e R7">
+                    <span class="card-title">Painel Reunião<br>DIÁRIA e R7</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Painel Reunião MANUTENÇÃO">
+                    <span class="card-title">Painel Reunião<br>MANUTENÇÃO</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Painel Reunião R30">
+                    <span class="card-title">Painel Reunião<br>R30</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Dashboard OEE">
+                    <span class="card-title">Dashboard OEE</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="SAC">
+                    <span class="card-title">SAC</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- PROJETOS -->
+        <section class="menu-section">
+            <h2 class="section-title">Projetos</h2>
+
+            <div class="cards">
+                <a class="card" href="#" data-name="Projetos de Melhorias">
+                    <span class="card-title">Projetos de<br>Melhorias</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- CONSULTAS -->
+        <section class="menu-section">
+            <h2 class="section-title">Consultas</h2>
+
+            <div class="cards">
+                <a class="card" href="#" data-name="Visão dos Estoques">
+                    <span class="card-title">Visão dos Estoques</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Tabela Dinâmica Produção">
+                    <span class="card-title">Tabela Dinâmica<br>Produção</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Tabela Dinâmica Desperdício">
+                    <span class="card-title">Tabela Dinâmica<br>Desperdício</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Acompanhamento da Produção">
+                    <span class="card-title">Acompanhamento<br>da Produção</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- RELATÓRIOS -->
+        <section class="menu-section">
+            <h2 class="section-title">Relatórios</h2>
+
+            <div class="cards">
+                <a class="card" href="#" data-name="Desperdícios">
+                    <span class="card-title">Desperdícios</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Causas de Não Conformidades">
+                    <span class="card-title">Causas de Não<br>Conformidades</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+
+                <a class="card" href="#" data-name="Resumo Produção Diária">
+                    <span class="card-title">Resumo Produção<br>Diária</span>
+                    <svg class="card-icon" viewBox="0 0 100 65" aria-hidden="true">
+                        <circle class="blue" cx="17" cy="11" r="6"/>
+                        <circle class="orange" cx="15" cy="39" r="7"/>
+                        <circle class="teal" cx="32" cy="54" r="8"/>
+                        <circle class="green" cx="68" cy="12" r="6"/>
+                        <circle class="yellow" cx="89" cy="12" r="6"/>
+                        <circle class="orange" cx="88" cy="33" r="7"/>
+                        <path class="line" d="M20 36 L37 22 L58 35 L73 17 L86 12"/>
+                        <path class="line" d="M37 22 L54 8"/>
+                        <circle class="blue-dark" cx="49" cy="25" r="13"/>
+                        <circle fill="#fff" cx="49" cy="25" r="8"/>
+                        <path class="line" d="M58 34 L72 50"/>
+                    </svg>
+                </a>
+            </div>
+        </section>
+
+    </section>
+</main>
+
+<script>
+(function () {
+    'use strict';
+
+    /*
+     * Centralize aqui as URLs reais dos seus dashboards/relatórios.
+     * Exemplo:
+     * "Dashboard OEE": "/mge/dashboard/oee"
+     */
+    const ROUTES = {
+        // "Painel Reunião DIÁRIA e R7": "/caminho/painel-r7",
+        // "Projetos de Melhorias": "/caminho/projetos",
+        // "Visão dos Estoques": "/caminho/estoques"
+    };
+
+    document.querySelectorAll('.card').forEach(function (card) {
+        card.addEventListener('click', function (event) {
+            const name = card.dataset.name;
+            const route = ROUTES[name];
+
+            if (route) {
+                event.preventDefault();
+                window.location.href = route;
+                return;
+            }
+
+            /*
+             * Enquanto uma rota não for cadastrada, o clique não navega.
+             * Substitua este comportamento pelas URLs reais quando disponíveis.
+             */
+            event.preventDefault();
+            card.classList.add('is-active');
+
+            window.setTimeout(function () {
+                card.classList.remove('is-active');
+            }, 120);
+
+            console.info('Item selecionado:', name);
+        });
+    });
+})();
+</script>
+
+</body>
+</html>
