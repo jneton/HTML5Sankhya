@@ -1,0 +1,32 @@
+HAIALA V17 - Homologacao (nao publicar sem testes).
+
+BASE: V16 homologada.
+
+REGRA CT:
+- Roteiro com atividades estruturadas: TPRIATV.CODWCP, por atividade.
+- OP com uma unica atividade USUARIO: CTs cadastrados em TPRWXP para CODPRODPA / CONTROLEPA.
+- CTs repetidos por SEQ sao deduplicados; CTs distintos ficam em linhas distintas.
+- Sem CT/SKU: SEM CENTRO DE TRABALHO.
+- OP sem atividade: NAO INICIADA, sem CT.
+- Atividade unica USUARIO nao contabiliza tempo produtivo generico, mesmo com CT identificado.
+- Cards: OP unica por IDIPROC; volumes por OP/produto sem multiplicar por CT.
+- Resumo por CT/atividade mostra OP em cada CT associado; NAO SOMAR linhas de CT.
+- Unidades PC e KG nao sao somadas.
+
+ATENCAO:
+- Para USUARIO com CTs multiplos, vinculo indica capacidade/cadastro do SKU,
+  nao comprova execucao fisica em todos eles.
+- A filtragem por CT mostra cards no escopo desse CT; a mesma OP pode estar em
+  mais de um escopo, porem nunca duas vezes no mesmo card geral.
+- A estrutura atual da V16 agrega planejamento por OP/produto, usando MAX do
+  controle para casar vinculos; validar cenarios de mesmo SKU com multiplos controles.
+- Status R/A apenas; outros status permanecem desabilitados.
+- Consulta principal e a do JSP; consulta_painel.sql agora espelha o SQL do JSP.
+
+CHECKLIST DE HOMOLOGACAO:
+1. Conferir OPs unicas no card Todos os centros.
+2. Conferir OPs USUARIO com 0, 1 e 2 CTs cadastrados.
+3. Conferir OPs estruturadas, incluindo Solda e Fechamento no mesmo CT.
+4. Conferir quantidades PC/KG e execucao final da OP.
+5. Conferir tempo Nao cadastrado em USUARIO e tempo SKU nas demais atividades.
+6. Verificar diferencas de cadastros entre teste e producao.

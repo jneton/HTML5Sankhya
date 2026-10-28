@@ -1,0 +1,7 @@
+<gadget>
+  <level id="lvl_haiala_ops" description="Painel de OPs">
+    <container orientacao="V" tamanhoRelativo="100">
+      <html5component id="html5_haiala_ops" entryPoint="painel_haiala.jsp"/>
+    </container>
+  </level>
+</gadget>
