@@ -1,0 +1,20 @@
+DASHBOARD RFM - Sankhya HTML5
+
+Arquivos:
+- dashboard_rfm.jsp: componente HTML5 que executa a query Oracle e exibe KPIs, gráficos e tabela com filtros locais.
+- query_rfm.sql: versão separada e comentada da consulta.
+
+Instalação:
+1. Faça backup do componente atual.
+2. Publique dashboard_rfm.jsp no diretório de componentes HTML5 do seu ambiente Sankhya.
+3. Cadastre o arquivo como componente HTML5 no dashboard.
+4. O componente utiliza Chart.js via CDN (https://cdn.jsdelivr.net/npm/chart.js). Se o servidor/rede bloquear acesso externo, hospede chart.umd.min.js internamente e ajuste o src.
+5. Teste primeiro em homologação.
+
+Observações importantes:
+- A consulta final foi alinhada para trazer apenas clientes ativos e clientes='S', além de vendedores vinculados a RCA/GRV.
+- O período usa os seis meses completos até o último dia do mês anterior.
+- Recência de clientes sem compras no período é marcada internamente como 999999 e recebe nota 1; a tabela mostrará esse número alto. Se preferir, posso ajustar a apresentação para mostrar “Sem compra no período”.
+- A frequência é COUNT(DISTINCT cab.dtneg), conforme a query fornecida; se dtneg tiver componente de hora, isso conta instantes distintos e não apenas dias.
+- O valor monetário utiliza SUM(ite.ad_vlrliq), mantendo a regra informada.
+- Confira a semântica de TOPS_VALIDAS: foi mantido tipmov='P' e atualfin=1 conforme a query.
