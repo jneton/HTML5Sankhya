@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gadget>
+  <prompt-parameters>
+    <!-- Produto raiz da estrutura -->
+    <parameter id="XCODPROD" description="Produto" metadata="singleList:Text"
+               listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT PRO.CODPROD AS VALUE,
+               TO_CHAR(PRO.CODPROD) || ' - ' || PRO.DESCRPROD AS LABEL
+          FROM TGFPRO PRO
+         ORDER BY PRO.DESCRPROD
+      ]]></expression>
+    </parameter>
+
+    <!-- Estrutura inicial selecionada para o produto raiz -->
+    <parameter id="XIDEFX" description="Estrutura (IDEFX)" metadata="singleList:Text"
+               listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT DISTINCT LMP.IDEFX AS VALUE,
+               TO_CHAR(LMP.IDEFX) AS LABEL
+          FROM TPRLMP LMP
+         WHERE LMP.CODPRODPA = :XCODPROD
+         ORDER BY LMP.IDEFX DESC
+      ]]></expression>
+    </parameter>
+
+    <!-- Data utilizada para recuperar o custo vigente até a referência -->
+    <parameter id="DT" description="Data de referência" metadata="date"
+               required="true" keep-last="true" keep-date="true"/>
+
+    <!-- Tipos de custo conforme regra da consulta -->
+    <parameter id="TP" description="Tipo de custo" metadata="singleList:Text"
+               listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT '0' AS VALUE, 'Custo médio com ICMS' AS LABEL FROM DUAL
+        UNION ALL SELECT '1', 'Custo sem ICMS' FROM DUAL
+        UNION ALL SELECT '2', 'Custo de reposição' FROM DUAL
+        UNION ALL SELECT '3', 'Custo variável' FROM DUAL
+        UNION ALL SELECT '4', 'Custo gerencial' FROM DUAL
+        UNION ALL SELECT '5', 'Custo médio' FROM DUAL
+        UNION ALL SELECT '6', 'Custo objetivo' FROM DUAL
+      ]]></expression>
+    </parameter>
+  </prompt-parameters>
+
+  <level id="lvl_custo_produto" description="Custo do Produto">
+    <args>
+      <arg id="XCODPROD" type="integer"/>
+      <arg id="XIDEFX" type="integer"/>
+      <arg id="DT" type="date"/>
+      <arg id="TP" type="text"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <html5component id="html5_custo_produto" entryPoint="dashboard_custos.jsp"/>
+      </container>
+    </container>
+  </level>
+</gadget>

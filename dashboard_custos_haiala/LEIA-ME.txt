@@ -1,0 +1,32 @@
+# Dashboard de Custos de Produtos — Haiala
+
+## Conteúdo
+- `model_Dashboard_Custos.xml`: definição do gadget, filtros e nível.
+- `dashboard_custos.jsp`: execução da consulta Oracle e apresentação dos indicadores/composição.
+- `css/dashboard_custos.css`: layout responsivo.
+
+## Parâmetros
+| Parâmetro | Finalidade |
+|---|---|
+| `XCODPROD` | Produto raiz da estrutura |
+| `XIDEFX` | Estrutura inicial (IDEFX) do produto |
+| `DT` | Data de referência para seleção do custo |
+| `TP` | Tipo de custo: 0 a 6, conforme CASE da consulta |
+
+## Publicação
+1. Faça backup do componente atual e importe o XML no Construtor de Dashboards, conforme o procedimento homologado da instalação.
+2. Publique `dashboard_custos.jsp` como componente HTML5 e mantenha o caminho de entrada indicado no XML.
+3. Publique a pasta `css` no mesmo componente, respeitando `${BASE_FOLDER}/css/dashboard_custos.css`.
+4. Configure os parâmetros do gadget e valide a dependência do filtro `XIDEFX` em relação a `XCODPROD`.
+5. Execute primeiro em ambiente TESTE com um produto cuja estrutura e custos sejam conhecidos.
+
+## Pontos para homologação
+- A consulta foi mantida com a regra de cálculo enviada, organizada e comentada. Não foi possível executá-la contra o Oracle da empresa neste ambiente.
+- A regra de `ULTIMA_ESTRUTURA` continua sendo `MAX(IDEFX)`. Confirme se o maior identificador representa efetivamente a revisão vigente.
+- Se houver mais de um registro de custo para o mesmo produto com o mesmo `DTATUAL`, o `ROW_NUMBER` original não possui critério adicional de desempate. Avalie incluir a chave/critério temporal correto da TGFCUS.
+- O nível máximo permanece em quatro, conforme a consulta original.
+- Confirme no ambiente Sankhya a compatibilidade do metadado `date` e da lista dependente `XIDEFX` com a versão instalada. A estrutura XML segue o padrão do modelo disponibilizado, mas esses metadados devem ser homologados no Construtor.
+- A máscara monetária é aplicada no navegador. A consulta continua retornando valores numéricos.
+
+## Observação importante sobre o custo
+O KPI “Custo total da estrutura” utiliza `CUSTO_TOTAL1`, calculado pela soma dos custos das folhas. O KPI “Custo unitário cadastrado” exibe `CUSTO1`, isto é, o custo cadastrado para o produto raiz conforme o tipo selecionado. São conceitos diferentes e foram mantidos separados.
