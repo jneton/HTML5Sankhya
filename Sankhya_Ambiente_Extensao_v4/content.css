@@ -1,0 +1,32 @@
+#snk-environment-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2147483647;
+    box-sizing: border-box;
+    min-height: 34px;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff !important;
+    font: 700 14px/20px Arial, Helvetica, sans-serif !important;
+    letter-spacing: .4px;
+    text-align: center;
+    pointer-events: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .25);
+}
+
+#snk-environment-banner.snk-prd {
+    background: #c90000 !important;
+}
+
+#snk-environment-banner.snk-tst {
+    background: #079b32 !important;
+}
+
+/* Evita que o banner cubra os primeiros elementos da aplicação. */
+html {
+    scroll-padding-top: 38px;
+}
