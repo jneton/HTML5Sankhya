@@ -1,0 +1,19 @@
+DASHBOARD DE CHAMADOS DA TI - HAIALA
+
+Conteúdo:
+- model_XML_Oracle.xml: modelo do gadget para Oracle.
+- dashboard_chamados_ti.jsp: componente HTML5 com consulta Oracle, indicadores, gráficos e filtros.
+
+Instalação:
+1. Importe/adicione o XML no Construtor de Dashboards/Componente HTML5 conforme o fluxo utilizado no ambiente.
+2. Publique o arquivo dashboard_chamados_ti.jsp como entryPoint do componente.
+3. Mantenha a tag <snk:load/> no cabeçalho e a consulta dentro de <snk:query>.
+4. Valide primeiro em ambiente de TESTE.
+
+Observações:
+- A consulta considera todo o histórico de AD_TGFCHA; os filtros de período/status/setor/tipo são aplicados no navegador.
+- O cálculo de tempo segue as regras informadas: segunda a sexta, 07:30-11:30 e 13:00-17:48, sem feriados.
+- Tempo médio de encerrados e tempo médio dos abertos são indicadores separados.
+- As faixas do gráfico de chamados em aberto usam dias úteis de 8h48: até 1, de 1 a 3, de 3 a 5 e acima de 5 dias.
+- Não há dependência de CDN ou biblioteca JavaScript externa.
+- O pacote segue a estrutura do modelo anexado; permissões/caminho de publicação do JSP devem seguir a configuração já existente no Sankhya.

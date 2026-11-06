@@ -1,0 +1,27 @@
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; font-family: Arial, Helvetica, sans-serif; color:#17324d; background:#fff; font-size:12px; }
+.dashboard { width:100%; min-width:900px; padding:5px 7px 8px; }
+.cabecalho { position:relative; border:1px solid #c7cdd3; background:linear-gradient(#f8f8f8,#e9edf1); padding:7px 9px 9px; margin-bottom:9px; min-height:84px; }
+.titulo { font-size:14px; font-weight:bold; letter-spacing:.35px; color:#163b62; margin-bottom:8px; }
+.linha-info { line-height:19px; color:#1b2d40; white-space:normal; }
+.descricao { padding-right:190px; }
+.btn-limpar { position:absolute; right:9px; bottom:9px; border:1px solid #aeb9c4; background:#f7f9fb; color:#24496b; padding:5px 9px; border-radius:2px; cursor:pointer; font-size:11px; }
+.btn-limpar:hover { background:#e4edf5; }
+.painel-grid { display:grid; grid-template-columns:repeat(4,minmax(210px,1fr)); gap:8px; align-items:stretch; }
+.painel { border:1px solid #b9c3cc; min-width:0; background:#fff; display:flex; flex-direction:column; min-height:420px; }
+.painel-titulo { background:linear-gradient(#f5f7f9,#e7ebef); border-bottom:1px solid #b9c3cc; padding:7px 8px; font-weight:bold; color:#264a6b; font-size:11px; }
+.tabela-wrap { overflow-x:auto; flex:1; }
+table { width:100%; border-collapse:collapse; table-layout:fixed; }
+th { background:#f6f7f8; color:#203e5b; font-weight:bold; border-bottom:1px solid #c8d0d7; border-right:1px solid #d7dde2; padding:6px 4px; text-align:left; white-space:nowrap; }
+td { border-bottom:1px solid #d8dde2; border-right:1px solid #e0e4e8; padding:4px; height:23px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+tbody tr:nth-child(even) { background:#f1f2f3; }
+tbody tr:hover { background:#dcebdc; }
+.codigo { width:54px; text-align:right; }
+.numero { width:65px; text-align:right; font-variant-numeric:tabular-nums; }
+.acao { width:25px; text-align:center; padding:1px; }
+.acao button { width:20px; height:19px; padding:0; border:1px solid #b8c4ce; border-radius:2px; color:#17466d; background:#f7fafc; font-size:17px; line-height:14px; cursor:pointer; }
+.acao button:hover { background:#dce9f4; }
+.descricao-celula { text-align:left; }
+tfoot td { background:#edf0f2; border-top:1px solid #b9c3cc; border-bottom:0; font-weight:bold; color:#173c5d; height:25px; }
+tfoot td:first-child { text-align:right; }
+@media (max-width:1100px) { .painel-grid { grid-template-columns:repeat(2,minmax(260px,1fr)); } }

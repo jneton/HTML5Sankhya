@@ -1,0 +1,34 @@
+DASHBOARD – SIMULAÇÃO DE CUSTOS DA COMPOSIÇÃO DE PRODUTOS (SANKHYA)
+
+ARQUIVOS
+- model_XML_Oracle.xml: gadget Oracle com filtros CODPROD, DT e TP e argumentos dos níveis.
+- model_SimulacaoCusto.jsp: componente HTML5 com cabeçalho, quatro painéis, totais e navegação.
+- css/simulacaoCusto.css: aparência do dashboard.
+- nivel1.sql ... nivel4.sql: consultas fornecidas, preservadas com normalização dos nomes dos binds.
+
+FILTROS
+- CODPROD: produto principal.
+- DT: data-base para seleção do custo vigente em TGFCUS.
+- TP: 0 ICMS; 1 sem ICMS; 2 reposição; 3 variável; 4 gerencial; 5 médio; 6 objetivo.
+
+NAVEGAÇÃO
+- Nível 1 utiliza :CODPROD.
+- Nível 2 utiliza :A_CODPROD.
+- Nível 3 utiliza :B_CODPROD.
+- Nível 4 utiliza :C_CODPROD.
+O clique no componente atualiza os argumentos do componente HTML5 e limpa os níveis descendentes.
+
+INSTALAÇÃO / VALIDAÇÃO
+1. Faça backup do gadget atual antes da importação.
+2. Importe model_XML_Oracle.xml como modelo do componente/gadget.
+3. Publique model_SimulacaoCusto.jsp e css/simulacaoCusto.css na estrutura de arquivos do componente HTML5, respeitando o BASE_FOLDER.
+4. Confira se os filtros CODPROD, DT e TP são reconhecidos na versão do Sankhya instalada.
+5. Teste com um produto que tenha composição cadastrada nos quatro níveis e custos em TGFCUS até a data-base.
+6. Compare quantidades e custos de cada nível com a tela nativa de Simulação de Custos.
+
+OBSERVAÇÕES IMPORTANTES
+- O pacote foi montado a partir do modelo HTML5 enviado e das quatro consultas SQL anexadas. Não foi possível executar contra o banco Oracle nem validar a importação no ambiente Sankhya do cliente.
+- O JSP utiliza os binds nomeados CODPROD, DT, TP, A_CODPROD, B_CODPROD e C_CODPROD. Caso a versão do Sankhya não exponha parâmetros de prompt diretamente ao snk:query como esperado, será necessário ajustar a vinculação conforme o padrão de parâmetros da instalação.
+- A descrição do tipo de custo é exibida pelo código do filtro; os sete rótulos estão disponíveis na lista do filtro.
+- Os totais dos painéis somam a coluna CUSTO retornada pela consulta de cada nível. O custo consolidado do produto continua seguindo o cálculo que já está na SQL fornecida.
+- As consultas foram mantidas separadas para preservar diferenças entre os níveis e a regra especial de grupo de produto existente na consulta do primeiro nível.

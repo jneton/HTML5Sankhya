@@ -1,0 +1,27 @@
+DASHBOARD – SIMULAÇÃO DE CUSTOS DA COMPOSIÇÃO DE PRODUTOS (SANKHYA)
+PACOTE DE CORREÇÃO v2
+
+CORREÇÃO APLICADA
+- Padronizados os identificadores do nível e do componente HTML5 para IDs explícitos e distintos:
+  - level: lvl_sim_custo
+  - html5component: html5_sim_custo
+- Atualizado refreshDetails() no JSP para apontar exatamente para html5_sim_custo.
+- Mantidos os três argumentos de navegação A_CODPROD, B_CODPROD e C_CODPROD no nível.
+- Mantidas as quatro consultas SQL originais e os filtros CODPROD, DT e TP.
+- Reorganizado o ZIP com os arquivos na raiz do pacote, sem uma pasta externa envolvendo os arquivos.
+
+ARQUIVOS
+- model_XML_Oracle.xml: definição do gadget, filtros e nível principal.
+- model_SimulacaoCusto.jsp: componente HTML5 com cabeçalho, quatro painéis, totais e navegação.
+- css/simulacaoCusto.css: estilos.
+- nivel1.sql, nivel2.sql, nivel3.sql e nivel4.sql: consultas recebidas.
+
+INSTALAÇÃO DA VERSÃO CORRIGIDA
+1. Faça backup do gadget e do pacote HTML5 atualmente publicados.
+2. Atualize o pacote HTML5 usando este ZIP (os arquivos estão na raiz do ZIP).
+3. No modelo do Gadget, importe/substitua a definição pelo model_XML_Oracle.xml desta versão.
+4. Confirme que o ponto de entrada do componente está selecionado como model_SimulacaoCusto.jsp.
+5. Salve, publique e execute novamente o Gadget.
+
+IMPORTANTE
+O erro informado (“Não foi encontrado um elemento 'level' com o ID null”) indica falha na resolução de um nível do Gadget. Esta versão elimina a divergência potencial entre o ID do componente HTML5 usado no refreshDetails() e o ID declarado no XML e torna explícito o ID do nível. O pacote foi validado estruturalmente (XML bem formado, IDs consistentes e ZIP sem pasta externa), mas não foi possível executar no ambiente Sankhya/Oracle do cliente. Se o erro persistir, será necessário o XML exportado do gadget já cadastrado no ambiente e o log completo do console/servidor, pois a resolução do nível também pode depender de metadados internos da instância.

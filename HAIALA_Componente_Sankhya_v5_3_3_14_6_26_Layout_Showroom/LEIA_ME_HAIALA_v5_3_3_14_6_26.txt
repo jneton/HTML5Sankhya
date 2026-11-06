@@ -1,0 +1,11 @@
+HAIALA v5.3.3.14.6.26 — ajustes de layout e regra Showroom
+Base: v5.3.3.14.6.25.
+1. Card de Clientes/Showroom redimensionado; Frete R$ e Qte OCs em blocos lado a lado em telas >=1200 px.
+2. Viagens -> Qte OCs. Mantido N/D até identificação da origem de OC no Oracle.
+3. Showroom SOMENTE TGFPAR.AD_STATUSSHOWROOM marcado Sim (ou S), ignorando os flags ACO/ALU/APD. Os totais anteriores 93 e 43 não são mais referência; executar conciliação no novo recorte.
+4. Popup memória: largura dinâmica por SKU, sem rolagem horizontal até 8 SKUs quando houver largura de tela; acima de 8 mantém rolagem e paginação existente (máximo 10 por página). Em telas pequenas, rolagem é necessária.
+5. Origem do custo resumida (Mês - 1; Histórico; Atual (cont.); VLRUNIT (cont.)).
+6. Hover azul mais intenso em tabelas.
+7. Cabeçalho Qte SKU / Pedido dividido em duas linhas.
+Consultas Q539-T e cálculos de MC, frete, comissão e tributos preservados.
+Testar em homologação, verificar o resultado de showroom e conferir larguras em vários tamanhos de janela.

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gadget>
+  <prompt-parameters>
+    <parameter id="CODPROD" description="Produto principal" metadata="singleList:Text" listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT CODPROD AS VALUE,
+               TO_CHAR(CODPROD) || ' - ' || DESCRPROD AS LABEL
+          FROM TGFPRO
+         ORDER BY DESCRPROD
+      ]]></expression>
+    </parameter>
+    <parameter id="DT" description="Data-base do custo" metadata="date" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[SELECT TRUNC(SYSDATE) AS VALUE FROM DUAL]]></expression>
+    </parameter>
+    <parameter id="TP" description="Tipo de custo" metadata="singleList:Text" listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT '0' AS VALUE, 'Custo com ICMS' AS LABEL FROM DUAL UNION ALL
+        SELECT '1', 'Custo sem ICMS' FROM DUAL UNION ALL
+        SELECT '2', 'Custo de reposição' FROM DUAL UNION ALL
+        SELECT '3', 'Custo variável' FROM DUAL UNION ALL
+        SELECT '4', 'Custo gerencial' FROM DUAL UNION ALL
+        SELECT '5', 'Custo médio' FROM DUAL UNION ALL
+        SELECT '6', 'Custo objetivo' FROM DUAL
+      ]]></expression>
+    </parameter>
+  </prompt-parameters>
+  <level id="lvl_sim_custo" description="Simulação de custos">
+    <args>
+      <arg id="A_CODPROD" type="integer"/>
+      <arg id="B_CODPROD" type="integer"/>
+      <arg id="C_CODPROD" type="integer"/>
+    </args>
+    <container orientacao="H" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <html5component id="html5_sim_custo" entryPoint="model_SimulacaoCusto.jsp"/>
+      </container>
+    </container>
+  </level>
+</gadget>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gadget>
+  <level id="lvl_chamados_ti" description="Dashboard de Chamados da TI">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <html5component id="html5_chamados_ti" entryPoint="dashboard_chamados_ti.jsp"/>
+      </container>
+    </container>
+  </level>
+</gadget>
