@@ -1,0 +1,15 @@
+{
+  "base": "v6.0.3",
+  "new": "v6.0.4",
+  "changes": [
+    "Removed Qte OCs column from Block 02 only",
+    "Clicking representative in Block 02 opens existing Pedidos popup with CODVEND filter, retaining current period and filters",
+    "Updated version labels"
+  ],
+  "sql_query_count_before": 30,
+  "sql_query_count_after": 30,
+  "all_sql_queries_unchanged": true,
+  "sha256_base": "9cf055c40da685efdd29bf3558fe493ec73c647ed6095a618b6c14cf80cad918",
+  "sha256_new": "d01da506c878a4adabe45e76a67d3794fedbed5ac13724eb32cd7aed55b78df7",
+  "actual_sankhya_execution": "not tested"
+}

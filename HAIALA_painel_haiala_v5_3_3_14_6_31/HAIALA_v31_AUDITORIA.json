@@ -1,0 +1,11 @@
+{
+  "origin_sha256": "926fb00a8d6810a95408b8dbbc6a9c73483471d4f53156ba5f8babe8345fd370",
+  "output_sha256": "1dac6f166deced923f49bc5133b8a4f3951ae2119c81ac3b7bf137fbc8a96470",
+  "removed_comparison": true,
+  "load_meter_present": true,
+  "all_Q539_sql_unmodified": true,
+  "Q533_count_same": true,
+  "Q539_count_same": true,
+  "Q471_count_same": false,
+  "showroom_refs_same": true
+}

@@ -1,0 +1,7 @@
+HAIALA v5.3.3.14.6.31
+ORIGEM EXCLUSIVA: v5.3.3.14.6.30 homologada.
+Mudanças: (1) remoção da comparação e cálculo vs. mês anterior no primeiro KPI do Bloco 01, incluindo linha divisória; (2) pequeno medidor visual de tempo de carga da página perto da versão, sem dependências externas. Passe o mouse para detalhes.
+Métrica: tempo desde o início da navegação até o evento load, incluindo espera do JSP/Oracle (TTFB), transferência e execução no navegador. Em páginas incorporadas ao Sankhya, mede a navegação do documento do componente, não a navegação do aplicativo ERP pai. Não compara tempos em redes ou caches diferentes.
+Não altera nenhuma consulta SQL, fórmula, filtro, família/tipologia, Qte OCs nem cards financeiros.
+Não executa otimizações agressivas antes de haver números de tempo.
+HOMOLOGAÇÃO: confirmar Bloco 03 - Família x Tipologia, KPIs financeiros e ausência da comparação; registrar medidor em 3 cargas equivalentes.

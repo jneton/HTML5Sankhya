@@ -1,0 +1,21 @@
+{
+  "from": "v6.0.8",
+  "version": "v6.0.9",
+  "sql_query_count": 30,
+  "sql_query_tags_unchanged": true,
+  "functional_scope": [
+    "Default AC-01/mês corrente",
+    "Default CL-01/mês corrente na entrada",
+    "CL-01: cobertura reposicionada e 3 apresentações ocultadas",
+    "Etiquetas vermelhas de teste nos três menus"
+  ],
+  "unchanged": [
+    "SQL/JSP original",
+    "regras MC e custos",
+    "Blocos de Acompanhamento",
+    "Dados de Clientes e demais abas"
+  ],
+  "sha256": "94d0c19baf147b8e6f80c9d624bb47b02dac7540d40278c524bca756fe0a090a",
+  "diff_lines": 117,
+  "status": "inspeção estática; requer homologação no Sankhya"
+}

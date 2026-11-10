@@ -1,0 +1,3 @@
+HAIALA v6.0.9 - Base v6.0.8. Mudanças somente na navegação e visualização.
+AC padrão: Por Dia + mês corrente. CL padrão: Carteira + mês corrente. CL-01: Cobertura primeiro; ocultos bloco tributário, dados comerciais e bloco 01 indicadores. Teste: tarja vermelha em Clientes, Produtos e Geomarketing.
+Consulta e fórmulas financeiras preservadas. Homologar visualmente; rollback v6.0.8 e v6.0.7 congelada.

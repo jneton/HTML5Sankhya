@@ -1,0 +1,5 @@
+HAIALA v6.0.4 - Base v6.0.3
+1) Retirada a coluna Qte OCs exclusivamente da tabela do Bloco 02.
+2) Clique no nome do representante abre o popup Pedidos existente; filtro aplicado por representante efetivo da venda (CODVEND) no mesmo recorte de skuItemsFiltered. Busca, detalhes, memória e paginação preservados.
+3) Sem novas consultas Oracle e sem mudanças financeiras.
+Homologar no Sankhya, incluindo representante ativo sem vendas.
