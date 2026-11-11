@@ -1,0 +1,19 @@
+{
+  "version": "6.1.11",
+  "base": "6.1.10",
+  "status": "TESTE",
+  "sha256_jsp": "5392c53d4a936d5a06bcaa979b9175f1ae41557c08bb7a8fbe0a391e1282b90a",
+  "queries_before": 32,
+  "queries_after": 33,
+  "old_sql_identical": true,
+  "changes": [
+    "fix two group title expressions",
+    "clickable TOP rows",
+    "popup per TOP with original commercial order details",
+    "new document-level Oracle source for informational groups"
+  ],
+  "limitations": [
+    "Sankhya live execution not verified",
+    "additional query may affect startup performance"
+  ]
+}

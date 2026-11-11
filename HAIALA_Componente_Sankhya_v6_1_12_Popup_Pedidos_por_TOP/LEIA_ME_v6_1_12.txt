@@ -1,0 +1,9 @@
+HAIALA v6.1.11 - POPUP PEDIDOS POR TOP / CORRECAO DOS TITULOS (TESTE)
+Base v6.1.10. Baseline homologada v6.0.9.
+1. Corrigida a origem real dos caracteres '?' nos cabecalhos dos grupos informativos: duas concatenacoes ainda continham travessao Unicode. Agora usam hifen simples.
+2. Clique/Enter sobre uma linha de TOP na tabela da Composicao financeira abre o popup Pedidos filtrado exclusivamente pela TOP clicada.
+3. Pedidos comerciais (grupo 1) reutilizam popup existente e seus detalhamentos de itens/MC; TOP especifica aplicada ao recorte.
+4. Grupos 3,4,5 usam consulta adicional de documentos TGFCAB + versao historica TGFTOP, com NUNOTA, data, cliente, representante e valor; popup de Pedidos informativo, sem itens ou margem inventados.
+5. Nova consulta auxiliar nao alimenta nenhum KPI, subtotal, MC, totais ou conciliações existentes.
+6. Regras financeiras, TOPs, STATUSNOTA e consultas anteriores inalteradas.
+LIMITES: novas linhas de documentos e JSP dependem de teste real no Sankhya. A consulta traz todos documentos elegiveis em 2026, potencialmente impactando o tempo de abertura; monitorar carga.
