@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Projetos - Estilo Monday (Sankhya)</title>
+    <script src="https://cdn.jsdelivr.net/gh/wansleynery/SankhyaJX@main/jx.min.js"></script>
+    <style>
+        :root {
+            --bg-main: #F6F7FB;
+            --bg-card: #FFFFFF;
+            --text-primary: #323338;
+            --text-secondary: #676879;
+            --border-color: #D0D4E4;
+            --primary-blue: #0073EA;
+            --status-feito: #00C875;
+            --status-andamento: #FDAB3D;
+            --status-travado: #E2445C;
+            --status-pendente: #C4C4C4;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { margin: 0; background-color: var(--bg-main); color: var(--text-primary); }
+
+        .header {
+            background: var(--bg-card);
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .header h1 { margin: 0; font-size: 20px; font-weight: 600; }
+        
+        select, input, textarea, button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            outline: none;
+        }
+        select:focus, input:focus, textarea:focus { border-color: var(--primary-blue); }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-secondary {
+            background-color: #F0F2F5;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+        }
+
+        .view-tabs {
+            background: var(--bg-card);
+            padding: 0 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 20px;
+        }
+        .tab {
+            padding: 12px 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+        }
+        .tab.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+
+        .group-block {
+            background: var(--bg-card);
+            border-radius: 8px;
+            margin-bottom: 28px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .group-header {
+            padding: 12px 16px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td {
+            border: 1px solid #E6E9EF;
+            padding: 10px 12px;
+            font-size: 13px;
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        th { background-color: #F9FAFC; color: var(--text-secondary); font-weight: 500; }
+        tr:hover td { background-color: #F5F6F8; }
+
+        .task-title-cell {
+            border-left: 5px solid #579BFC;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .task-title-cell:hover { color: var(--primary-blue); text-decoration: underline; }
+
+        .status-pill {
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 6px 8px;
+            display: block;
+            width: 100%;
+            border: none;
+            appearance: none;
+        }
+        .st-FEITO { background-color: var(--status-feito); }
+        .st-ANDAMENTO { background-color: var(--status-andamento); }
+        .st-TRAVADO { background-color: var(--status-travado); }
+        .st-PENDENTE { background-color: var(--status-pendente); color: #333; }
+
+        .add-task-row td { background: #FAFBFC; padding: 6px 12px; }
+        .add-task-input { width: 100%; border: none; background: transparent; font-size: 13px; }
+
+        .kanban-board {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 16px;
+        }
+        .kanban-col {
+            min-width: 280px;
+            width: 280px;
+            background: #EBEDF5;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .kanban-col-header {
+            font-weight: 600;
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: white;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .kanban-card {
+            background: white;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            cursor: pointer;
+        }
+        .kanban-card-title { font-weight: 500; margin-bottom: 8px; font-size: 14px; }
+        .kanban-card-meta { font-size: 12px; color: var(--text-secondary); display: flex; justify-content: space-between; }
+
+        /* Gaveta Lateral Completa */
+        .drawer-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            justify-content: flex-end;
+            z-index: 1000;
+        }
+        .drawer {
+            width: 540px;
+            max-width: 100%;
+            background: white;
+            height: 100%;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.1);
+        }
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+        .section-title { font-size: 14px; font-weight: 600; margin: 16px 0 8px 0; border-bottom: 1px solid #EEE; padding-bottom: 4px; }
+        
+        .subtask-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 8px;
+            background: #F9FAFC;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        .comments-list { max-height: 240px; overflow-y: auto; margin: 12px 0; display: flex; flex-direction: column; gap: 10px; }
+        .comment-item { background: #F6F7FB; padding: 10px; border-radius: 8px; font-size: 13px; }
+        .comment-author { font-weight: 600; color: var(--primary-blue); margin-bottom: 4px; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-left">
+            <h1>Quadro de Tarefas</h1>
+            <select id="selectQuadro" onchange="carregarDadosQuadro()">
+                <option value="">Carregando quadros...</option>
+            </select>
+        </div>
+        <div>
+            <button class="btn-primary" onclick="carregarDadosQuadro()">Atualizar Dados</button>
+        </div>
+    </div>
+
+    <div class="view-tabs">
+        <div class="tab active" id="tabTabela" onclick="alternarVisao('TABELA')">Tabela Principal</div>
+        <div class="tab" id="tabKanban" onclick="alternarVisao('KANBAN')">Quadro Kanban</div>
+    </div>
+
+    <div class="container">
+        <div id="viewTabela"></div>
+        <div id="viewKanban" class="kanban-board" style="display: none;"></div>
+    </div>
+
+    <!-- Gaveta Lateral de Edição, Subtarefas e Atualizações -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="fecharGaveta(event)">
+        <div class="drawer" onclick="event.stopPropagation()">
+            <div class="drawer-header">
+                <h3 style="margin:0; font-size:16px;">Detalhes do Item</h3>
+                <button class="btn-secondary" onclick="document.getElementById('drawerOverlay').style.display='none'">Fechar</button>
+            </div>
+
+            <!-- Campos da Tarefa -->
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>Título da Tarefa</label>
+                <input type="text" id="editTitulo">
+            </div>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Responsável (TSIUSU)</label>
+                    <select id="editResponsavel"></select>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="editStatus">
+                        <option value="PENDENTE">Pendente</option>
+                        <option value="ANDAMENTO">Em Andamento</option>
+                        <option value="TRAVADO">Travado</option>
+                        <option value="FEITO">Feito</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Prioridade</label>
+                    <select id="editPrioridade">
+                        <option value="BAIXA">Baixa</option>
+                        <option value="MEDIA">Média</option>
+                        <option value="ALTA">Alta</option>
+                        <option value="CRITICA">Crítica</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Data de Entrega</label>
+                    <input type="date" id="editDtEntrega">
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>Descrição / Detalhamento</label>
+                <textarea id="editDescricao" rows="2"></textarea>
+            </div>
+
+            <button class="btn-primary" onclick="salvarDetalhesTarefa()" style="width: 100%;">Salvar Alterações</button>
+
+            <!-- Subtarefas (AD_SUBTAREFAS) -->
+            <div class="section-title">Subtarefas</div>
+            <div id="listaSubtarefas"></div>
+            <div style="display:flex; gap:8px; margin-top:8px;">
+                <input type="text" id="novaSubtarefa" placeholder="Adicionar subtarefa..." style="flex:1;">
+                <button class="btn-secondary" onclick="adicionarSubtarefa()">Adicionar</button>
+            </div>
+
+            <!-- Atualizações / Comentários (AD_COMENTARIOS) -->
+            <div class="section-title">Atualizações e Comentários</div>
+            <div class="comments-list" id="listaComentarios"></div>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="novoComentario" placeholder="Escreva uma atualização..." style="flex:1;">
+                <button class="btn-primary" onclick="enviarComentario()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let visaoAtual = 'TABELA';
+        let gruposDoQuadro = [];
+        let tarefasDoQuadro = [];
+        let listaUsuarios = [];
+        let tarefaSelecionada = null;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            carregarUsuarios();
+            carregarQuadros();
+        });
+
+        function carregarUsuarios() {
+            const sql = `SELECT CODUSU, NOMEUSU FROM TSIUSU WHERE DTLIMACESSO IS NULL OR DTLIMACESSO >= SYSDATE ORDER BY NOMEUSU`;
+            JX.consultar(sql).then(res => {
+                listaUsuarios = res || [];
+                const sel = document.getElementById('editResponsavel');
+                sel.innerHTML = '<option value="">-- Sem responsável --</option>';
+                listaUsuarios.forEach(u => {
+                    const opt = document.createElement('option');
+                    opt.value = u.CODUSU;
+                    opt.textContent = u.NOMEUSU;
+                    sel.appendChild(opt);
+                });
+            });
+        }
+
+        function carregarQuadros() {
+            const sql = `SELECT CODQUADRO, NOME FROM AD_QUADROS ORDER BY CODQUADRO`;
+            JX.consultar(sql).then(res => {
+                const select = document.getElementById('selectQuadro');
+                select.innerHTML = '';
+                if (!res || res.length === 0) {
+                    select.innerHTML = '<option value="">Nenhum quadro cadastrado</option>';
+                    return;
+                }
+                res.forEach(q => {
+                    const opt = document.createElement('option');
+                    opt.value = q.CODQUADRO;
+                    opt.textContent = q.NOME;
+                    select.appendChild(opt);
+                });
+                carregarDadosQuadro();
+            });
+        }
+
+        function carregarDadosQuadro() {
+            const codQuadro = document.getElementById('selectQuadro').value;
+            if (!codQuadro) return;
+
+            const sqlGrupos = `SELECT CODGRUPO, NOME, COR FROM AD_GRUPOS WHERE CODQUADRO = ${codQuadro} ORDER BY ORDEM, CODGRUPO`;
+            const sqlTarefas = `
+                SELECT T.CODTAREFA, T.CODGRUPO, T.TITULO, T.DESCRICAO, T.STATUS, T.PRIORIDADE, T.CODUSU_RESP,
+                       TO_CHAR(T.DTENTREGA, 'DD/MM/YYYY') AS DTENTREGA,
+                       TO_CHAR(T.DTENTREGA, 'YYYY-MM-DD') AS DTENTREGA_ISO,
+                       U.NOMEUSU AS RESPONSAVEL
+                FROM AD_TAREFAS T
+                INNER JOIN AD_GRUPOS G ON G.CODGRUPO = T.CODGRUPO
+                LEFT JOIN TSIUSU U ON U.CODUSU = T.CODUSU_RESP
+                WHERE G.CODQUADRO = ${codQuadro}
+                ORDER BY T.ORDEM, T.CODTAREFA
+            `;
+
+            Promise.all([JX.consultar(sqlGrupos), JX.consultar(sqlTarefas)]).then(([grupos, tarefas]) => {
+                gruposDoQuadro = grupos || [];
+                tarefasDoQuadro = tarefas || [];
+                renderizar();
+            });
+        }
+
+        function alternarVisao(visao) {
+            visaoAtual = visao;
+            document.getElementById('tabTabela').classList.toggle('active', visao === 'TABELA');
+            document.getElementById('tabKanban').classList.toggle('active', visao === 'KANBAN');
+            document.getElementById('viewTabela').style.display = visao === 'TABELA' ? 'block' : 'none';
+            document.getElementById('viewKanban').style.display = visao === 'KANBAN' ? 'flex' : 'none';
+            renderizar();
+        }
+
+        function renderizar() {
+            if (visaoAtual === 'TABELA') renderizarTabela();
+            else renderizarKanban();
+        }
+
+        function renderizarTabela() {
+            const container = document.getElementById('viewTabela');
+            container.innerHTML = '';
+
+            gruposDoQuadro.forEach(grupo => {
+                const cor = grupo.COR || '#579BFC';
+                const tarefasGrupo = tarefasDoQuadro.filter(t => t.CODGRUPO == grupo.CODGRUPO);
+
+                let linhasHtml = tarefasGrupo.map(t => `
+                    <tr>
+                        <td class="task-title-cell" style="border-left-color: ${cor};" onclick="abrirGaveta(${t.CODTAREFA})">
+                            ${t.TITULO}
+                        </td>
+                        <td>${t.RESPONSAVEL || '-'}</td>
+                        <td style="padding: 4px;">
+                            <select class="status-pill st-${t.STATUS || 'PENDENTE'}" onchange="alterarStatus(${t.CODTAREFA}, this.value)">
+                                <option value="PENDENTE" ${t.STATUS === 'PENDENTE' ? 'selected' : ''}>Pendente</option>
+                                <option value="ANDAMENTO" ${t.STATUS === 'ANDAMENTO' ? 'selected' : ''}>Em Andamento</option>
+                                <option value="TRAVADO" ${t.STATUS === 'TRAVADO' ? 'selected' : ''}>Travado</option>
+                                <option value="FEITO" ${t.STATUS === 'FEITO' ? 'selected' : ''}>Feito</option>
+                            </select>
+                        </td>
+                        <td>${t.PRIORIDADE || 'MEDIA'}</td>
+                        <td>${t.DTENTREGA || '-'}</td>
+                    </tr>
+                `).join('');
+
+                const bloco = document.createElement('div');
+                bloco.className = 'group-block';
+                bloco.innerHTML = `
+                    <div class="group-header" style="color: ${cor};">
+                        <span>▼</span> <span>${grupo.NOME}</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 40%;">Item / Tarefa</th>
+                                <th style="width: 18%;">Responsável</th>
+                                <th style="width: 16%;">Status</th>
+                                <th style="width: 13%;">Prioridade</th>
+                                <th style="width: 13%;">Prazo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${linhasHtml}
+                            <tr class="add-task-row">
+                                <td colspan="5" style="border-left: 5px solid ${cor};">
+                                    <input type="text" class="add-task-input" 
+                                           placeholder="+ Adicionar tarefa neste grupo (pressione Enter)..." 
+                                           onkeypress="if(event.key==='Enter') criarTarefa(${grupo.CODGRUPO}, this)">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+                container.appendChild(bloco);
+            });
+        }
+
+        function renderizarKanban() {
+            const container = document.getElementById('viewKanban');
+            container.innerHTML = '';
+
+            const colunas = [
+                { id: 'PENDENTE', nome: 'Pendente', cor: '#808080' },
+                { id: 'ANDAMENTO', nome: 'Em Andamento', cor: '#FDAB3D' },
+                { id: 'TRAVADO', nome: 'Travado', cor: '#E2445C' },
+                { id: 'FEITO', nome: 'Feito', cor: '#00C875' }
+            ];
+
+            colunas.forEach(col => {
+                const cards = tarefasDoQuadro.filter(t => (t.STATUS || 'PENDENTE') === col.id);
+                const cardsHtml = cards.map(t => `
+                    <div class="kanban-card" onclick="abrirGaveta(${t.CODTAREFA})">
+                        <div class="kanban-card-title">${t.TITULO}</div>
+                        <div class="kanban-card-meta">
+                            <span>👤 ${t.RESPONSAVEL || 'Sem resp.'}</span>
+                            <span>📅 ${t.DTENTREGA || '-'}</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                const colDiv = document.createElement('div');
+                colDiv.className = 'kanban-col';
+                colDiv.innerHTML = `
+                    <div class="kanban-col-header" style="background-color: ${col.cor};">
+                        <span>${col.nome}</span>
+                        <span>${cards.length}</span>
+                    </div>
+                    ${cardsHtml}
+                `;
+                container.appendChild(colDiv);
+            });
+        }
+
+        function criarTarefa(codGrupo, inputEl) {
+            const titulo = inputEl.value.trim();
+            if (!titulo) return;
+
+            inputEl.disabled = true;
+            JX.salvar({
+                CODGRUPO: codGrupo,
+                TITULO: titulo,
+                STATUS: 'PENDENTE',
+                PRIORIDADE: 'MEDIA',
+                ORDEM: 1
+            }, 'AD_TAREFAS').then(() => {
+                inputEl.value = '';
+                inputEl.disabled = false;
+                carregarDadosQuadro();
+            }).catch(err => {
+                alert('Erro ao salvar tarefa: ' + JSON.stringify(err));
+                inputEl.disabled = false;
+            });
+        }
+
+        function alterarStatus(codTarefa, novoStatus) {
+            JX.salvar(
+                { STATUS: novoStatus },
+                'AD_TAREFAS',
+                [{ CODTAREFA: codTarefa }]
+            ).then(() => {
+                carregarDadosQuadro();
+            });
+        }
+
+        function abrirGaveta(codTarefa) {
+            tarefaSelecionada = tarefasDoQuadro.find(t => t.CODTAREFA == codTarefa);
+            if (!tarefaSelecionada) return;
+
+            document.getElementById('editTitulo').value = tarefaSelecionada.TITULO || '';
+            document.getElementById('editResponsavel').value = tarefaSelecionada.CODUSU_RESP || '';
+            document.getElementById('editStatus').value = tarefaSelecionada.STATUS || 'PENDENTE';
+            document.getElementById('editPrioridade').value = tarefaSelecionada.PRIORIDADE || 'MEDIA';
+            document.getElementById('editDtEntrega').value = tarefaSelecionada.DTENTREGA_ISO || '';
+            document.getElementById('editDescricao').value = tarefaSelecionada.DESCRICAO || '';
+
+            document.getElementById('drawerOverlay').style.display = 'flex';
+            carregarSubtarefas(codTarefa);
+            carregarComentarios(codTarefa);
+        }
+
+        function fecharGaveta(e) {
+            if (e.target.id === 'drawerOverlay') {
+                document.getElementById('drawerOverlay').style.display = 'none';
+            }
+        }
+
+        function salvarDetalhesTarefa() {
+            if (!tarefaSelecionada) return;
+            const dtIso = document.getElementById('editDtEntrega').value;
+            let dtSankhya = null;
+            if (dtIso) {
+                const partes = dtIso.split('-');
+                dtSankhya = `${partes[2]}/${partes[1]}/${partes[0]}`;
+            }
+
+            const dados = {
+                TITULO: document.getElementById('editTitulo').value,
+                CODUSU_RESP: document.getElementById('editResponsavel').value || null,
+                STATUS: document.getElementById('editStatus').value,
+                PRIORIDADE: document.getElementById('editPrioridade').value,
+                DTENTREGA: dtSankhya,
+                DESCRICAO: document.getElementById('editDescricao').value
+            };
+
+            JX.salvar(dados, 'AD_TAREFAS', [{ CODTAREFA: tarefaSelecionada.CODTAREFA }]).then(() => {
+                alert('Tarefa atualizada com sucesso!');
+                carregarDadosQuadro();
+            });
+        }
+
+        function carregarSubtarefas(codTarefa) {
+            const sql = `SELECT CODSUBTAREFA, TITULO, STATUS FROM AD_SUBTAREFAS WHERE CODTAREFA = ${codTarefa} ORDER BY CODSUBTAREFA`;
+            JX.consultar(sql).then(res => {
+                const lista = document.getElementById('listaSubtarefas');
+                if (!res || res.length === 0) {
+                    lista.innerHTML = '<div style="color:#888; font-size:12px;">Nenhuma subtarefa.</div>';
+                    return;
+                }
+                lista.innerHTML = res.map(s => `
+                    <div class="subtask-item">
+                        <span style="${s.STATUS === 'FEITO' ? 'text-decoration:line-through; color:#888;' : ''}">${s.TITULO}</span>
+                        <input type="checkbox" ${s.STATUS === 'FEITO' ? 'checked' : ''} onchange="alternarSubtarefa(${s.CODSUBTAREFA}, this.checked)">
+                    </div>
+                `).join('');
+            });
+        }
+
+        function adicionarSubtarefa() {
+            const input = document.getElementById('novaSubtarefa');
+            const titulo = input.value.trim();
+            if (!titulo || !tarefaSelecionada) return;
+
+            JX.salvar({
+                CODTAREFA: tarefaSelecionada.CODTAREFA,
+                TITULO: titulo,
+                STATUS: 'PENDENTE'
+            }, 'AD_SUBTAREFAS').then(() => {
+                input.value = '';
+                carregarSubtarefas(tarefaSelecionada.CODTAREFA);
+            });
+        }
+
+        function alternarSubtarefa(codSub, feito) {
+            JX.salvar(
+                { STATUS: feito ? 'FEITO' : 'PENDENTE' },
+                'AD_SUBTAREFAS',
+                [{ CODSUBTAREFA: codSub }]
+            ).then(() => carregarSubtarefas(tarefaSelecionada.CODTAREFA));
+        }
+
+        function carregarComentarios(codTarefa) {
+            const sql = `
+                SELECT C.MENSAGEM, TO_CHAR(C.DHALTER, 'DD/MM/YYYY HH24:MI') AS DATAHORA, U.NOMEUSU
+                FROM AD_COMENTARIOS C
+                LEFT JOIN TSIUSU U ON U.CODUSU = C.CODUSU
+                WHERE C.CODTAREFA = ${codTarefa}
+                ORDER BY C.CODCOMENTARIO DESC
+            `;
+            JX.consultar(sql).then(res => {
+                const lista = document.getElementById('listaComentarios');
+                if (!res || res.length === 0) {
+                    lista.innerHTML = '<div style="color:#888; font-size:12px;">Nenhuma atualização registrada.</div>';
+                    return;
+                }
+                lista.innerHTML = res.map(c => `
+                    <div class="comment-item">
+                        <div class="comment-author">${c.NOMEUSU || 'Usuário'} • ${c.DATAHORA || ''}</div>
+                        <div>${c.MENSAGEM}</div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function enviarComentario() {
+            const input = document.getElementById('novoComentario');
+            const texto = input.value.trim();
+            if (!texto || !tarefaSelecionada) return;
+
+            JX.getCookie('userIDLogado').then(codUsu => {
+                return JX.salvar({
+                    CODTAREFA: tarefaSelecionada.CODTAREFA,
+                    CODUSU: codUsu || 0,
+                    MENSAGEM: texto
+                }, 'AD_COMENTARIOS');
+            }).then(() => {
+                input.value = '';
+                carregarComentarios(tarefaSelecionada.CODTAREFA);
+            });
+        }
+    </script>
+</body>
+</html>
