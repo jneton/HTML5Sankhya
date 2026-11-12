@@ -1,0 +1,94 @@
+--- HAIALA_v6_1_23_FRETE_SQL_VALIDADA_TESTE.jsp
++++ HAIALA_v6_1_24_RESTRICAO_DIAGNOSTICO_Q622_TESTE.jsp
+@@ -16,7 +16,7 @@
+ String haialaMesParam = request.getParameter("haialaMes");
+ if (haialaMesParam == null || !(haialaMesParam.equals("all") || haialaMesParam.matches("(?:[1-9]|1[0-2])"))) haialaMesParam = "";
+ pageContext.setAttribute("haialaMesSelecionado", haialaMesParam);
+-// v6.1.23: codigo de usuario obtido da sessao do ERP (fail closed).
++// v6.1.24: codigo de usuario obtido da sessao do ERP (fail closed).
+ String haialaCodUsuLogado = "0";
+ try {
+   Object haialaAuth = session.getAttribute("usuarioLogado");
+@@ -27,11 +27,14 @@
+ } catch (Exception ignored) { haialaCodUsuLogado = "0"; }
+ boolean haialaPodeVerQ534P = "1".equals(haialaCodUsuLogado) || "45".equals(haialaCodUsuLogado);
+ pageContext.setAttribute("haialaPodeVerQ534P", Boolean.valueOf(haialaPodeVerQ534P));
++// v6.1.24: permissao de exibicao independente para o diagnostico Q622.
++boolean haialaPodeVerQ622 = "1".equals(haialaCodUsuLogado) || "45".equals(haialaCodUsuLogado);
++pageContext.setAttribute("haialaPodeVerQ622", Boolean.valueOf(haialaPodeVerQ622));
+ 
+ 
+ %>
+ 
+-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HAIALA - Painel de Bordo Comercial - Ambiente de Teste V6.1.23</title><style>
++<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HAIALA - Painel de Bordo Comercial - Ambiente de Teste V6.1.24</title><style>
+ :root{font-family:Inter,ui-sans-serif,system-ui,'Segoe UI',Arial;color:#192d41;background:#f3f6fa}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}#app{display:block;min-height:100vh}.sidebar{background:#172d43;color:#eef6fd;padding:14px 22px;position:sticky;top:0;z-index:20;box-shadow:0 4px 16px #0c21321f;display:flex;align-items:center;gap:22px;flex-wrap:wrap}.brand{display:flex;gap:11px;align-items:center;margin:0;min-width:max-content}.logomark{background:#3c6d87;border-radius:12px;font-weight:900;padding:11px}.brand strong{font-size:21px;letter-spacing:2px}.brand small{display:block;font-size:10px;letter-spacing:1px;color:#bbcfdf}.modhead{font-size:10px;color:#a5bfce;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap;margin-right:6px}.navgroups{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.navgroup{position:relative}.navgroup>summary{list-style:none;display:flex;align-items:center;gap:8px;border:1px solid #34506a;background:#1d3951;color:#e7f0f7;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px}.navgroup>summary::-webkit-details-marker{display:none}.navgroup>summary::after{content:"v";font-size:11px;color:#aecdde}.navgroup[open]>summary{background:#29445a;border-color:#46627c}.navgroup[open]>summary::after{content:"^"}.dropdownmenu{position:absolute;top:calc(100% + 8px);left:0;min-width:280px;max-height:68vh;overflow:auto;background:#fff;border:1px solid #dbe6ef;border-radius:12px;box-shadow:0 20px 50px #0b233633;padding:8px;z-index:30}.dropdownmenu .nav{width:100%;text-align:left;border:0;background:transparent;color:#274258;border-radius:8px;padding:10px 12px;margin:2px 0;font-size:12px;display:block}.dropdownmenu .nav:hover{background:#edf4f9}.dropdownmenu .nav.active{background:#e1eef5;color:#172d43;font-weight:800}.navgroup .groupcaption{font-size:10px;color:#7891a4;letter-spacing:1px;text-transform:uppercase;padding:4px 8px 8px}.main{min-width:0;padding:25px 28px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.eyebrow{color:#63798d;font-size:12px;margin-bottom:4px}.title{font-size:27px;line-height:1.15;margin:0}.subtitle{font-size:13px;color:#718397;margin-top:8px}.tag{background:#e9f1f8;color:#275874;padding:5px 9px;border-radius:50px;font-size:11px;font-weight:700}.notice{background:#fff5dd;border:1px solid #f2dfb6;color:#805b1a;border-radius:10px;padding:10px 13px;font-size:12px}.box{background:#fff;border:1px solid #dfe7ef;border-radius:13px;box-shadow:0 2px 8px #183a5810;padding:18px}.filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.field label{display:block;color:#657b8f;font-size:11px;font-weight:700;margin-bottom:5px}.field select,.field input{border:1px solid #d0dce6;color:#23384c;background:white;width:100%;border-radius:7px;padding:9px;min-width:0}.section{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:25px 0 12px}.section h2{font-size:15px;margin:0}.section small{color:#7c8d9e}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+ .kpis.five-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}.kpis.six-kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+ @media(max-width:1100px){.kpis.five-kpis,.kpis.six-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@@ -6687,7 +6690,7 @@
+ ORDER BY NUNOTA
+ </snk:query>
+ </c:catch>
+-<!-- v6.1.23: OC e frete conforme sintaxe fornecida pela TI, recorte ano selecionado. -->
++<!-- v6.1.24: OC e frete conforme sintaxe fornecida pela TI, recorte ano selecionado. -->
+ <c:catch var="haialaFalhaQ622Frete">
+ <snk:query var="haialaQ622Frete">
+ WITH
+@@ -7548,12 +7551,14 @@
+ <div id="haialaCarteiraNotice" class="haiala-diagnostics" role="status">Verificando carteira atual...</div>
+ <div id="haialaV477Notice" class="haiala-diagnostics" role="status">Verificando gerência e UF no Oracle...</div>
+ <div id="haialaSkuNotice" class="haiala-diagnostics" role="status">Verificando dados de SKU...</div>
+-<section class="box" id="haialaCarteiraCompletaPanel" style="display:none;margin-top:16px"></section><div id="q12Real" aria-label="Dados comerciais por período"></div><div class="section" id="cl01Sec01"><h2>01 - Visão executiva</h2><small id="kpiHint"></small></div><div class="kpis" id="kpis"></div><div id="acClientSecondRow" class="ac-client-second-row" style="display:none" aria-label="Indicadores de clientes e ShowRoom"></div><section id="haialaV6GerRep" class="v6-gerrep" style="display:none" aria-label="Desempenho por gerente e representante"></section><div class="section" id="cl01Sec02"><h2>02 - Inteligência comercial</h2><small>Visualização por página</small></div><div class="analytics"><section class="box" id="primaryPanel"></section><section class="box" id="secondaryPanel"></section></div><div class="section" id="cl01Sec03"><h2>03 - Regras e cenários funcionais</h2><small>Calculados a partir da amostra sintética</small></div><section class="box" id="rulesPanel"></section><div class="section" id="q533FamilyTitle" style="display:none"><h2>03 - Vendas por Família x Tipologia</h2><small id="q533FamilyStatus">Fonte: Oracle | Empresa 1</small></div><section class="box" id="q533FamilyPanel" style="display:none" aria-label="Vendas por família e tipologia"></section><div class="section" id="cl01Sec04"><h2>04 - Análise detalhada</h2><div class="actions"><button class="btn" id="exportBtn">Exportar CSV</button><button class="btn" id="testBtn">Executar autotestes</button></div></div><section class="box" id="cl01DetailContainer"><div class="chips" id="activeFilters"></div><div class="tablewrap" id="tablePanel"></div><p class="note" id="tableHelp"></p></section><div class="footer" id="haialaVersionFooter">HAIALA - V6.1.23 | 5 menus | Fonte e período identificados nos indicadores; limitações sinalizadas quando aplicáveis.</div></main></div><div id="modalHost"></div><script>
++<section class="box" id="haialaCarteiraCompletaPanel" style="display:none;margin-top:16px"></section><div id="q12Real" aria-label="Dados comerciais por período"></div><div class="section" id="cl01Sec01"><h2>01 - Visão executiva</h2><small id="kpiHint"></small></div><div class="kpis" id="kpis"></div><div id="acClientSecondRow" class="ac-client-second-row" style="display:none" aria-label="Indicadores de clientes e ShowRoom"></div><section id="haialaV6GerRep" class="v6-gerrep" style="display:none" aria-label="Desempenho por gerente e representante"></section><div class="section" id="cl01Sec02"><h2>02 - Inteligência comercial</h2><small>Visualização por página</small></div><div class="analytics"><section class="box" id="primaryPanel"></section><section class="box" id="secondaryPanel"></section></div><div class="section" id="cl01Sec03"><h2>03 - Regras e cenários funcionais</h2><small>Calculados a partir da amostra sintética</small></div><section class="box" id="rulesPanel"></section><div class="section" id="q533FamilyTitle" style="display:none"><h2>03 - Vendas por Família x Tipologia</h2><small id="q533FamilyStatus">Fonte: Oracle | Empresa 1</small></div><section class="box" id="q533FamilyPanel" style="display:none" aria-label="Vendas por família e tipologia"></section><div class="section" id="cl01Sec04"><h2>04 - Análise detalhada</h2><div class="actions"><button class="btn" id="exportBtn">Exportar CSV</button><button class="btn" id="testBtn">Executar autotestes</button></div></div><section class="box" id="cl01DetailContainer"><div class="chips" id="activeFilters"></div><div class="tablewrap" id="tablePanel"></div><p class="note" id="tableHelp"></p></section><div class="footer" id="haialaVersionFooter">HAIALA - V6.1.24 | 5 menus | Fonte e período identificados nos indicadores; limitações sinalizadas quando aplicáveis.</div></main></div><div id="modalHost"></div><script>
+ /* Versao centralizada para cabecalho e rodape. Sem alterar os indicadores. */
+-const HAIALA_VERSION = '6.1.23';
++const HAIALA_VERSION = '6.1.24';
+ const HAIALA_YEAR=Number('<c:out value="${haialaAno}"/>');
+ const HAIALA_YEAR_CURRENT=Number('<c:out value="${haialaAnoAtual}"/>');
+ const HAIALA_Q534P_DIAG_ALLOWED = <c:out value="${haialaPodeVerQ534P}"/>;
++/* v6.1.24: sinalizador Q622 servido pelo JSP, negado para demais codigos ou codigo desconhecido. */
++const HAIALA_Q622_DIAG_ALLOWED = <c:out value="${haialaPodeVerQ622}"/>;
+ const HAIALA_MONTH_PARAM=String('<c:out value="${haialaMesSelecionado}"/>') || null;
+ const HAIALA_MONTH_INITIAL=(HAIALA_MONTH_PARAM==='all'||/^(?:[1-9]|1[0-2])$/.test(HAIALA_MONTH_PARAM||''))?HAIALA_MONTH_PARAM:String(new Date().getMonth()+1);
+ const haialaYearDay=(d)=>/^\d{4}-\d{2}-\d{2}$/.test(String(d))&&Number(String(d).slice(0,4))===HAIALA_YEAR;
+@@ -7599,7 +7604,7 @@
+     const kpis=d&&d.querySelector('#kpis');
+     const header=d&&d.getElementById('haialaVersionHeader');
+     const filter=d&&d.getElementById('filters');
+-    if(!yearSel||yearSel.value!==String(next)||!kpis||!kpis.children.length||!filter||!filter.children.length||!header||!header.textContent.includes('6.1.23')){
++    if(!yearSel||yearSel.value!==String(next)||!kpis||!kpis.children.length||!filter||!filter.children.length||!header||!header.textContent.includes('6.1.24')){
+      throw new Error('A resposta chegou, mas os scripts e os filtros do exercício '+next+' não foram inicializados.');
+     }
+     finished=true;clearTimeout(deadline);resolve();
+@@ -7648,8 +7653,8 @@
+   if(!response.ok)throw new Error('HTTP '+response.status);
+   const markup=await response.text();
+   const targetYear="const HAIALA_YEAR=Number('"+next+"');";
+-  if(!markup.includes(targetYear)||!markup.includes('haialaQ43Result')||!markup.includes('haialaQ534PrazoResult')||!markup.includes("const HAIALA_VERSION = '6.1.23'")){
+-   throw new Error('O endpoint não retornou o JSP íntegro da versão 6.1.23 para '+next+'.');
++  if(!markup.includes(targetYear)||!markup.includes('haialaQ43Result')||!markup.includes('haialaQ534PrazoResult')||!markup.includes("const HAIALA_VERSION = '6.1.24'")){
++   throw new Error('O endpoint não retornou o JSP íntegro da versão 6.1.24 para '+next+'.');
+   }
+   if(cancelled||controller.signal.aborted)throw new Error('Consulta interrompida.');
+   msg.textContent='Dados de '+next+' recebidos. Inicializando o painel isolado...';
+@@ -9120,7 +9125,7 @@
+  const margem='<section class="ac-client-card ac-client-card--margin" aria-label="Margem de contribuição"><h3>Margem de Contribuição por Grupo - Pedido</h3>'+q539V614Table()+haialaQ534PDiagnosticHTML()+'</section>';
+  host.innerHTML=combined+freightCard+margem;
+ }
+-/* v6.1.23: Frete/OC de transporte segundo SQL da TI. Nao altera o frete de custo da MC. */
++/* v6.1.24: Frete/OC de transporte segundo SQL da TI. Nao altera o frete de custo da MC. */
+ const HAIALA_Q622_FRETE_HOST=document.getElementById('haialaQ622FreteResult');
+ const HAIALA_Q622_FRETE_OK=!!HAIALA_Q622_FRETE_HOST&&HAIALA_Q622_FRETE_HOST.dataset.ok==='true';
+ const HAIALA_Q622_FRETE_ROWS=HAIALA_Q622_FRETE_HOST?[...HAIALA_Q622_FRETE_HOST.querySelectorAll('.haiala-q622-frete')].map(el=>({
+@@ -9129,9 +9134,9 @@
+ const HAIALA_Q622_FRETE_VALID=HAIALA_Q622_FRETE_OK && HAIALA_Q622_FRETE_ROWS.length===12 &&
+  HAIALA_Q622_FRETE_ROWS.every(r=>Number.isInteger(r.mes)&&r.mes>=1&&r.mes<=12&&Number.isFinite(r.ocs)&&r.ocs>=0&&Number.isFinite(r.frete)) &&
+  new Set(HAIALA_Q622_FRETE_ROWS.map(r=>r.mes)).size===12;
+-/* v6.1.23: auditoria de integracao da Q622, restrita aos usuarios 1 e 45. */
++/* v6.1.24: auditoria de integracao da Q622, restrita aos usuarios 1 e 45. */
+ function haialaQ623FreteDiagnosticHTML(){
+- if(!HAIALA_Q534P_DIAG_ALLOWED)return '';
++ if(HAIALA_Q622_DIAG_ALLOWED !== true)return '';
+  const err=String(HAIALA_Q622_FRETE_HOST?.dataset.error||'');
+  const filterBlock=(state.rep!=='all'||state.carteira!=='all'||state.manager!=='all'||state.uf!=='all'||clientSelected()||skuSelected()||typeSelected());
+  const rowText=HAIALA_Q622_FRETE_ROWS.slice().sort((a,b)=>a.mes-b.mes).map(r=>

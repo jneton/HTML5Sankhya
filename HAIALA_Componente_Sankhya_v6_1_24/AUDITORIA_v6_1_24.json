@@ -1,0 +1,9 @@
+{
+  "versao": "6.1.24",
+  "baseline": "6.1.23 homologada",
+  "status": "teste",
+  "sha256_jsp": "b477b3368339f3779983b847ae2d93844cf6345a34731fd43ad385a821f45b2b",
+  "consultas_oracle": 36,
+  "consultas_idênticas": true,
+  "alteração": "sinalizador independente de permissão Q622, resolvido no servidor para usuários 1 e 45"
+}

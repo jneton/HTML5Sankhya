@@ -1,0 +1,8 @@
+HAIALA v6.1.24 — RESTRICAO EXPLICITA DO DIAGNOSTICO Q622
+
+Base homologada: v6.1.23.
+Alteracao: controle visual de Q622 com permissao independente, validada no servidor: usuario de codigo 1 ou 45. Demais usuarios e nao identificados recebem false (falha fechada).
+Q534P mantem a restricao existente aos mesmos codigos. Indicadores Frete R$ e Qte OCs permanecem visiveis para todos, sujeitos a filtros e dados validos.
+Todas as 36 consultas Oracle, formulas, navegacao e indicadores inalterados.
+Teste pendente no Sankhya: usuario 1, 45 e terceiro usuario nao autorizado.
+A restricao de exibicao nao equivale a controle de autorizacao sobre fontes de dados.
