@@ -1,0 +1,45 @@
+HAIALA | Painel de Gestão Comercial v6.1.35 | TESTE NÃO HOMOLOGADO
+Base de código: v6.1.34. Baseline homologada congelada: v6.1.24.
+
+ESCOPO IMPLEMENTADO:
+- Q619: fonte de custos das devoluções do grupo 5, filtradas pelo grupo 04 regular,
+  com ligação direta TGFVAR D->V (NUNOTA+SEQUENCIA) e custo referencial da NF
+  pelo histórico TGFCUS.CUSSEMICM. Busca último custo anterior ao mês da NF;
+  fallback para último custo disponível, como política do painel.
+- Q618 permanece fonte de receita, quantidade e tributos fiscais CODIMP 1/6/7.
+- MC grupo 5 técnica: -(receita devolvida) + (custo referencial NF original)
+  + (ICMS + PIS + COFINS fiscais da devolução), sem estorno não comprovado
+  de comissão ou frete. Filtra competência da DTNEG da devolução.
+- Consolidado com devolução: inclui grupo 5 SOMENTE quando Q618+Q619 integralmente
+  conciliadas e card de Pedido/Investimento/Defeitos válido; caso contrário N/D.
+- Números são identificados de modo visível como PROVISÓRIOS.
+- KPIs principais de Vendas/Pedidos/Faturamento NÃO foram alterados.
+
+TRAVAS:
+- 2026: totais anuais Q618 de R$229.067,69 e 478 unidades (prova externa anterior).
+- Vinculação única D->V, custo >0, quantidade devolvida <= NF origem,
+  nenhuma duplicação documento/SKU e Q618/Q619 idênticas por item agregado.
+- Não registra comissão revertida como zero homologado. Sem prova efetiva,
+  nenhuma reversão de comissão ou frete entra no cálculo técnico.
+
+LIMITAÇÕES (CRÍTICAS):
+- CUSTO TGFCUS histórico da competência da NF é REFERENCIAL; a equivalência com
+  o valor de custo utilizado na MC do pedido original não foi comprovada no Oracle.
+- TRIBUTOS são registros fiscais do retorno; correção da reversão econômica
+  precisa de validação fiscal/documental por natureza da operação.
+- A parcela referente à comissão e ao frete pode modificar o valor final.
+- NÃO é a MC final homologada. Não tomar decisão financeira por esse consolidado.
+- SQL não executado nesta sessão no Oracle, validação apenas estática.
+
+VALIDAÇÃO REQUERIDA NO SANKHYA:
+  1) Abrir JSP, conferir que Q619 conclui sem erro; registrar carga em segundos.
+  2) Recorte 2026 integral: reproduzir 188 itens, 478 QTDNEG, VLC R$229.067,69
+     na base elegível e reconciliar custo esperado Check01 R$72.823,65.
+  3) MC grupo 5 deve ser NEGATIVA em receita e mostrar MC técnica provisória.
+     Consolidado inclui grupo 5 e avisa caráter provisório.
+  4) Recortes julho (11 PC, R$4.664,14 sem sucata), outubro, novembro e filtros.
+  5) Se N/D: verificar a mensagem de validação, não remover trava artificialmente.
+  6) Testar que KPIs comerciais homologados e outras consultas mantêm os valores.
+
+FONTE CAMPOS: Google Drive HAIALA | Repositório Mestre Sankhya Oracle:
+  04_CAMPOS, 06_RELACIONAMENTOS, 10C_Opções e significados dos valores.

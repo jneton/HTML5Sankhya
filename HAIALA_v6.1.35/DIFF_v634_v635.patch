@@ -1,0 +1,281 @@
+--- HAIALA_v6_1_34_Tributos_Devolucoes_Fonte_Validada_TESTE.jsp
++++ HAIALA_v6_1_35_MC_Tecnica_Devolucoes_TESTE.jsp
+@@ -34,7 +34,7 @@
+ 
+ %>
+ 
+-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HAIALA - Painel de Bordo Comercial - Ambiente de Teste V6.1.34</title><style>
++<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HAIALA - Painel de Bordo Comercial - Ambiente de Teste V6.1.35</title><style>
+ :root{font-family:Inter,ui-sans-serif,system-ui,'Segoe UI',Arial;color:#192d41;background:#f3f6fa}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}#app{display:block;min-height:100vh}.sidebar{background:#172d43;color:#eef6fd;padding:14px 22px;position:sticky;top:0;z-index:20;box-shadow:0 4px 16px #0c21321f;display:flex;align-items:center;gap:22px;flex-wrap:wrap}.brand{display:flex;gap:11px;align-items:center;margin:0;min-width:max-content}.logomark{background:#3c6d87;border-radius:12px;font-weight:900;padding:11px}.brand strong{font-size:21px;letter-spacing:2px}.brand small{display:block;font-size:10px;letter-spacing:1px;color:#bbcfdf}.modhead{font-size:10px;color:#a5bfce;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap;margin-right:6px}.navgroups{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.navgroup{position:relative}.navgroup>summary{list-style:none;display:flex;align-items:center;gap:8px;border:1px solid #34506a;background:#1d3951;color:#e7f0f7;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px}.navgroup>summary::-webkit-details-marker{display:none}.navgroup>summary::after{content:"v";font-size:11px;color:#aecdde}.navgroup[open]>summary{background:#29445a;border-color:#46627c}.navgroup[open]>summary::after{content:"^"}.dropdownmenu{position:absolute;top:calc(100% + 8px);left:0;min-width:280px;max-height:68vh;overflow:auto;background:#fff;border:1px solid #dbe6ef;border-radius:12px;box-shadow:0 20px 50px #0b233633;padding:8px;z-index:30}.dropdownmenu .nav{width:100%;text-align:left;border:0;background:transparent;color:#274258;border-radius:8px;padding:10px 12px;margin:2px 0;font-size:12px;display:block}.dropdownmenu .nav:hover{background:#edf4f9}.dropdownmenu .nav.active{background:#e1eef5;color:#172d43;font-weight:800}.navgroup .groupcaption{font-size:10px;color:#7891a4;letter-spacing:1px;text-transform:uppercase;padding:4px 8px 8px}.main{min-width:0;padding:25px 28px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.eyebrow{color:#63798d;font-size:12px;margin-bottom:4px}.title{font-size:27px;line-height:1.15;margin:0}.subtitle{font-size:13px;color:#718397;margin-top:8px}.tag{background:#e9f1f8;color:#275874;padding:5px 9px;border-radius:50px;font-size:11px;font-weight:700}.notice{background:#fff5dd;border:1px solid #f2dfb6;color:#805b1a;border-radius:10px;padding:10px 13px;font-size:12px}.box{background:#fff;border:1px solid #dfe7ef;border-radius:13px;box-shadow:0 2px 8px #183a5810;padding:18px}.filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.field label{display:block;color:#657b8f;font-size:11px;font-weight:700;margin-bottom:5px}.field select,.field input{border:1px solid #d0dce6;color:#23384c;background:white;width:100%;border-radius:7px;padding:9px;min-width:0}.section{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:25px 0 12px}.section h2{font-size:15px;margin:0}.section small{color:#7c8d9e}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+ .kpis.five-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}.kpis.six-kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+ @media(max-width:1100px){.kpis.five-kpis,.kpis.six-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@@ -364,7 +364,7 @@
+ </c:catch>
+ <c:catch var="haialaFalhaQ43">
+ <snk:query var="haialaQ43">
+-/* v6.1.34: valores de pedido por itens elegiveis do grupo 04, exceto Show-Room;
++/* v6.1.35: valores de pedido por itens elegiveis do grupo 04, exceto Show-Room;
+    contagem de documentos preservada mesmo quando nenhum item for elegivel. */
+ WITH GRUPOS_04_REGULARES AS (
+   SELECT G.CODGRUPOPROD
+@@ -462,7 +462,7 @@
+ </snk:query>
+ </c:catch>
+ <!-- v6.1.8: grupos informativos de TOP. Nao alimentam indicadores comerciais. -->
+-<!-- v6.1.34: composição informativa por NUNOTA + SKU elegível, incluindo devoluções D/5.
++<!-- v6.1.35: composição informativa por NUNOTA + SKU elegível, incluindo devoluções D/5.
+      Não alimenta KPIs nem compensa devoluções: somente exibição documental e por item filtrado. -->
+ <c:catch var="haialaFalhaQ618Informativo">
+ <snk:query var="haialaQ618Informativo">
+@@ -532,7 +532,70 @@
+ ORDER BY DIA,GRUPO,OPERACAO,DOCUMENTO,SKU
+ </snk:query>
+ </c:catch>
+-<!-- v6.1.34: Q626 removida da execução; auditoria visual descontinuada a pedido. -->
++<!-- v6.1.35 / Q619: custo na competencia da NF de origem, vinculo D->V, sem duplicar TGFVAR.
++     Consulta exclusivamente diagnóstica até validação Oracle na instalação. -->
++<c:catch var="haialaFalhaQ619CustoDevolucao">
++<snk:query var="haialaQ619CustoDevolucao">
++WITH ELEGIVEL AS (
++ SELECT G.CODGRUPOPROD FROM SANKHYA.TGFGRU G
++ START WITH G.CODGRUPOPROD=40000000
++ CONNECT BY NOCYCLE PRIOR G.CODGRUPOPROD=G.CODGRUPAI
++), EXCECAO AS (
++ SELECT G.CODGRUPOPROD FROM SANKHYA.TGFGRU G
++ START WITH G.CODGRUPOPROD=40209000
++ CONNECT BY NOCYCLE PRIOR G.CODGRUPOPROD=G.CODGRUPAI
++), DEV_ITENS AS (
++ SELECT C.NUNOTA, C.DTNEG, C.CODTIPOPER, I.SEQUENCIA, I.CODPROD,
++        NVL(I.QTDNEG,0) AS QTD, NVL(I.VLRTOT,0)-NVL(I.VLRDESC,0)-NVL(I.VLRDESCRAT,0) AS VLC
++ FROM SANKHYA.TGFCAB C
++ JOIN SANKHYA.TGFTOP T ON T.CODTIPOPER=C.CODTIPOPER AND T.DHALTER=C.DHTIPOPER
++ JOIN SANKHYA.TGFITE I ON I.NUNOTA=C.NUNOTA
++ JOIN SANKHYA.TGFPRO P ON P.CODPROD=I.CODPROD
++ WHERE C.CODEMP=1 AND C.TIPMOV='D' AND T.AD_GRUPO=5
++ AND C.STATUSNOTA IN ('A','P','L')
++ AND C.DTNEG>=DATE '${haialaAno}-01-01'
++ AND C.DTNEG<LEAST(TRUNC(SYSDATE)+1,DATE '${haialaAnoSeguinte}-01-01')
++ AND P.CODGRUPOPROD IN (SELECT CODGRUPOPROD FROM ELEGIVEL)
++ AND P.CODGRUPOPROD NOT IN (SELECT CODGRUPOPROD FROM EXCECAO)
++), VINCULOS AS (
++ SELECT DISTINCT V.NUNOTA,V.SEQUENCIA,V.NUNOTAORIG,V.SEQUENCIAORIG
++ FROM SANKHYA.TGFVAR V
++ JOIN DEV_ITENS D ON D.NUNOTA=V.NUNOTA AND D.SEQUENCIA=V.SEQUENCIA
++), CONFERENCIA AS (
++ SELECT D.NUNOTA, D.SEQUENCIA, D.CODPROD, D.DTNEG, D.QTD, D.VLC,
++        CASE WHEN NF.TIPMOV='V' AND NF.CODEMP=1 AND O.CODPROD=D.CODPROD THEN 1 ELSE 0 END AS VINCULO_VALIDO,
++        CASE WHEN NF.TIPMOV='V' AND NF.CODEMP=1 AND O.CODPROD=D.CODPROD THEN O.QTDNEG END AS QTD_ORIG,
++        CASE WHEN NF.TIPMOV='V' AND NF.CODEMP=1 AND O.CODPROD=D.CODPROD THEN CUS.CUSSEMICM END AS CUS_UNIT
++ FROM DEV_ITENS D
++ LEFT JOIN VINCULOS V ON V.NUNOTA=D.NUNOTA AND V.SEQUENCIA=D.SEQUENCIA
++ LEFT JOIN SANKHYA.TGFITE O ON O.NUNOTA=V.NUNOTAORIG AND O.SEQUENCIA=V.SEQUENCIAORIG
++ LEFT JOIN SANKHYA.TGFCAB NF ON NF.NUNOTA=O.NUNOTA
++ OUTER APPLY (
++  SELECT C.CUSSEMICM
++  FROM SANKHYA.TGFCUS C
++  WHERE C.CODPROD=O.CODPROD AND C.CODEMP=NF.CODEMP AND C.CUSSEMICM>0
++  ORDER BY CASE WHEN C.DTATUAL<TRUNC(NF.DTNEG,'MM') THEN 0 ELSE 1 END,
++           C.DTATUAL DESC, C.DHALTER DESC
++  FETCH FIRST 1 ROW ONLY
++ ) CUS
++)
++SELECT TO_CHAR(DTNEG,'YYYY-MM-DD') AS DIA, NUNOTA AS DOCUMENTO, CODPROD AS SKU,
++       COUNT(DISTINCT SEQUENCIA) AS ITENS_DEV,
++       ROUND(SUM(CASE WHEN RN=1 THEN QTD ELSE 0 END),6) AS QTD_DEV,
++       ROUND(SUM(CASE WHEN RN=1 THEN VLC ELSE 0 END),2) AS VLC_DEV,
++       SUM(VINCULO_VALIDO) AS VINCULOS_VALIDOS,
++       SUM(CASE WHEN VINCULO_VALIDO=1 AND CUS_UNIT>0 THEN 1 ELSE 0 END) AS LINHAS_COM_CUSTO,
++       SUM(CASE WHEN VINCULO_VALIDO=1 AND QTD>NVL(QTD_ORIG,0) THEN 1 ELSE 0 END) AS QTD_EXCEDE,
++       ROUND(SUM(CASE WHEN VINCULO_VALIDO=1 AND CUS_UNIT>0 THEN QTD*CUS_UNIT ELSE 0 END),6) AS CUSTO_REF
++FROM (
++ SELECT X.*, ROW_NUMBER() OVER (PARTITION BY NUNOTA,SEQUENCIA ORDER BY VINCULO_VALIDO DESC) AS RN
++ FROM CONFERENCIA X
++)
++GROUP BY TO_CHAR(DTNEG,'YYYY-MM-DD'),NUNOTA,CODPROD
++ORDER BY DIA,DOCUMENTO,SKU
++</snk:query>
++</c:catch>
++<!-- v6.1.35: Q626 removida da execução; auditoria visual descontinuada a pedido. -->
+ <c:catch var="haialaFalhaQ616SemItensZero">
+ <snk:query var="haialaQ616SemItensZero">
+ SELECT TO_CHAR(CAB.DTNEG, 'YYYY-MM-DD') AS DIA,
+@@ -7425,6 +7488,10 @@
+  data-lin-cofins="<c:out value="${item.LIN_COFINS}"/>"></span>
+ </c:forEach></c:if>
+ </div>
++<div id="haialaQ619CustoDevolucaoResult" hidden data-ok="<c:out value="${empty haialaFalhaQ619CustoDevolucao}"/>" data-error="<c:out value="${haialaFalhaQ619CustoDevolucao.message}"/>">
++<c:if test="${empty haialaFalhaQ619CustoDevolucao}"><c:forEach items="${haialaQ619CustoDevolucao.rows}" var="item">
++<span class="haiala-q619-custo" data-dia="<c:out value="${item.DIA}"/>" data-doc="<c:out value="${item.DOCUMENTO}"/>" data-sku="<c:out value="${item.SKU}"/>" data-itens="<c:out value="${item.ITENS_DEV}"/>" data-qtd="<c:out value="${item.QTD_DEV}"/>" data-vlc="<c:out value="${item.VLC_DEV}"/>" data-vinculos="<c:out value="${item.VINCULOS_VALIDOS}"/>" data-cobertos="<c:out value="${item.LINHAS_COM_CUSTO}"/>" data-excede="<c:out value="${item.QTD_EXCEDE}"/>" data-custo="<c:out value="${item.CUSTO_REF}"/>"></span>
++</c:forEach></c:if></div>
+ <div id="haialaQ6111DocsResult" hidden
+  data-ok="<c:out value="${empty haialaFalhaQ6111DocsTOP}"/>"
+  data-error="<c:out value="${haialaFalhaQ6111DocsTOP.message}"/>">
+@@ -7980,9 +8047,9 @@
+ <div id="haialaCarteiraNotice" class="haiala-diagnostics" role="status">Verificando carteira atual...</div>
+ <div id="haialaV477Notice" class="haiala-diagnostics" role="status">Verificando gerência e UF no Oracle...</div>
+ <div id="haialaSkuNotice" class="haiala-diagnostics" role="status">Verificando dados de SKU...</div>
+-<section class="box" id="haialaCarteiraCompletaPanel" style="display:none;margin-top:16px"></section><div id="q12Real" aria-label="Dados comerciais por período"></div><div class="section" id="cl01Sec01"><h2>01 - Visão executiva</h2><small id="kpiHint"></small></div><div class="kpis" id="kpis"></div><div id="acClientSecondRow" class="ac-client-second-row" style="display:none" aria-label="Indicadores de clientes e ShowRoom"></div><section id="haialaV6GerRep" class="v6-gerrep" style="display:none" aria-label="Desempenho por gerente e representante"></section><div class="section" id="cl01Sec02"><h2>02 - Inteligência comercial</h2><small>Visualização por página</small></div><div class="analytics"><section class="box" id="primaryPanel"></section><section class="box" id="secondaryPanel"></section></div><div class="section" id="cl01Sec03"><h2>03 - Regras e cenários funcionais</h2><small>Calculados a partir da amostra sintética</small></div><section class="box" id="rulesPanel"></section><div class="section" id="q533FamilyTitle" style="display:none"><h2>03 - Vendas por Família x Tipologia</h2><small id="q533FamilyStatus">Fonte: Oracle | Empresa 1</small></div><section class="box" id="q533FamilyPanel" style="display:none" aria-label="Vendas por família e tipologia"></section><div class="section" id="cl01Sec04"><h2>04 - Análise detalhada</h2><div class="actions"><button class="btn" id="exportBtn">Exportar CSV</button><button class="btn" id="testBtn">Executar autotestes</button></div></div><section class="box" id="cl01DetailContainer"><div class="chips" id="activeFilters"></div><div class="tablewrap" id="tablePanel"></div><p class="note" id="tableHelp"></p></section><div class="footer" id="haialaVersionFooter">HAIALA - V6.1.34 | 5 menus | Fonte e período identificados nos indicadores; limitações sinalizadas quando aplicáveis.</div></main></div><div id="modalHost"></div><script>
++<section class="box" id="haialaCarteiraCompletaPanel" style="display:none;margin-top:16px"></section><div id="q12Real" aria-label="Dados comerciais por período"></div><div class="section" id="cl01Sec01"><h2>01 - Visão executiva</h2><small id="kpiHint"></small></div><div class="kpis" id="kpis"></div><div id="acClientSecondRow" class="ac-client-second-row" style="display:none" aria-label="Indicadores de clientes e ShowRoom"></div><section id="haialaV6GerRep" class="v6-gerrep" style="display:none" aria-label="Desempenho por gerente e representante"></section><div class="section" id="cl01Sec02"><h2>02 - Inteligência comercial</h2><small>Visualização por página</small></div><div class="analytics"><section class="box" id="primaryPanel"></section><section class="box" id="secondaryPanel"></section></div><div class="section" id="cl01Sec03"><h2>03 - Regras e cenários funcionais</h2><small>Calculados a partir da amostra sintética</small></div><section class="box" id="rulesPanel"></section><div class="section" id="q533FamilyTitle" style="display:none"><h2>03 - Vendas por Família x Tipologia</h2><small id="q533FamilyStatus">Fonte: Oracle | Empresa 1</small></div><section class="box" id="q533FamilyPanel" style="display:none" aria-label="Vendas por família e tipologia"></section><div class="section" id="cl01Sec04"><h2>04 - Análise detalhada</h2><div class="actions"><button class="btn" id="exportBtn">Exportar CSV</button><button class="btn" id="testBtn">Executar autotestes</button></div></div><section class="box" id="cl01DetailContainer"><div class="chips" id="activeFilters"></div><div class="tablewrap" id="tablePanel"></div><p class="note" id="tableHelp"></p></section><div class="footer" id="haialaVersionFooter">HAIALA - V6.1.35 | 5 menus | Fonte e período identificados nos indicadores; limitações sinalizadas quando aplicáveis.</div></main></div><div id="modalHost"></div><script>
+ /* Versao centralizada para cabecalho e rodape. Sem alterar os indicadores. */
+-const HAIALA_VERSION = '6.1.34';
++const HAIALA_VERSION = '6.1.35';
+ const HAIALA_YEAR=Number('<c:out value="${haialaAno}"/>');
+ const HAIALA_YEAR_CURRENT=Number('<c:out value="${haialaAnoAtual}"/>');
+ const HAIALA_Q534P_DIAG_ALLOWED = <c:out value="${haialaPodeVerQ534P}"/>;
+@@ -8033,7 +8100,7 @@
+     const kpis=d&&d.querySelector('#kpis');
+     const header=d&&d.getElementById('haialaVersionHeader');
+     const filter=d&&d.getElementById('filters');
+-    if(!yearSel||yearSel.value!==String(next)||!kpis||!kpis.children.length||!filter||!filter.children.length||!header||!header.textContent.includes('6.1.34')){
++    if(!yearSel||yearSel.value!==String(next)||!kpis||!kpis.children.length||!filter||!filter.children.length||!header||!header.textContent.includes('6.1.35')){
+      throw new Error('A resposta chegou, mas os scripts e os filtros do exercício '+next+' não foram inicializados.');
+     }
+     finished=true;clearTimeout(deadline);resolve();
+@@ -8082,8 +8149,8 @@
+   if(!response.ok)throw new Error('HTTP '+response.status);
+   const markup=await response.text();
+   const targetYear="const HAIALA_YEAR=Number('"+next+"');";
+-  if(!markup.includes(targetYear)||!markup.includes('haialaQ43Result')||!markup.includes('haialaQ534PrazoResult')||!markup.includes("const HAIALA_VERSION = '6.1.34'")){
+-   throw new Error('O endpoint não retornou o JSP íntegro da versão 6.1.34 para '+next+'.');
++  if(!markup.includes(targetYear)||!markup.includes('haialaQ43Result')||!markup.includes('haialaQ534PrazoResult')||!markup.includes("const HAIALA_VERSION = '6.1.35'")){
++   throw new Error('O endpoint não retornou o JSP íntegro da versão 6.1.35 para '+next+'.');
+   }
+   if(cancelled||controller.signal.aborted)throw new Error('Consulta interrompida.');
+   msg.textContent='Dados de '+next+' recebidos. Inicializando o painel isolado...';
+@@ -8224,7 +8291,7 @@
+ const Q471_ORDERS=new Set(Q471_ROWS.map(r=>r.id));
+ const Q471_CENTS=Math.round(Q471_ROWS.reduce((a,r)=>a+r.sales,0)*100);
+ const Q471_REF_CENTS=Math.round(Q43_ROWS.reduce((a,r)=>a+r[3],0)*100);
+-/* v6.1.34: pares MC-only auditados diretamente no Oracle; Q471 continua exclusivo comercial. */
++/* v6.1.35: pares MC-only auditados diretamente no Oracle; Q471 continua exclusivo comercial. */
+ const Q628_EL=document.getElementById('haialaQ628ExcecaoMC');
+ const Q628_ROWS=Q628_EL?[...Q628_EL.querySelectorAll('.haiala-q628-mc')].map(el=>({
+  id:q43num(el.dataset.id),dia:el.dataset.dia,op:q43num(el.dataset.op),
+@@ -8449,6 +8516,56 @@
+  }
+  return {valid:true,receita:rows.reduce((v,r)=>v+r.receita,0),margem:rows.reduce((v,r)=>v+r.margem,0),count:rows.length,note:'Fonte Q539-T Oracle'};
+ }
++/* v6.1.35: MC técnica condicional de devoluções, NÃO homologada para decisão financeira.
++   Custos de NF original em Q619 + impostos fiscais em Q618. Comissão/frete sem prova =
++   ausência de ajuste, não significa estorno zero confirmado. */
++const Q619_HOST=document.getElementById('haialaQ619CustoDevolucaoResult');
++const Q619_ROWS=Q619_HOST?[...Q619_HOST.querySelectorAll('.haiala-q619-custo')].map(el=>({
++ dia:el.dataset.dia,doc:q43num(el.dataset.doc),sku:q43num(el.dataset.sku),
++ itens:q43num(el.dataset.itens),qtd:q43num(el.dataset.qtd),vlc:q43num(el.dataset.vlc),
++ vinculos:q43num(el.dataset.vinculos),cobertos:q43num(el.dataset.cobertos),
++ excede:q43num(el.dataset.excede),custo:q539RequiredNumber(el.dataset.custo)
++})):[];
++const Q619_OK=!!Q619_HOST&&Q619_HOST.dataset.ok==='true'&&Q619_ROWS.every(r=>
++ haialaYearDay(r.dia)&&r.doc>0&&r.sku>0&&r.itens>0&&r.vinculos===r.itens&&
++ r.cobertos===r.itens&&r.excede===0&&
++ [r.qtd,r.vlc,r.custo].every(Number.isFinite)&&r.custo>=0);
++const Q619_BY_KEY=new Map(Q619_ROWS.map(r=>[r.doc+'|'+r.sku,r]));
++const Q619_UNIQUE=Q619_BY_KEY.size===Q619_ROWS.length;
++function q635McDevolucao(){
++ const bad=note=>({valid:false,receita:null,margem:null,count:0,note});
++ if(String(HAIALA_YEAR)!=='2026')return bad('MC devolução: ano não conciliado em Oracle');
++ if(!isRealPage()||state.profile!=='director'||!Q618_INFO_VALID||!Q619_OK||!Q619_UNIQUE)
++  return bad('Q618/Q619 não disponíveis ou vínculos/custos por item não conciliados');
++ if((managerActive()&&!V477_REP_OK)||(ufActive()&&!V477_UF_OK)||(carteiraActive()&&!CARTEIRA478_VALID))
++  return bad('Dimensões de gerente, UF ou carteira não conciliadas');
++ const all=Q618_INFO_ROWS.filter(r=>r.group===5&&r.tipmov==='D');
++ if(Math.abs(all.reduce((a,r)=>a+r.vlc,0)-229067.69)>.05||
++    Math.abs(all.reduce((a,r)=>a+r.qtd,0)-478)>.000001)
++  return bad('Base anual divergente da auditoria Oracle de 2026');
++ if(all.length!==Q619_ROWS.length)return bad('Cardinalidade Q618/Q619 não coincide por documento+SKU');
++ for(const r of all){const m=Q619_BY_KEY.get(r.doc+'|'+r.sku);
++  if(!m||m.dia!==r.day||Math.abs(m.qtd-r.qtd)>.00001||Math.abs(m.vlc-r.vlc)>.05)
++   return bad('Conciliação individual Q618/Q619 divergente');}
++ const selected=all.filter(r=>
++  (state.period==='all'||Number(r.day.slice(5,7))===Number(state.period))&&
++  (state.rep==='all'||r.rep===String(state.rep))&&clientMatches(r.client)&&
++  (!skuSelected()||String(r.sku)===String(state.sku))&&
++  (!typeSelected()||r.typology===state.type)&&
++  (state.manager==='all'||String(V477_REP_MAP.get(r.rep)?.manager||'-1')===String(state.manager))&&
++  (state.uf==='all'||String(V477_UF_MAP.get(r.client)||'(SEM UF)')===String(state.uf))&&
++  (state.carteira==='all'||String(CARTEIRA478_MAP.get(r.client)||'-1')===String(state.carteira)));
++ let rev=0,margin=0;
++ for(const r of selected){const c=Q619_BY_KEY.get(r.doc+'|'+r.sku);
++  const taxes=r.icmsFiscal+r.pisFiscal+r.cofinsFiscal;
++  if(![taxes,c.custo].every(Number.isFinite)||r.linIcms<1||r.linPis<1||r.linCofins<1)
++   return bad('Componentes fiscais incompletos no item');
++  rev-=r.vlc;
++  margin+= -r.vlc+c.custo+taxes;
++ }
++ return {valid:true,receita:rev,margem:margin,count:selected.length,
++  provisional:true,note:'MC TÉCNICA PROVISÓRIA: receita devolvida + custo original referencial + tributos TGFDIN; comissão/frete não ajustados sem prova do estorno. Não homologada.'};
++}
+ function q539V614Summary(){
+  const commercial=q539TFiltered();
+  const mc=q539TCard();
+@@ -8459,25 +8576,24 @@
+  const investimento=q539V614GroupMetrics(Q539T_NONCOMM_ROWS.filter(r=>[1002,1003,1006,1009,9002].includes(r.op)),'INVESTIMENTO');
+  const defeitos=q539V614GroupMetrics(Q539T_NONCOMM_ROWS.filter(r=>r.op===1004),'PEQUENOS DEFEITOS');
+  const groups=[['Venda / Pedido',venda],['Investimento',investimento],['Pequenos Defeitos',defeitos]];
+- // Grupo 5: operação fiscal D; não há componentes MC por devolução conciliados em Q539-T.
+- // Mantém visualização N/D sem duplicar dedução ou falsear margem consolidada.
+- const devolucao={valid:false,receita:null,margem:null,count:0,note:'MC de devoluções não apurada: ICMS/PIS/COFINS fiscais disponíveis (CODIMP 1/6/7), mas falta conciliar reversão efetiva e comissão/frete por item'};
+- const valid=groups.every(g=>g[1].valid);
++ const devolucao=q635McDevolucao();
++ const valid=groups.every(g=>g[1].valid)&&devolucao.valid;
+  const total=valid?{valid:true,
+-  receita:groups.reduce((v,g)=>v+g[1].receita,0),
+-  margem:groups.reduce((v,g)=>v+g[1].margem,0),
+-  count:groups.reduce((v,g)=>v+g[1].count,0),note:'Somente grupos da pagina Pedido'
+- }:{valid:false,receita:null,margem:null,count:0,note:'Consolidacao indisponivel: ao menos um grupo nao conciliado'};
++  receita:groups.reduce((v,g)=>v+g[1].receita,0)+devolucao.receita,
++  margem:groups.reduce((v,g)=>v+g[1].margem,0)+devolucao.margem,
++  count:groups.reduce((v,g)=>v+g[1].count,0)+devolucao.count,
++  provisional:true,note:'Consolidado técnico provisório com devolução (comissão/frete não conciliados)'
++ }:{valid:false,receita:null,margem:null,count:0,note:'Consolidado líquido bloqueado: retorno ou grupo sem conciliação completa'};
+  return {groups:[...groups,['Devolução (grupo 5)',devolucao]],total};
+ }
+ function q539V614Table(){
+  const summary=q539V614Summary();
+- const rows=[...summary.groups,['Consolidado (sem devolução)',summary.total]];
++ const rows=[...summary.groups,['Consolidado com devolução (PROVISÓRIO)',summary.total]];
+  const pct=r=>r.valid&&r.receita!==0?(100*r.margem/r.receita).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})+'%':'N/D';
+  return '<div class="mc614-scroll"><table class="mc614-table"><thead><tr><th>Grupo</th><th>Receita elegivel</th><th>MC R$</th><th>MC %</th></tr></thead><tbody>'+rows.map(([name,r],i)=>
+   '<tr'+(i===rows.length-1?' class="mc614-total"':'')+'><td>'+esc(name)+'</td><td>'+(r.valid?esc(money(r.receita)):'N/D')+'</td><td>'+(r.valid?esc(money(r.margem)):'N/D')+'</td><td>'+esc(pct(r))+'</td></tr>'
+  ).join('')+'</tbody></table></div>'+
+- '<p class="ac-client-note">MC Projetada por grupo da pagina Pedido. Grupo 5 (Devolução) exibido como N/D até validação da MC fiscal por item; não entra no consolidado. Consolidado (sem devolução) = soma das MC em R$ dos grupos 1, 3 e 4; percentual = MC total / receita elegível total. N/D indica falta de dados ou conciliação.</p>'+
++ '<p class="ac-client-note">v6.1.35 TESTE: MC técnica provisória do grupo 5 = − receita da devolução + custo referencial da NF original + ICMS/PIS/COFINS fiscais da devolução. Não há reversão presumida de comissão ou frete. Consolidado com devolução é PROVISÓRIO e não equivale à MC homologada. N/D bloqueia total quando houver qualquer divergência, vínculo ou custo ausente.</p>'+
+  (rows.some(([,r])=>!r.valid)?'<p class="ac-client-note ac-client-pending">'+esc(rows.filter(([,r])=>!r.valid).map(([name,r])=>name+': '+r.note).join(' | '))+'</p>':'')+ (summary.groups.slice(0,3).some(([,r])=>!r.valid)||!summary.total.valid?haialaV615DiagnosticHTML():'');
+ }
+ function q539TCard(){
+@@ -8921,7 +9037,7 @@
+    Com representante: somente Oracle Q45 conciliado, perfil visual diretor, paginas reais.
+    Filtros nao integrados NAO alteram esses resultados; informado explicitamente. */
+ /* v6.1.8: grupos extras apenas informativos, sem alteracao de totals ou KPIs. */
+-/* v6.1.34: ledger por competencia da devolucao, sem confundir receita com MC.
++/* v6.1.35: ledger por competencia da devolucao, sem confundir receita com MC.
+    Trava 2026: verificacao externa DBExplorer de 188 itens / 478 unidades / VLC 229067,69.
+    Somente recortes com bases de itens Q471/Q618 integralmente conciliadas. */
+ function q633BalanceHTML(){
+@@ -9002,7 +9118,7 @@
+   return title+detail+total;
+  }).join('');
+ }
+-/* v6.1.34: vinculo de abertura de TOP identico nas duas apresentações; sem alterar modal. */
++/* v6.1.35: vinculo de abertura de TOP identico nas duas apresentações; sem alterar modal. */
+ function haialaV626BindTaxTOP(content){
+  const table=content.querySelector('table[aria-label="Composição tributária por operação filtrada"]');
+  if(!table)return;
+@@ -9097,7 +9213,7 @@
+   return;
+  }
+  if(fiscalFilterActive()){
+-  // v6.1.34: mesma estrutura dos pedidos homologados, sem equiparar item a cabecalho.
++  // v6.1.35: mesma estrutura dos pedidos homologados, sem equiparar item a cabecalho.
+   // Os cinco filtros dimensionais usam Q471 (itens) para o recorte comercial.
+   source.textContent=Q471_VALID?(Q476_FISCAL_VALID?'ORACLE - ITENS CONCILIADOS':'ORACLE - ITENS / TRIBUTOS N/D'):'ORACLE - ITENS N/D';
+   scope.textContent=(managerActive()?'Gerência '+labelManager(state.manager)+' | ':'')+(ufActive()?'UF '+state.uf+' | ':'')+(carteiraActive()?'Carteira atual '+carteiraName(state.carteira)+' | ':'')+(typeSelected()?'Tipologia '+rotuloTipologia(state.type)+' | ':'')+(skuSelected()?'SKU '+rotuloSKU(state.sku)+' | ':'')+per+' | Empresa 1';
+@@ -9463,7 +9579,7 @@
+ /* HAIALA v5.1.2 - KPI: pares distintos (NUNOTA, CODPROD) / pedidos distintos. 
+    N/D sem conciliacao dimensional de Q471, inclusive snapshot.
+    Um pedido com o mesmo CODPROD em duas sequencias conta apenas uma vez. */
+-/* v6.1.34: documentos sem SKU comercial são válidos, mas contribuem
++/* v6.1.35: documentos sem SKU comercial são válidos, mas contribuem
+    ZERO ao numerador (pares pedido-SKU) e UMA unidade ao denominador.
+    A ausência é provada por Q628 (somente MC) ou Q616 (pedido vazio),
+    nunca por ajuste manual nem pela diferença residual Q43-Q471. */

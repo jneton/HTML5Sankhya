@@ -1,0 +1,22 @@
+{
+  "version": "6.1.35",
+  "base": "6.1.34",
+  "status": "TESTE PARCIAL - MC TÉCNICA PROVISÓRIA; NÃO HOMOLOGADA",
+  "sha256_jsp": "95bc4ce74e99f34a7105c1257abda468e93a7807bf7719de64b892082d2fd899",
+  "checks_static": {
+    "queries_balanced": true,
+    "catches_balanced": true,
+    "has_q619": true,
+    "cost_join_original_nf": true,
+    "has_trava_annual": true,
+    "no_auto_commission_reverse": true,
+    "provisional_visible": true,
+    "prior_group5_hardcoded_removed": true,
+    "js_block_syntax": true
+  },
+  "oracle_executed": false,
+  "new_queries": 1,
+  "total_queries": 38,
+  "original_mc_formula_preserved": true,
+  "kpis_preserved": true
+}
