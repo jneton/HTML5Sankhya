@@ -1,0 +1,37 @@
+#snk-environment-indicator {
+    position: fixed !important;
+    top: 50% !important;
+    left: 0 !important;
+    z-index: 2147483647 !important;
+    width: 18px !important;
+    height: 18px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    color: #fff !important;
+    font: 700 7px/1 Arial, Helvetica, sans-serif !important;
+    letter-spacing: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translate(-100%, -50%) !important;
+    transition: transform .18s ease, opacity .18s ease, visibility .18s ease !important;
+    pointer-events: none !important;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .30) !important;
+    user-select: none !important;
+}
+
+#snk-environment-indicator.snk-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translate(4px, -50%) !important;
+}
+
+#snk-environment-indicator.snk-prd {
+    background: #c90000 !important;
+}
+
+#snk-environment-indicator.snk-tst {
+    background: #079b32 !important;
+}

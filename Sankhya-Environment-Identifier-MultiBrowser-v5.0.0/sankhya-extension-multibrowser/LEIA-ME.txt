@@ -1,0 +1,43 @@
+SANKHYA ENVIRONMENT IDENTIFIER 5.0.0 — MULTI-BROWSER
+
+Compatibilidade
+- Google Chrome (Manifest V3)
+- Microsoft Edge (Chromium / Manifest V3)
+- Mozilla Firefox (WebExtensions / Manifest V3)
+
+ARQUIVOS
+- manifest.json
+- content.js
+- content.css
+- popup.html
+- popup.js
+- icon128.png
+
+INSTALAÇÃO — CHROME
+1. Extraia o ZIP em uma pasta.
+2. Acesse chrome://extensions
+3. Ative “Modo do desenvolvedor”.
+4. Clique em “Carregar sem compactação”.
+5. Selecione a pasta extraída.
+
+INSTALAÇÃO — MICROSOFT EDGE
+1. Extraia o ZIP em uma pasta.
+2. Acesse edge://extensions
+3. Ative “Modo do desenvolvedor”.
+4. Clique em “Carregar sem compactação”.
+5. Selecione a pasta extraída.
+
+INSTALAÇÃO — FIREFOX (TESTE / TEMPORÁRIA)
+1. Extraia o ZIP em uma pasta.
+2. Acesse about:debugging#/runtime/this-firefox
+3. Clique em “Carregar extensão temporária...”.
+4. Selecione o arquivo manifest.json dentro da pasta extraída.
+
+OBSERVAÇÃO SOBRE O FIREFOX
+A instalação temporária do Firefox pode ser removida quando o navegador for
+reiniciado. Para distribuição permanente, a extensão precisa ser assinada pelo
+Mozilla Add-ons (AMO), mesmo que seja distribuída fora da loja.
+
+OBSERVAÇÃO
+A extensão só injeta o indicador nos endereços definidos em matches no
+manifest.json. A lógica de identificação de Produção/Teste foi preservada.
