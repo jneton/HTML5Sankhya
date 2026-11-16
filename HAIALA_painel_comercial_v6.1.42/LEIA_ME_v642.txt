@@ -1,0 +1,4 @@
+HAIALA v6.1.42 — Remoção do bloco redundante sob o TOTAL DEVOLUÇÃO.
+Mantém tabela exclusiva do grupo 5 com quantidade devolvida em peças, MC e 38 SQLs originais.
+Não altera fórmulas, filtros, custos ou tributos.
+Versão de teste aguardando conferência final no Sankhya e homologação explícita.

@@ -1,0 +1,8 @@
+HAIALA v6.1.50 — TESTE
+Base: v6.1.49 homologada.
+Instalar o JSP no construtor de componentes Sankhya.
+Escopo: gráfico Bloco 03 com barra empilhada por gerente, cores fixas, total acima e tooltip; Top 5 + Outros.
+Os 38 SQL e popup permanecem iguais.
+Conciliação por período: a soma dos gerentes deve conferir com a barra já homologada; se não, mostra o gráfico total sem empilhamento e explica por quê.
+Testar novembro/2026 por dia com Gerência Todos, validar 03/11 e 13/11, filtrar gerência/rep, mês e visões de semana/mês; conferir total e segmentos com Bloco 02.
+Status: candidata a teste no Sankhya, NAO homologada.

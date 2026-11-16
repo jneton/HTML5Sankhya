@@ -1,0 +1,10 @@
+{
+  "versao": "6.1.42",
+  "status": "TESTE — homologação condicionada à validação no Sankhya",
+  "consultas_iguais": true,
+  "consultas": 38,
+  "removido": "bloco inferior de 3 linhas financeiras + tributos + controle de competência",
+  "preservado": "tabela TOP grupo5 com QTDNEG (peças), MC, fórmulas e fonte Oracle",
+  "js_necessita_validacao": true,
+  "jsp_sha256": "c108b64cea211ad360ec6af3fe3b34e88b18f0d004cf9504c2447f7bbfa4c9e7"
+}

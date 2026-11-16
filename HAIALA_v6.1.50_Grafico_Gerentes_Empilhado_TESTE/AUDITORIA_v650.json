@@ -1,0 +1,30 @@
+{
+  "versao": "6.1.50",
+  "status": "TESTE, NAO HOMOLOGADA",
+  "base": "6.1.49 HOMOLOGADA",
+  "escopo": "Bloco 03 grafico de vendas por dia/semana/mes como barras empilhadas por gerente",
+  "fonte": "Q471 itens comerciais / cadastro V601 de gerentes; conciliacao com totais por periodo do grafico original",
+  "consultas_sql": 38,
+  "sql_textualmente_identicos": true,
+  "popup_intacto": true,
+  "validacoes": [
+    "cobertura por periodo e valor em R$ 0,02",
+    "falha fechada: grafico total original caso divergencia",
+    "sem dados sinteticos",
+    "Top 5 gerentes + Outros",
+    "legenda fixa por codigo de gerente",
+    "tooltip gerente/periodo/valor/percentual",
+    "sem mudanca em cards e KPIs"
+  ],
+  "testes": [
+    "node --check funcao isolada",
+    "teste mock com dois periodos e dois gerentes",
+    "teste de divergencia aciona fallback",
+    "comparacao 38 consultas"
+  ],
+  "limitacoes": [
+    "teste de execucao Sankhya pendente",
+    "sem responsividade confirmada em dispositivo real"
+  ],
+  "sha256_jsp": "0d13995cc3e86d1dbbcc1278cd35a7b6469970e1ede2620c433321cda5175617"
+}
