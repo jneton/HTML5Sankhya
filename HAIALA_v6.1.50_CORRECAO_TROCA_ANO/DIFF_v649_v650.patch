@@ -1,0 +1,163 @@
+--- v6.1.49
++++ v6.1.50
+@@ -34,7 +34,7 @@
+ 
+ %>
+ 
+-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HAIALA - Painel de Bordo Comercial - Teste V6.1.49</title><style>
++<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HAIALA - Painel de Bordo Comercial - Teste V6.1.50</title><style>
+ :root{font-family:Inter,ui-sans-serif,system-ui,'Segoe UI',Arial;color:#192d41;background:#f3f6fa}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}#app{display:block;min-height:100vh}.sidebar{background:#172d43;color:#eef6fd;padding:14px 22px;position:sticky;top:0;z-index:20;box-shadow:0 4px 16px #0c21321f;display:flex;align-items:center;gap:22px;flex-wrap:wrap}.brand{display:flex;gap:11px;align-items:center;margin:0;min-width:max-content}.logomark{background:#3c6d87;border-radius:12px;font-weight:900;padding:11px}.brand strong{font-size:21px;letter-spacing:2px}.brand small{display:block;font-size:10px;letter-spacing:1px;color:#bbcfdf}.modhead{font-size:10px;color:#a5bfce;letter-spacing:1.3px;text-transform:uppercase;white-space:nowrap;margin-right:6px}.navgroups{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.navgroup{position:relative}.navgroup>summary{list-style:none;display:flex;align-items:center;gap:8px;border:1px solid #34506a;background:#1d3951;color:#e7f0f7;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px}.navgroup>summary::-webkit-details-marker{display:none}.navgroup>summary::after{content:"v";font-size:11px;color:#aecdde}.navgroup[open]>summary{background:#29445a;border-color:#46627c}.navgroup[open]>summary::after{content:"^"}.dropdownmenu{position:absolute;top:calc(100% + 8px);left:0;min-width:280px;max-height:68vh;overflow:auto;background:#fff;border:1px solid #dbe6ef;border-radius:12px;box-shadow:0 20px 50px #0b233633;padding:8px;z-index:30}.dropdownmenu .nav{width:100%;text-align:left;border:0;background:transparent;color:#274258;border-radius:8px;padding:10px 12px;margin:2px 0;font-size:12px;display:block}.dropdownmenu .nav:hover{background:#edf4f9}.dropdownmenu .nav.active{background:#e1eef5;color:#172d43;font-weight:800}.navgroup .groupcaption{font-size:10px;color:#7891a4;letter-spacing:1px;text-transform:uppercase;padding:4px 8px 8px}.main{min-width:0;padding:25px 28px;max-width:1600px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.eyebrow{color:#63798d;font-size:12px;margin-bottom:4px}.title{font-size:27px;line-height:1.15;margin:0}.subtitle{font-size:13px;color:#718397;margin-top:8px}.tag{background:#e9f1f8;color:#275874;padding:5px 9px;border-radius:50px;font-size:11px;font-weight:700}.notice{background:#fff5dd;border:1px solid #f2dfb6;color:#805b1a;border-radius:10px;padding:10px 13px;font-size:12px}.box{background:#fff;border:1px solid #dfe7ef;border-radius:13px;box-shadow:0 2px 8px #183a5810;padding:18px}.filters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.field label{display:block;color:#657b8f;font-size:11px;font-weight:700;margin-bottom:5px}.field select,.field input{border:1px solid #d0dce6;color:#23384c;background:white;width:100%;border-radius:7px;padding:9px;min-width:0}.section{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:25px 0 12px}.section h2{font-size:15px;margin:0}.section small{color:#7c8d9e}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}
+ .kpis.five-kpis{grid-template-columns:repeat(5,minmax(0,1fr))}.kpis.six-kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+ @media(max-width:1100px){.kpis.five-kpis,.kpis.six-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@@ -352,6 +352,15 @@
+ .v6-gerrep .v6-rep-idle{font-style:italic;color:#657d8d}
+ .v6-gerrep [hidden]{display:none!important}
+ 
++
++/* v6.1.50 — exclusivo do gráfico do Bloco 03: barras empilhadas por gerente. */
++.ac-manager-stack{display:flex;flex-direction:column;justify-content:flex-end;width:100%;height:165px;border-radius:5px 5px 0 0;overflow:hidden;background:#eaf1f6}
++.ac-manager-segment{width:100%;min-height:0;display:block;flex:0 0 auto;box-sizing:border-box}
++.ac-manager-segment:focus-visible{outline:2px solid #122e48;outline-offset:-2px;position:relative;z-index:2}
++.ac-manager-legend{display:flex;flex-wrap:wrap;gap:7px 15px;margin:12px 0 3px;font-size:11px;color:#344b60}
++.ac-manager-legend-item{display:inline-flex;gap:6px;align-items:center;min-width:0}
++.ac-manager-swatch{display:inline-block;width:11px;height:11px;border-radius:2px;flex:0 0 11px}
++.ac-manager-stack-note{margin-top:5px;font-size:11px;color:#567087}
+ </style></head><body>
+ <style id="haiala-v639-progress-style">
+ #haialaStageOverlay{position:fixed;inset:0;z-index:100000;background:#f1f5f9;display:flex;align-items:center;justify-content:center;padding:22px;color:#182d40;font-family:Inter,system-ui,'Segoe UI',Arial,sans-serif}
+@@ -359,7 +368,7 @@
+ .haiala-stage-heading{letter-spacing:1px;font-weight:800;font-size:18px}.haiala-stage-subtitle{margin:6px 0 25px;color:#637d91;font-size:12px}.haiala-stage-flex{display:flex;gap:12px;justify-content:space-between;align-items:flex-end}.haiala-stage-step{font-size:15px;font-weight:700}.haiala-stage-count{color:#587389;font-size:12px;font-variant-numeric:tabular-nums}.haiala-stage-track{height:12px;background:#e5edf3;border-radius:20px;overflow:hidden;margin:14px 0 11px}.haiala-stage-fill{height:100%;width:0%;background:#397da0;transition:width .3s ease;border-radius:20px}.haiala-stage-description{color:#607b91;font-size:12px;min-height:38px;line-height:1.5}.haiala-stage-list{list-style:none;padding:0;margin:16px 0 0;font-size:12px;color:#607b91;display:grid;gap:8px}.haiala-stage-list li:before{content:'○';margin-right:9px}.haiala-stage-list li.is-done:before{content:'✓';color:#237a61}.haiala-stage-list li.is-active{color:#193b52;font-weight:700}.haiala-stage-list li.is-active:before{content:'●';color:#397da0}.haiala-stage-foot{font-size:11px;color:#68839a;border-top:1px solid #e5edf3;padding-top:14px;margin-top:19px}
+ </style>
+ <div id="haialaStageOverlay" role="status" aria-live="polite" aria-label="Carregamento do Painel Comercial">
+- <div class="haiala-stage-panel"><div class="haiala-stage-heading">HAIALA <span style="font-weight:400;font-size:12px;color:#68839a">| Gestão Comercial — v6.1.49</span></div>
++ <div class="haiala-stage-panel"><div class="haiala-stage-heading">HAIALA <span style="font-weight:400;font-size:12px;color:#68839a">| Gestão Comercial — v6.1.50</span></div>
+  <div class="haiala-stage-subtitle">Preparando os dados do Sankhya</div>
+  <div class="haiala-stage-flex"><div class="haiala-stage-step" id="haialaStageTitle">Conectando ao Oracle</div><div class="haiala-stage-count" id="haialaStageCount">0 de 38 consultas</div></div>
+  <div class="haiala-stage-track" role="progressbar" aria-valuemin="0" aria-valuemax="38" aria-valuenow="0" id="haialaStageBar"><div class="haiala-stage-fill" id="haialaStageFill"></div></div>
+@@ -7414,7 +7423,7 @@
+ #q533FamilyPanel .q533-unified col.q533-typecol{width:25%}
+ #q533FamilyPanel .q533-unified col.q533-qtycol{width:6%}
+ #q533FamilyPanel .q533-unified col.q533-valuecol{width:12.75%}
+-/* v6.1.49 — Bloco 04: 3 famílias com quatro colunas e TOTAL com Acum %.
++/* v6.1.50 — Bloco 04: 3 famílias com quatro colunas e TOTAL com Acum %.
+    Colunas calculadas: Tipologia 18%; 3 x (3+9+4+3.2)% e TOTAL (3+9+4+3.2+5.2)% = 100%. */
+ #q533FamilyPanel .q533-scroll{width:100%;overflow:visible}
+ #q533FamilyPanel .q533-unified{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse;font-size:clamp(9px,.68vw,11px)}
+@@ -7440,7 +7449,7 @@
+ #q533FamilyPanel .q533-tophead th{text-align:center!important;border-bottom:1px solid #cad8e3}
+ #q533FamilyPanel .q533-tophead th:first-child{text-align:left!important}
+ #q533FamilyPanel .q533-subhead th{text-align:right!important}
+-/* v6.1.49 - divisórias entre grupos de quatro colunas, somente no Bloco 04. */
++/* v6.1.50 - divisórias entre grupos de quatro colunas, somente no Bloco 04. */
+ #q533FamilyPanel .q533-unified tbody tr > :nth-child(6),
+ #q533FamilyPanel .q533-unified tbody tr > :nth-child(10),
+ #q533FamilyPanel .q533-unified tbody tr > :nth-child(14),
+@@ -7493,10 +7502,10 @@
+ .q533-popup table{min-width:780px}
+ @media(max-width:740px){.q533-popup-kpis{grid-template-columns:1fr}.q533-popup{max-width:100%;padding:14px}.q533-popup-scroll{overflow:auto}}
+ 
+-/* v6.1.49 — Ajustes exclusivamente visuais: SKU preco medio na mesma linha. */
++/* v6.1.50 — Ajustes exclusivamente visuais: SKU preco medio na mesma linha. */
+ .q533-popup #q533SkuBody td.q533-num{white-space:nowrap}
+ .q533-popup #q533SkuBody td{padding:7px 7px}
+-/* v6.1.49 — Bloco 05: mesma densidade compacta do Bloco 04, sem afetar demais tabelas. */
++/* v6.1.50 — Bloco 05: mesma densidade compacta do Bloco 04, sem afetar demais tabelas. */
+ #cl01DetailContainer #tablePanel th,#cl01DetailContainer #tablePanel td{padding:6px 7px}
+ </style>
+ <style id="acClientSecondRowStyles">
+@@ -8268,9 +8277,9 @@
+ <div id="haialaCarteiraNotice" class="haiala-diagnostics" role="status">Verificando carteira atual...</div>
+ <div id="haialaV477Notice" class="haiala-diagnostics" role="status">Verificando gerência e UF no Oracle...</div>
+ <div id="haialaSkuNotice" class="haiala-diagnostics" role="status">Verificando dados de SKU...</div>
+-<section class="box" id="haialaCarteiraCompletaPanel" style="display:none;margin-top:16px"></section><div id="q12Real" aria-label="Dados comerciais por período"></div><div class="section" id="cl01Sec01"><h2>01 - Visão executiva</h2><small id="kpiHint"></small></div><div class="kpis" id="kpis"></div><div id="acClientSecondRow" class="ac-client-second-row" style="display:none" aria-label="Indicadores de clientes e ShowRoom"></div><section id="haialaV6GerRep" class="v6-gerrep" style="display:none" aria-label="Desempenho por gerente e representante"></section><div class="section" id="cl01Sec02"><h2>02 - Inteligência comercial</h2><small>Visualização por página</small></div><div class="analytics"><section class="box" id="primaryPanel"></section><section class="box" id="secondaryPanel"></section></div><div class="section" id="cl01Sec03"><h2>03 - Regras e cenários funcionais</h2><small>Calculados a partir da amostra sintética</small></div><section class="box" id="rulesPanel"></section><div class="section" id="q533FamilyTitle" style="display:none"><h2>03 - Vendas por Família x Tipologia</h2><small id="q533FamilyStatus">Fonte: Oracle | Empresa 1</small></div><section class="box" id="q533FamilyPanel" style="display:none" aria-label="Vendas por família e tipologia"></section><div class="section" id="cl01Sec04"><h2>04 - Análise detalhada</h2><div class="actions"><button class="btn" id="exportBtn">Exportar CSV</button><button class="btn" id="testBtn">Executar autotestes</button></div></div><section class="box" id="cl01DetailContainer"><div class="chips" id="activeFilters"></div><div class="tablewrap" id="tablePanel"></div><p class="note" id="tableHelp"></p></section><div class="footer" id="haialaVersionFooter">HAIALA - V6.1.49 | 5 menus | Fonte e período identificados nos indicadores; limitações sinalizadas quando aplicáveis.</div></main></div><div id="modalHost"></div><script>
++<section class="box" id="haialaCarteiraCompletaPanel" style="display:none;margin-top:16px"></section><div id="q12Real" aria-label="Dados comerciais por período"></div><div class="section" id="cl01Sec01"><h2>01 - Visão executiva</h2><small id="kpiHint"></small></div><div class="kpis" id="kpis"></div><div id="acClientSecondRow" class="ac-client-second-row" style="display:none" aria-label="Indicadores de clientes e ShowRoom"></div><section id="haialaV6GerRep" class="v6-gerrep" style="display:none" aria-label="Desempenho por gerente e representante"></section><div class="section" id="cl01Sec02"><h2>02 - Inteligência comercial</h2><small>Visualização por página</small></div><div class="analytics"><section class="box" id="primaryPanel"></section><section class="box" id="secondaryPanel"></section></div><div class="section" id="cl01Sec03"><h2>03 - Regras e cenários funcionais</h2><small>Calculados a partir da amostra sintética</small></div><section class="box" id="rulesPanel"></section><div class="section" id="q533FamilyTitle" style="display:none"><h2>03 - Vendas por Família x Tipologia</h2><small id="q533FamilyStatus">Fonte: Oracle | Empresa 1</small></div><section class="box" id="q533FamilyPanel" style="display:none" aria-label="Vendas por família e tipologia"></section><div class="section" id="cl01Sec04"><h2>04 - Análise detalhada</h2><div class="actions"><button class="btn" id="exportBtn">Exportar CSV</button><button class="btn" id="testBtn">Executar autotestes</button></div></div><section class="box" id="cl01DetailContainer"><div class="chips" id="activeFilters"></div><div class="tablewrap" id="tablePanel"></div><p class="note" id="tableHelp"></p></section><div class="footer" id="haialaVersionFooter">HAIALA - V6.1.50 | 5 menus | Fonte e período identificados nos indicadores; limitações sinalizadas quando aplicáveis.</div></main></div><div id="modalHost"></div><script>
+ /* Versao centralizada para cabecalho e rodape. Sem alterar os indicadores. */
+-const HAIALA_VERSION = '6.1.49';
++const HAIALA_VERSION = '6.1.50';
+ const HAIALA_YEAR=Number('<c:out value="${haialaAno}"/>');
+ const HAIALA_YEAR_CURRENT=Number('<c:out value="${haialaAnoAtual}"/>');
+ const HAIALA_Q534P_DIAG_ALLOWED = <c:out value="${haialaPodeVerQ534P}"/>;
+@@ -8370,8 +8379,8 @@
+   if(!response.ok)throw new Error('HTTP '+response.status);
+   const markup=await response.text();
+   const targetYear="const HAIALA_YEAR=Number('"+next+"');";
+-  if(!markup.includes(targetYear)||!markup.includes('haialaQ43Result')||!markup.includes('haialaQ534PrazoResult')||!markup.includes("const HAIALA_VERSION = '6.1.49'")){
+-   throw new Error('O endpoint não retornou o JSP íntegro da versão 6.1.49 para '+next+'.');
++  if(!markup.includes(targetYear)||!markup.includes('haialaQ43Result')||!markup.includes('haialaQ534PrazoResult')||!markup.includes("const HAIALA_VERSION = '6.1.50'")){
++   throw new Error('O endpoint não retornou o JSP íntegro da versão 6.1.50 para '+next+'.');
+   }
+   if(cancelled||controller.signal.aborted)throw new Error('Consulta interrompida.');
+   msg.textContent='Dados de '+next+' recebidos. Inicializando o painel isolado...';
+@@ -10031,6 +10040,56 @@
+  if(!selected.length)return null;
+  return {ocs:selected.reduce((s,r)=>s+r.ocs,0),frete:selected.reduce((s,r)=>s+r.frete,0)};
+ }
++
++/* v6.1.50 — somente apresentação do gráfico operacional do Bloco 03.
++   Origem Q471 em nível pedido/SKU. Mesmos filtros da visão; o gráfico original
++   baseado em Q43/Q45/Q46 permanece como fallback quando não há conciliação. */
++function haialaV650ManagerStacks(periods,granularity){
++ if(!periods.length)return {ok:false,reason:'sem períodos no recorte'};
++ if(DATA_ORIGIN!=='ORACLE'||!Q471_VALID||!V601_ACTIVE_OK||!V477_REP_OK||state.profile!=='director')
++  return {ok:false,reason:'cadastro de gerente ou Q471 não validado'};
++ const allowed=new Set(periods.map(p=>p.key));
++ const byPeriod=new Map(periods.map(p=>[p.key,new Map()]));
++ const totals=new Map(),names=new Map();
++ const keyFor=r=>granularity==='dia'?r.dia:granularity==='semana'?isoWeekQ12(r.dia):r.dia.slice(0,7);
++ for(const r of skuItemsFiltered()){
++  const key=keyFor(r);if(!allowed.has(key))continue;
++  if(!Number.isFinite(r.sales))return {ok:false,reason:'receita do item não numérica'};
++  const meta=V601_ACTIVE_REPS.get(String(r.rep));
++  // Representantes sem mapeamento verificado não são atribuídos a gerente fictício.
++  const gid=meta?String(v6GerenciaRepresentante(r.rep,meta)):'__SEM_GERENCIA__';
++  const label=meta?(String(meta.managerName||'').trim() || ('Gerente '+gid)):'Sem gerência identificada';
++  names.set(gid,label);
++  const group=byPeriod.get(key);
++  group.set(gid,(group.get(gid)||0)+r.sales);
++  totals.set(gid,(totals.get(gid)||0)+r.sales);
++ }
++ for(const p of periods){
++  const actual=[...byPeriod.get(p.key).values()].reduce((a,b)=>a+b,0);
++  if(Math.abs(actual-p.sales)>0.02)return {ok:false,reason:'soma dos gerentes diverge do total em '+p.key};
++  if([...byPeriod.get(p.key).values()].some(v=>v<0))return {ok:false,reason:'valor negativo em uma composição; pilha não representaria o total'};
++ }
++ const ranked=[...totals.keys()].sort((a,b)=>totals.get(b)-totals.get(a)||a.localeCompare(b));
++ const top=ranked.slice(0,5),others=ranked.slice(5),groups=others.length?[...top,'__OUTROS__']:top;
++ const colorList=['#297d9b','#4c9776','#e0a237','#805ca6','#c46e54','#657e91','#338a91','#a37a41'];
++ const knownColors={'3':'#297d9b','4':'#805ca6','12':'#4c9776','23':'#e0a237','52':'#c46e54','__OUTROS__':'#657e91','__SEM_GERENCIA__':'#8396a3'};
++ const colorFor=id=>knownColors[id]||colorList[[...String(id)].reduce((v,c)=>v+c.charCodeAt(0),0)%colorList.length];
++ const fullName=id=>id==='__OUTROS__'?'Outros gerentes':(names.get(id)||'Gerente '+id);
++ const legend='<div class="ac-manager-legend" aria-label="Legenda dos gerentes">'+groups.map(id=>'<span class="ac-manager-legend-item"><i class="ac-manager-swatch" style="background:'+colorFor(id)+'"></i>'+esc(fullName(id))+'</span>').join('')+'</div>';
++ const bars=periods.map(p=>{
++  const rows=byPeriod.get(p.key),label=granularity==='dia'?p.key.slice(8,10)+'/'+p.key.slice(5,7):granularity==='semana'?p.key.slice(5):p.key.slice(5,7)+'/'+p.key.slice(2,4);
++  const byGroup=groups.map(id=>({id,v:id==='__OUTROS__'?others.reduce((t,o)=>t+(rows.get(o)||0),0):(rows.get(id)||0)}));
++  const height=Math.max(2,p.sales/Math.max(1,...periods.map(x=>x.sales))*165);
++  const segments=byGroup.filter(o=>o.v>0).map(o=>{
++   const percent=p.sales?100*o.v/p.sales:0;
++   const tip=p.key+' | Total: '+money(p.sales)+' | '+fullName(o.id)+': '+money(o.v)+' ('+percent.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%)';
++   return '<div class="ac-manager-segment" tabindex="0" role="img" aria-label="'+esc(tip)+'" title="'+esc(tip)+'" style="height:'+(100*o.v/p.sales).toFixed(8)+'%;background:'+colorFor(o.id)+'"></div>';
++  }).join('');
++  return '<div class="barcol ac-bars-col"><em>'+Math.round(p.sales/1000)+'k</em><div class="ac-manager-stack" style="height:'+height+'px" title="'+esc(p.key+' | '+money(p.sales))+'">'+segments+'</div><span title="'+esc(p.key)+'">'+esc(label)+'</span></div>';
++ }).join('');
++ return {ok:true,bars,legend};
++}
++
+ function renderAC51(){
+  const isShort=state.page==='AC-01'||state.page==='AC-02';
+  const isLong=state.page==='AC-03'||state.page==='AC-04'||state.page==='VD-03';
+@@ -10087,8 +10146,13 @@
+  byId('kpiHint').textContent='Fonte: '+(DATA_ORIGIN==='ORACLE'?'Oracle':'Snapshot histórico sinalizado')+' | Empresa 1 | '+arr.length+' '+suffix+(arr.length===1?'':'s');
+  const recentArr=arr.slice(-24);
+  const max=Math.max(1,...recentArr.map(x=>x.sales));
+- const bars=recentArr.map(x=>{const label=granularity==='dia'?x.key.slice(8,10)+'/'+x.key.slice(5,7):granularity==='semana'?x.key.slice(5):x.key.slice(5,7)+'/'+x.key.slice(2,4);return '<div class="barcol ac-bars-col" title="'+esc(x.key+' | '+money(x.sales))+'"><em>'+Math.round(x.sales/1000)+'k</em><div class="bar" style="height:'+Math.max(2,x.sales/max*165)+'px"></div><span title="'+esc(x.key)+'">'+esc(label)+'</span></div>';}).join('');
+- byId('primaryPanel').innerHTML='<h3 class="paneltitle">Vendas por '+esc(suffix)+'</h3><div class="ac-bars-scroll"><div class="bars ac-bars" style="min-width:'+Math.max(620,recentArr.length*53)+'px">'+(bars||'<p class="empty">Sem dados na seleção.</p>')+'</div></div><p class="note">'+esc(origemRecorte().linha)+'</p>';
++ // Mantém o gráfico original como fallback caso a dimensão gerente não concilie.
++ const originalBars=recentArr.map(x=>{const label=granularity==='dia'?x.key.slice(8,10)+'/'+x.key.slice(5,7):granularity==='semana'?x.key.slice(5):x.key.slice(5,7)+'/'+x.key.slice(2,4);return '<div class="barcol ac-bars-col" title="'+esc(x.key+' | '+money(x.sales))+'"><em>'+Math.round(x.sales/1000)+'k</em><div class="bar" style="height:'+Math.max(2,x.sales/max*165)+'px"></div><span title="'+esc(x.key)+'">'+esc(label)+'</span></div>';}).join('');
++ const managerStack=haialaV650ManagerStacks(recentArr,granularity);
++ const bars=managerStack.ok?managerStack.bars:originalBars;
++ const stackLegend=managerStack.ok?managerStack.legend:'';
++ const stackNote=managerStack.ok?'<p class="ac-manager-stack-note">Segmentos por gerente; total do período no topo. Passe o mouse em um segmento para ver valor e participação.</p>':'<p class="ac-manager-stack-note" role="status">Composição por gerente indisponível: '+esc(managerStack.reason)+'. Exibido somente o total já conciliado do período.</p>';
++ byId('primaryPanel').innerHTML='<h3 class="paneltitle">Vendas por '+esc(suffix)+(managerStack.ok?' — composição por gerente':'')+'</h3><div class="ac-bars-scroll"><div class="bars ac-bars" style="min-width:'+Math.max(620,recentArr.length*53)+'px">'+(bars||'<p class="empty">Sem dados na seleção.</p>')+'</div></div>'+stackLegend+stackNote+'<p class="note">'+esc(origemRecorte().linha)+'</p>';
+  const first=arr[0];
+  const months=arr.length;
+  const avg=months?all.sales/months:0;

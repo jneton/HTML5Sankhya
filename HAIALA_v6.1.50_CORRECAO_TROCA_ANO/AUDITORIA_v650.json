@@ -1,0 +1,36 @@
+{
+  "versao": "6.1.50",
+  "status": "TESTE, NAO HOMOLOGADA",
+  "base": "6.1.49 HOMOLOGADA",
+  "escopo": "Bloco 03 grafico de vendas por dia/semana/mes como barras empilhadas por gerente",
+  "fonte": "Q471 itens comerciais / cadastro V601 de gerentes; conciliacao com totais por periodo do grafico original",
+  "consultas_sql": 38,
+  "sql_textualmente_identicos": true,
+  "popup_intacto": true,
+  "validacoes": [
+    "cobertura por periodo e valor em R$ 0,02",
+    "falha fechada: grafico total original caso divergencia",
+    "sem dados sinteticos",
+    "Top 5 gerentes + Outros",
+    "legenda fixa por codigo de gerente",
+    "tooltip gerente/periodo/valor/percentual",
+    "sem mudanca em cards e KPIs"
+  ],
+  "testes": [
+    "node --check funcao isolada",
+    "teste mock com dois periodos e dois gerentes",
+    "teste de divergencia aciona fallback",
+    "comparacao 38 consultas"
+  ],
+  "limitacoes": [
+    "teste de execucao Sankhya pendente",
+    "sem responsividade confirmada em dispositivo real"
+  ],
+  "sha256_jsp": "0d13995cc3e86d1dbbcc1278cd35a7b6469970e1ede2620c433321cda5175617",
+  "correcao_pacote": {
+    "descricao": "Corrigida a validacao de inicializacao da troca de exercicio: o cabeçalho agora e validado contra a versao real 6.1.50, em vez da referencia obsoleta 6.1.35.",
+    "arquivo": "HAIALA_v6_1_50_Grafico_Gerentes_Empilhado_TESTE.jsp",
+    "validacao_local": "Conferencia estatica: o marcador antigo 6.1.35 foi removido da condicao de inicializacao e substituido pela validacao exata do cabecalho Versão 6.1.50.",
+    "pendencia": "Executar a troca para 2024 no ambiente Sankhya; a consulta Oracle e a inicializacao real dependem do ambiente."
+  }
+}
