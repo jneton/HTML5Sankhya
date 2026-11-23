@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gadget>
+  <prompt-parameters>
+    <parameter id="P_OC" description="Ordens de Carga" metadata="multiList:Text"
+               listType="sql" required="true" keep-last="false" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT ordemcarga AS VALUE,
+               LPAD(TO_CHAR(ordemcarga, 'FM9999'), 6, ' ') || ' - ' || roteiro AS LABEL
+          FROM tgford
+         WHERE situacao = 'A'
+           AND ordemcarga > 0
+         ORDER BY ordemcarga DESC
+      ]]></expression>
+    </parameter>
+    <parameter id="SIT" description="Situação da Ordem de Carga" metadata="multiList:Text"
+               listType="sql" required="true" keep-last="false" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT 'N' AS VALUE, 'Aberta' AS LABEL FROM DUAL
+        UNION ALL
+        SELECT 'S' AS VALUE, 'Concluída' AS LABEL FROM DUAL
+      ]]></expression>
+    </parameter>
+  </prompt-parameters>
+
+  <level id="lvl_ordens_carga" description="Ordens de Carga">
+    <args>
+      <arg id="A_CODPROD" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="58">
+        <html5component id="html5_oc_produtos" entryPoint="model_Ordens_Carga.jsp"/>
+      </container>
+      <container orientacao="V" tamanhoRelativo="21">
+        <html5component id="html5_oc_itens_produto" entryPoint="model_Itens_Produto.jsp"/>
+      </container>
+      <container orientacao="V" tamanhoRelativo="21">
+        <html5component id="html5_oc_pedidos" entryPoint="model_Pedidos.jsp"/>
+      </container>
+    </container>
+  </level>
+
+  <level id="lvl_itens_pedido" description="Itens do Pedido">
+    <args>
+      <arg id="A_NUNOTA" type="integer"/>
+    </args>
+    <container orientacao="V" tamanhoRelativo="100">
+      <html5component id="html5_oc_itens_pedido" entryPoint="model_Itens_Pedido.jsp"/>
+    </container>
+  </level>
+</gadget>

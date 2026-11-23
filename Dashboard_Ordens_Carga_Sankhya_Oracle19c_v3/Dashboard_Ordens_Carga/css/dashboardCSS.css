@@ -1,0 +1,25 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; color: #243247; background: #f4f6f9; font-size: 12px; }
+body { padding: 10px; }
+.painel { background: #fff; border: 1px solid #d9e0e8; border-radius: 6px; padding: 12px; }
+.painel.compacto { padding: 9px 10px; }
+.titulo { color: #64748b; font-size: 10px; font-weight: 700; letter-spacing: .08em; }
+h2 { margin: 5px 0 3px; color: #14263d; font-size: 18px; }
+h3 { margin: 0 0 3px; color: #14263d; font-size: 14px; }
+.subtitulo { margin: 0 0 9px; color: #64748b; font-size: 11px; }
+.tabela-wrap { width: 100%; overflow: auto; max-height: 440px; border: 1px solid #e2e8f0; }
+table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+th { position: sticky; top: 0; z-index: 1; background: #eaf0f6; color: #334155; text-align: left; font-weight: 700; }
+th, td { padding: 6px 8px; border-bottom: 1px solid #e7ecf2; }
+tbody tr:nth-child(even) { background: #f8fafc; }
+tbody tr:hover { background: #eef5fc; }
+td.numero { text-align: right; font-variant-numeric: tabular-nums; }
+td.descricao { min-width: 170px; white-space: normal; }
+button { border: 0; border-radius: 4px; background: #1f5f91; color: white; padding: 5px 9px; cursor: pointer; font-size: 11px; }
+button:hover { background: #17486f; }
+.vazio { text-align: center; color: #64748b; padding: 16px; }
+.farol { display: inline-block; border-radius: 10px; padding: 3px 7px; font-size: 10px; font-weight: 700; }
+.farol.RED { background: #fee2e2; color: #991b1b; }
+.farol.YELLOW { background: #fef3c7; color: #92400e; }
+.farol.BLUE { background: #dbeafe; color: #1e40af; }
+.nota { color: #64748b; font-size: 10px; margin: 7px 0 0; }
