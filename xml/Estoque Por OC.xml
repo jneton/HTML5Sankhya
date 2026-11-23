@@ -1,0 +1,967 @@
+<gadget ><prompt-parameters><parameter  id="P_OC" description="OC" metadata="multiList:Text" listType="sql" required="true" keep-last="false" keep-date="false" show-inactives="false" label="P_OC : multiList:Text" order="0"><expression type="SQL"><![CDATA[
+        SELECT ordemcarga AS VALUE,
+       lpad(to_char(ordemcarga, 'FM9999'), 6, ' ') || ' - ' || roteiro AS label
+  FROM tgford
+ WHERE situacao = 'A'
+   AND ordemcarga > 0
+ ORDER BY ordemcarga DESC
+      ]]></expression></parameter><parameter  id="SIT" description="Situação" metadata="multiList:Text" listType="text" required="false" keep-last="false" keep-date="false" order="1" label="SIT : multiList:Text"><item value="N" label="Aberto"/><item value="S" label="Concluída"/></parameter></prompt-parameters><level id="lvl_asxxn3e" description="Principal"><container orientacao="V" tamanhoRelativo="100"><container orientacao="V" tamanhoRelativo="6.174211553184659"><simple-value id="svl_avdxmhg"><value-expression ><![CDATA[<div style='text-align: center;'>
+            <b>Ir Para Detalhes</b>
+            <span style='color: #000099; font-size: 14px;'>
+            </span>
+          </div>]]></value-expression><on-click  navigate-to="lvl_avdxmgx">
+          <param id="A_NUNOTA"/>
+        </on-click></simple-value></container><container orientacao="V" tamanhoRelativo="94.83588945691636"><grid id="grd_asxxn3f" useNewGrid="S"><title><![CDATA[As informações neste Dashboards é referentes aos itens das Ordens de Cargas Selecionadas]]></title><expression type="sql" data-source="MGEDS"><![CDATA[SELECT codgrupoprod,
+       descrgrupoprod,
+       codprod,
+       descrprod,
+       qtdpedobs,
+       pedcomobs,
+       marca,
+       pendente,
+       estoque,
+       estoque_def,
+       CASE
+          WHEN dif >= 0 THEN
+           dif
+          ELSE
+           0
+       END AS difpos,
+       CASE
+          WHEN dif < 0 THEN
+           dif
+          ELSE
+           0
+       END AS difneg,
+       situacao,
+       codpro_sa,
+       option_label('TGFPRO', 'AD_SET_PRODUCAO', (SELECT p.ad_set_producao FROM tgfpro p WHERE p.codprod = codpro_sa)) AS set_sa,
+       estsa,
+       codpro_pint,
+       estpint,
+       vlttot,
+       frete,
+       estmin,
+       farol,
+       oca_01,
+       qtd_01,
+       frt_01,
+       mt3_01,
+       oca_02,
+       qtd_02,
+       frt_02,
+       mt3_02,
+       oca_03,
+       qtd_03,
+       frt_03,
+       mt3_03,
+       oca_04,
+       qtd_04,
+       frt_04,
+       mt3_04,
+       oca_05,
+       qtd_05,
+       frt_05,
+       mt3_05,
+       oca_06,
+       qtd_06,
+       frt_06,
+       mt3_06,
+       oca_07,
+       qtd_07,
+       frt_07,
+       mt3_07,
+       oca_08,
+       qtd_08,
+       frt_08,
+       mt3_08,
+       oca_09,
+       qtd_09,
+       frt_09,
+       mt3_09,
+       oca_10,
+       qtd_10,
+       frt_10,
+       mt3_10,
+       oca_11,
+       qtd_11,
+       frt_11,
+       mt3_11,
+       oca_12,
+       qtd_12,
+       frt_12,
+       mt3_12,
+       oca_13,
+       qtd_13,
+       frt_13,
+       mt3_13,
+       oca_14,
+       qtd_14,
+       frt_14,
+       mt3_14,
+       oca_15,
+       qtd_15,
+       frt_15,
+       mt3_15,
+       oca_16,
+       qtd_16,
+       frt_16,
+       mt3_16,
+       oca_17,
+       qtd_17,
+       frt_17,
+       mt3_17,
+       oca_18,
+       qtd_18,
+       frt_18,
+       mt3_18,
+       oca_19,
+       qtd_19,
+       frt_19,
+       mt3_19,
+       oca_20,
+       qtd_20,
+       frt_20,
+       mt3_20,
+       oca_21,
+       qtd_21,
+       frt_21,
+       mt3_21,
+       oca_22,
+       qtd_22,
+       frt_22,
+       mt3_22,
+       oca_23,
+       qtd_23,
+       frt_23,
+       mt3_23,
+       oca_24,
+       qtd_24,
+       frt_24,
+       mt3_24,
+       oca_25,
+       qtd_25,
+       frt_25,
+       mt3_25,
+       oca_26,
+       qtd_26,
+       frt_26,
+       mt3_26,
+       oca_27,
+       qtd_27,
+       frt_27,
+       mt3_27,
+       oca_28,
+       qtd_28,
+       frt_28,
+       mt3_28,
+       oca_29,
+       qtd_29,
+       frt_29,
+       mt3_29,
+       oca_30,
+       qtd_30,
+       frt_30,
+       mt3_30
+  FROM (SELECT to_char(lpad(gru.codgrupoprod, 10, 0), 'FM00G00G00G000') AS codgrupoprod,
+               gru.descrgrupoprod,
+               ite.codprod,
+               pro.descrprod,
+               obs1.qtdpedobs AS qtdpedobs,
+               obs2.obser AS pedcomobs,
+               pro.marca,
+               xx.codpro_sa,
+               xx.estsa,
+               xx.codpro_pint,
+               xx.estpint,
+               SUM(ite.qtdneg - ite.qtdentregue - ite.qtdconferida) AS pendente,
+               coalesce((SELECT SUM(coalesce(estoque, 0))
+                          FROM tgfest
+                         WHERE codprod = ite.codprod
+                           AND codparc = 0
+                           AND codlocal <> 2030000), 0) AS estoque,
+               coalesce((SELECT SUM(coalesce(estoque, 0))
+                          FROM tgfest
+                         WHERE codprod = ite.codprod
+                           AND codparc = 0
+                           AND codlocal = 2030000), 0) AS estoque_def,
+               (coalesce((SELECT SUM(coalesce(estoque, 0))
+                           FROM tgfest
+                          WHERE codprod = ite.codprod
+                            AND codparc = 0
+                            AND codlocal <> 2030000), 0) - coalesce(SUM(ite.qtdneg - ite.qtdentregue - ite.qtdconferida), 0)) AS dif,
+               (CASE
+                  WHEN (coalesce((SELECT SUM(coalesce(estoque, 0))
+                                   FROM tgfest
+                                  WHERE codprod = ite.codprod
+                                    AND codparc = 0
+                                    AND codlocal <> 2030000), 0) - coalesce(SUM(ite.qtdneg - ite.qtdentregue - ite.qtdconferida), 0)) > 0 THEN
+                   'Sobrando'
+                  ELSE
+                   'Faltando'
+               END) AS situacao,
+               SUM((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * (ite.ad_vlrliq / ite.qtdneg)) AS vlttot,
+               SUM((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * ite.ad_vlrunitfrete) AS frete,
+               coalesce(pro.estmin, 0) estmin,
+               CASE
+                  WHEN coalesce((SELECT SUM(coalesce(estoque, 0))
+                                  FROM tgfest
+                                 WHERE codprod = ite.codprod
+                                   AND codparc = 0
+                                   AND codlocal <> 2030000), 0) - coalesce(SUM(ite.qtdneg - ite.qtdentregue - ite.qtdconferida), 0) <= 0 THEN
+                   'RED'
+                  WHEN coalesce((SELECT SUM(coalesce(estoque, 0))
+                                  FROM tgfest
+                                 WHERE codprod = ite.codprod
+                                   AND codparc = 0
+                                   AND codlocal <> 2030000), 0) - coalesce(SUM(ite.qtdneg - ite.qtdentregue - ite.qtdconferida), 0) <= pro.estmin THEN
+                   'YELLOW'
+                  ELSE
+                   'BLUE'
+               END AS farol,
+               xx.oca_01,
+               xx.qtd_01,
+               xx.frt_01,
+               xx.mt3_01,
+               xx.oca_02,
+               xx.qtd_02,
+               xx.frt_02,
+               xx.mt3_02,
+               xx.oca_03,
+               xx.qtd_03,
+               xx.frt_03,
+               xx.mt3_03,
+               xx.oca_04,
+               xx.qtd_04,
+               xx.frt_04,
+               xx.mt3_04,
+               xx.oca_05,
+               xx.qtd_05,
+               xx.frt_05,
+               xx.mt3_05,
+               xx.oca_06,
+               xx.qtd_06,
+               xx.frt_06,
+               xx.mt3_06,
+               xx.oca_07,
+               xx.qtd_07,
+               xx.frt_07,
+               xx.mt3_07,
+               xx.oca_08,
+               xx.qtd_08,
+               xx.frt_08,
+               xx.mt3_08,
+               xx.oca_09,
+               xx.qtd_09,
+               xx.frt_09,
+               xx.mt3_09,
+               xx.oca_10,
+               xx.qtd_10,
+               xx.frt_10,
+               xx.mt3_10,
+               xx.oca_11,
+               xx.qtd_11,
+               xx.frt_11,
+               xx.mt3_11,
+               xx.oca_12,
+               xx.qtd_12,
+               xx.frt_12,
+               xx.mt3_12,
+               xx.oca_13,
+               xx.qtd_13,
+               xx.frt_13,
+               xx.mt3_13,
+               xx.oca_14,
+               xx.qtd_14,
+               xx.frt_14,
+               xx.mt3_14,
+               xx.oca_15,
+               xx.qtd_15,
+               xx.frt_15,
+               xx.mt3_15,
+               xx.oca_16,
+               xx.qtd_16,
+               xx.frt_16,
+               xx.mt3_16,
+               xx.oca_17,
+               xx.qtd_17,
+               xx.frt_17,
+               xx.mt3_17,
+               xx.oca_18,
+               xx.qtd_18,
+               xx.frt_18,
+               xx.mt3_18,
+               xx.oca_19,
+               xx.qtd_19,
+               xx.frt_19,
+               xx.mt3_19,
+               xx.oca_20,
+               xx.qtd_20,
+               xx.frt_20,
+               xx.mt3_20,
+               xx.oca_21,
+               xx.qtd_21,
+               xx.frt_21,
+               xx.mt3_21,
+               xx.oca_22,
+               xx.qtd_22,
+               xx.frt_22,
+               xx.mt3_22,
+               xx.oca_23,
+               xx.qtd_23,
+               xx.frt_23,
+               xx.mt3_23,
+               xx.oca_24,
+               xx.qtd_24,
+               xx.frt_24,
+               xx.mt3_24,
+               xx.oca_25,
+               xx.qtd_25,
+               xx.frt_25,
+               xx.mt3_25,
+               xx.oca_26,
+               xx.qtd_26,
+               xx.frt_26,
+               xx.mt3_26,
+               xx.oca_27,
+               xx.qtd_27,
+               xx.frt_27,
+               xx.mt3_27,
+               xx.oca_28,
+               xx.qtd_28,
+               xx.frt_28,
+               xx.mt3_28,
+               xx.oca_29,
+               xx.qtd_29,
+               xx.frt_29,
+               xx.mt3_29,
+               xx.oca_30,
+               xx.qtd_30,
+               xx.frt_30,
+               xx.mt3_30
+          FROM tgfcab cab
+         INNER JOIN tgfite ite
+            ON (cab.nunota = ite.nunota)
+         INNER JOIN tgfpro pro
+            ON (ite.codprod = pro.codprod)
+         INNER JOIN tgfgru gru
+            ON pro.codgrupoprod = gru.codgrupoprod
+          LEFT JOIN tgford ord
+            ON cab.ordemcarga = ord.ordemcarga
+          LEFT JOIN (SELECT DISTINCT c.ordemcarga,
+                                    i.codprod,
+                                    COUNT(DISTINCT i.nunota) AS qtdpedobs
+                      FROM tgfite i
+                     INNER JOIN tgfcab c
+                        ON i.nunota = c.nunota
+                     WHERE i.observacao IS NOT NULL
+                       AND c.ordemcarga IN :P_OC
+                     GROUP BY c.ordemcarga,
+                              i.codprod) obs1
+            ON /*cab.ordemcarga = obs1.ordemcarga
+           AND*/ ite.codprod = obs1.codprod
+          LEFT JOIN (SELECT ordemcarga,
+                           codprod,
+                           CASE
+                              WHEN p01_p IS NULL THEN
+                               NULL
+                              ELSE
+                               'OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p01_p
+                           END || CASE
+                              WHEN p02_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p02_p
+                           END || CASE
+                              WHEN p03_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p03_p
+                           END || CASE
+                              WHEN p04_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p04_p
+                           END || CASE
+                              WHEN p05_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p05_p
+                           END || CASE
+                              WHEN p06_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p06_p
+                           END || CASE
+                              WHEN p07_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p07_p
+                           END || CASE
+                              WHEN p08_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p08_p
+                           END || CASE
+                              WHEN p09_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p09_p
+                           END || CASE
+                              WHEN p10_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p10_p
+                           END || CASE
+                              WHEN p11_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p11_p
+                           END || CASE
+                              WHEN p12_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p12_p
+                           END || CASE
+                              WHEN p13_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p13_p
+                           END || CASE
+                              WHEN p14_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p14_p
+                           END || CASE
+                              WHEN p15_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p15_p
+                           END || CASE
+                              WHEN p16_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p16_p
+                           END || CASE
+                              WHEN p17_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p17_p
+                           END || CASE
+                              WHEN p18_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p18_p
+                           END || CASE
+                              WHEN p19_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p19_p
+                           END || CASE
+                              WHEN p20_p IS NULL THEN
+                               NULL
+                              ELSE
+                               ', OC: ' || to_char(ordemcarga, 'FM999999') || ' Ped: ' || p20_p
+                           END AS obser
+                      FROM (SELECT ordemcarga,
+                                   codprod,
+                                   nunota,
+                                   MAX(x) AS x
+                              FROM (SELECT DISTINCT c.ordemcarga,
+                                                    i.codprod,
+                                                    i.nunota,
+                                                    rank() over (PARTITION BY c.ordemcarga, i.codprod ORDER BY c.ordemcarga, i.nunota) AS x
+                                      FROM tgfite i
+                                     INNER JOIN tgfcab c
+                                        ON i.nunota = c.nunota
+                                     WHERE i.observacao IS NOT NULL
+                                       AND c.ordemcarga > 0
+                                       AND c.ordemcarga IN :P_OC)
+                             GROUP BY ordemcarga,
+                                      codprod,
+                                      nunota)
+                    pivot(MAX(nunota) AS p
+                       FOR x IN(01 AS p01, 02 AS p02, 03 AS p03, 04 AS p04, 05 AS p05, 06 AS p06, 07 AS p07, 08 AS p08, 09 AS p09, 10 AS p10, 11 AS p11, 12 AS p12, 13 AS p13, 14 AS p14, 15 AS p15, 16 AS p16, 17 AS p17, 18 AS p18, 19 AS p19, 20 AS p20))) obs2
+            ON /*cab.ordemcarga = obs2.ordemcarga
+           AND*/ ite.codprod = obs2.codprod
+          LEFT JOIN (SELECT codprod,
+                           codpro_sa,
+                           estsa,
+                           codpro_pint,
+                           estpint,
+                           a01_oca     AS "OCA_01",
+                           a01_qtd     AS "QTD_01",
+                           a01_frt     AS "FRT_01",
+                           a01_mt3     AS "MT3_01",
+                           a02_oca     AS "OCA_02",
+                           a02_qtd     AS "QTD_02",
+                           a02_frt     AS "FRT_02",
+                           a02_mt3     AS "MT3_02",
+                           a03_oca     AS "OCA_03",
+                           a03_qtd     AS "QTD_03",
+                           a03_frt     AS "FRT_03",
+                           a03_mt3     AS "MT3_03",
+                           a04_oca     AS "OCA_04",
+                           a04_qtd     AS "QTD_04",
+                           a04_frt     AS "FRT_04",
+                           a04_mt3     AS "MT3_04",
+                           a05_oca     AS "OCA_05",
+                           a05_qtd     AS "QTD_05",
+                           a05_frt     AS "FRT_05",
+                           a05_mt3     AS "MT3_05",
+                           a06_oca     AS "OCA_06",
+                           a06_qtd     AS "QTD_06",
+                           a06_frt     AS "FRT_06",
+                           a06_mt3     AS "MT3_06",
+                           a07_oca     AS "OCA_07",
+                           a07_qtd     AS "QTD_07",
+                           a07_frt     AS "FRT_07",
+                           a07_mt3     AS "MT3_07",
+                           a08_oca     AS "OCA_08",
+                           a08_qtd     AS "QTD_08",
+                           a08_frt     AS "FRT_08",
+                           a08_mt3     AS "MT3_08",
+                           a09_oca     AS "OCA_09",
+                           a09_qtd     AS "QTD_09",
+                           a09_frt     AS "FRT_09",
+                           a09_mt3     AS "MT3_09",
+                           a10_oca     AS "OCA_10",
+                           a10_qtd     AS "QTD_10",
+                           a10_frt     AS "FRT_10",
+                           a10_mt3     AS "MT3_10",
+                           a11_oca     AS "OCA_11",
+                           a11_qtd     AS "QTD_11",
+                           a11_frt     AS "FRT_11",
+                           a11_mt3     AS "MT3_11",
+                           a12_oca     AS "OCA_12",
+                           a12_qtd     AS "QTD_12",
+                           a12_frt     AS "FRT_12",
+                           a12_mt3     AS "MT3_12",
+                           a13_oca     AS "OCA_13",
+                           a13_qtd     AS "QTD_13",
+                           a13_frt     AS "FRT_13",
+                           a13_mt3     AS "MT3_13",
+                           a14_oca     AS "OCA_14",
+                           a14_qtd     AS "QTD_14",
+                           a14_frt     AS "FRT_14",
+                           a14_mt3     AS "MT3_14",
+                           a15_oca     AS "OCA_15",
+                           a15_qtd     AS "QTD_15",
+                           a15_frt     AS "FRT_15",
+                           a15_mt3     AS "MT3_15",
+                           a16_oca     AS "OCA_16",
+                           a16_qtd     AS "QTD_16",
+                           a16_frt     AS "FRT_16",
+                           a16_mt3     AS "MT3_16",
+                           a17_oca     AS "OCA_17",
+                           a17_qtd     AS "QTD_17",
+                           a17_frt     AS "FRT_17",
+                           a17_mt3     AS "MT3_17",
+                           a18_oca     AS "OCA_18",
+                           a18_qtd     AS "QTD_18",
+                           a18_frt     AS "FRT_18",
+                           a18_mt3     AS "MT3_18",
+                           a19_oca     AS "OCA_19",
+                           a19_qtd     AS "QTD_19",
+                           a19_frt     AS "FRT_19",
+                           a19_mt3     AS "MT3_19",
+                           a20_oca     AS "OCA_20",
+                           a20_qtd     AS "QTD_20",
+                           a20_frt     AS "FRT_20",
+                           a20_mt3     AS "MT3_20",
+                           a21_oca     AS "OCA_21",
+                           a21_qtd     AS "QTD_21",
+                           a21_frt     AS "FRT_21",
+                           a21_mt3     AS "MT3_21",
+                           a22_oca     AS "OCA_22",
+                           a22_qtd     AS "QTD_22",
+                           a22_frt     AS "FRT_22",
+                           a22_mt3     AS "MT3_22",
+                           a23_oca     AS "OCA_23",
+                           a23_qtd     AS "QTD_23",
+                           a23_frt     AS "FRT_23",
+                           a23_mt3     AS "MT3_23",
+                           a24_oca     AS "OCA_24",
+                           a24_qtd     AS "QTD_24",
+                           a24_frt     AS "FRT_24",
+                           a24_mt3     AS "MT3_24",
+                           a25_oca     AS "OCA_25",
+                           a25_qtd     AS "QTD_25",
+                           a25_frt     AS "FRT_25",
+                           a25_mt3     AS "MT3_25",
+                           a26_oca     AS "OCA_26",
+                           a26_qtd     AS "QTD_26",
+                           a26_frt     AS "FRT_26",
+                           a26_mt3     AS "MT3_26",
+                           a27_oca     AS "OCA_27",
+                           a27_qtd     AS "QTD_27",
+                           a27_frt     AS "FRT_27",
+                           a27_mt3     AS "MT3_27",
+                           a28_oca     AS "OCA_28",
+                           a28_qtd     AS "QTD_28",
+                           a28_frt     AS "FRT_28",
+                           a28_mt3     AS "MT3_28",
+                           a29_oca     AS "OCA_29",
+                           a29_qtd     AS "QTD_29",
+                           a29_frt     AS "FRT_29",
+                           a29_mt3     AS "MT3_29",
+                           a30_oca     AS "OCA_30",
+                           a30_qtd     AS "QTD_30",
+                           a30_frt     AS "FRT_30",
+                           a30_mt3     AS "MT3_30"
+                      FROM (SELECT b.codprod,
+                                   x.codpro_sa,
+                                   x.estsa,
+                                   x.codpro_pint,
+                                   x.estpint,
+                                   (b.qtdneg - b.qtdentregue - b.qtdconferida) qtdneg,
+                                   c.x,
+                                   a.ordemcarga,
+                                   (b.ad_vlrunitfrete * (b.qtdneg - b.qtdentregue - b.qtdconferida)) AS vlrfrete,
+                                   (d.m3 * (b.qtdneg - b.qtdentregue - b.qtdconferida)) AS mt3
+                              FROM tgfcab a
+                             INNER JOIN tgfite b
+                                ON a.nunota = b.nunota
+                             INNER JOIN tgfpro d
+                                ON b.codprod = d.codprod
+                             INNER JOIN (SELECT rownum x,
+                                               ordemcarga
+                                          FROM (SELECT DISTINCT a.ordemcarga
+                                                  FROM tgfcab a
+                                                 INNER JOIN tgfite b
+                                                    ON a.nunota = b.nunota
+                                                  LEFT JOIN tgford c
+                                                    ON a.ordemcarga = c.ordemcarga
+                                                 WHERE a.tipmov = 'P'
+                                                   AND b.pendente = 'S'
+                                                   AND a.pendente = 'S'
+                                                   AND a.ordemcarga IN :P_OC
+                                                   AND coalesce(c.ad_formconc, 'N') IN :SIT
+                                                   AND a.ordemcarga IS NOT NULL
+                                                 ORDER BY a.ordemcarga)) c
+                                ON a.ordemcarga = c.ordemcarga
+                              LEFT JOIN tgford c
+                                ON a.ordemcarga = c.ordemcarga
+                              LEFT JOIN (SELECT codprod,
+                                               codpro_sa,
+                                               descricao_sa,
+                                               coalesce(estsa, 0) AS estsa,
+                                               codpro_pint,
+                                               descricao_pint,
+                                               estpint
+                                          FROM (SELECT codprod,
+                                                       ad_cod_prod_sa2 AS codpro_sa,
+                                                       descricao2 AS descricao_sa,
+                                                       (SELECT SUM(est.estoque)
+                                                          FROM tgfest est
+                                                         WHERE est.codprod = ad_cod_prod_sa2
+                                                           AND est.codlocal = 2010000) AS estsa,
+                                                       ad_cod_prod_sa1 AS codpro_pint,
+                                                       descricao1 AS descricao_pint,
+                                                       (SELECT SUM(est.estoque)
+                                                          FROM tgfest est
+                                                         WHERE est.codprod = ad_cod_prod_sa1
+                                                           AND est.codlocal = 2010000) AS estpint
+                                                  FROM (SELECT codprod,
+                                                               CASE
+                                                                  WHEN codgrupoprod1 = 301 THEN
+                                                                   NULL
+                                                                  ELSE
+                                                                   ad_cod_prod_sa1
+                                                               END ad_cod_prod_sa1,
+                                                               CASE
+                                                                  WHEN codgrupoprod1 = 301 THEN
+                                                                   NULL
+                                                                  ELSE
+                                                                   descricao1
+                                                               END descricao1,
+                                                               CASE
+                                                                  WHEN codgrupoprod1 = 301 THEN
+                                                                   NULL
+                                                                  ELSE
+                                                                   codgrupoprod1
+                                                               END codgrupoprod1,
+                                                               CASE
+                                                                  WHEN codgrupoprod1 = 301 THEN
+                                                                   ad_cod_prod_sa1
+                                                                  ELSE
+                                                                   ad_cod_prod_sa2
+                                                               END ad_cod_prod_sa2,
+                                                               CASE
+                                                                  WHEN codgrupoprod1 = 301 THEN
+                                                                   descricao1
+                                                                  ELSE
+                                                                   descricao2
+                                                               END descricao2,
+                                                               CASE
+                                                                  WHEN codgrupoprod1 = 301 THEN
+                                                                   codgrupoprod1
+                                                                  ELSE
+                                                                   codgrupoprod2
+                                                               END codgrupoprod2
+                                                          FROM (SELECT p.codprod,
+                                                                       p.ad_cod_prod_sa AS ad_cod_prod_sa1,
+                                                                       (SELECT pa.descrprod || pa.compldesc FROM tgfpro pa WHERE pa.codprod = p.ad_cod_prod_sa) AS descricao1,
+                                                                       (SELECT substr(pa.codgrupoprod, 1, 3) FROM tgfpro pa WHERE pa.codprod = p.ad_cod_prod_sa) AS codgrupoprod1,
+                                                                       p1.ad_cod_prod_sa AS ad_cod_prod_sa2,
+                                                                       (SELECT pa.descrprod || pa.compldesc FROM tgfpro pa WHERE pa.codprod = p1.ad_cod_prod_sa) AS descricao2,
+                                                                       (SELECT substr(pa.codgrupoprod, 1, 3) FROM tgfpro pa WHERE pa.codprod = p1.ad_cod_prod_sa) AS codgrupoprod2
+                                                                  FROM tgfpro p
+                                                                  LEFT JOIN tgfpro p1
+                                                                    ON p.ad_cod_prod_sa = p1.codprod
+                                                                 WHERE substr(p.codgrupoprod, 1, 1) = 4))
+                                                 WHERE (ad_cod_prod_sa2 + ad_cod_prod_sa2) IS NOT NULL)) x
+                                ON b.codprod = x.codprod
+                             WHERE a.tipmov = 'P'
+                               AND b.pendente = 'S'
+                               AND a.pendente = 'S'
+                               AND a.ordemcarga IN :P_OC
+                               AND coalesce(c.ad_formconc, 'N') IN :SIT
+                               AND a.ordemcarga IS NOT NULL)
+                    pivot(MAX(ordemcarga) AS "OCA", SUM(qtdneg) AS "QTD", SUM(vlrfrete) AS "FRT", SUM(mt3) AS "MT3"
+                       FOR x IN(01 AS "A01", 02 AS "A02", 03 AS "A03", 04 AS "A04", 05 AS "A05", 06 AS "A06", 07 AS "A07", 08 AS "A08", 09 AS "A09", 10 AS "A10", 11 AS "A11", 12 AS
+                                "A12", 13 AS "A13", 14 AS "A14", 15 AS "A15", 16 AS "A16", 17 AS "A17", 18 AS "A18", 19 AS "A19", 20 AS "A20", 21 AS "A21", 22 AS "A22", 23 AS "A23", 24 AS
+                                "A24", 25 AS "A25", 26 AS "A26", 27 AS "A27", 28 AS "A28", 29 AS "A29", 30 AS "A30"))) xx
+            ON ite.codprod = xx.codprod
+         WHERE cab.tipmov = 'P'
+           AND cab.pendente = 'S'
+           AND ite.pendente = 'S'
+           AND cab.ordemcarga IN :P_OC
+           AND coalesce(ord.ad_formconc, 'N') IN :SIT
+         GROUP BY gru.codgrupoprod,
+                  gru.descrgrupoprod,
+                  ite.codprod,
+                  pro.descrprod,
+                  obs1.qtdpedobs,
+                  obs2.obser,
+                  pro.marca,
+                  pro.estmin,
+                  xx.codpro_sa,
+                  xx.estsa,
+                  xx.codpro_pint,
+                  xx.estpint,
+                  xx.oca_01,
+                  xx.qtd_01,
+                  xx.frt_01,
+                  xx.mt3_01,
+                  xx.oca_02,
+                  xx.qtd_02,
+                  xx.frt_02,
+                  xx.mt3_02,
+                  xx.oca_03,
+                  xx.qtd_03,
+                  xx.frt_03,
+                  xx.mt3_03,
+                  xx.oca_04,
+                  xx.qtd_04,
+                  xx.frt_04,
+                  xx.mt3_04,
+                  xx.oca_05,
+                  xx.qtd_05,
+                  xx.frt_05,
+                  xx.mt3_05,
+                  xx.oca_06,
+                  xx.qtd_06,
+                  xx.frt_06,
+                  xx.mt3_06,
+                  xx.oca_07,
+                  xx.qtd_07,
+                  xx.frt_07,
+                  xx.mt3_07,
+                  xx.oca_08,
+                  xx.qtd_08,
+                  xx.frt_08,
+                  xx.mt3_08,
+                  xx.oca_09,
+                  xx.qtd_09,
+                  xx.frt_09,
+                  xx.mt3_09,
+                  xx.oca_10,
+                  xx.qtd_10,
+                  xx.frt_10,
+                  xx.mt3_10,
+                  xx.oca_11,
+                  xx.qtd_11,
+                  xx.frt_11,
+                  xx.mt3_11,
+                  xx.oca_12,
+                  xx.qtd_12,
+                  xx.frt_12,
+                  xx.mt3_12,
+                  xx.oca_13,
+                  xx.qtd_13,
+                  xx.frt_13,
+                  xx.mt3_13,
+                  xx.oca_14,
+                  xx.qtd_14,
+                  xx.frt_14,
+                  xx.mt3_14,
+                  xx.oca_15,
+                  xx.qtd_15,
+                  xx.frt_15,
+                  xx.mt3_15,
+                  xx.oca_16,
+                  xx.qtd_16,
+                  xx.frt_16,
+                  xx.mt3_16,
+                  xx.oca_17,
+                  xx.qtd_17,
+                  xx.frt_17,
+                  xx.mt3_17,
+                  xx.oca_18,
+                  xx.qtd_18,
+                  xx.frt_18,
+                  xx.mt3_18,
+                  xx.oca_19,
+                  xx.qtd_19,
+                  xx.frt_19,
+                  xx.mt3_19,
+                  xx.oca_20,
+                  xx.qtd_20,
+                  xx.frt_20,
+                  xx.mt3_20,
+                  xx.oca_21,
+                  xx.qtd_21,
+                  xx.frt_21,
+                  xx.mt3_21,
+                  xx.oca_22,
+                  xx.qtd_22,
+                  xx.frt_22,
+                  xx.mt3_22,
+                  xx.oca_23,
+                  xx.qtd_23,
+                  xx.frt_23,
+                  xx.mt3_23,
+                  xx.oca_24,
+                  xx.qtd_24,
+                  xx.frt_24,
+                  xx.mt3_24,
+                  xx.oca_25,
+                  xx.qtd_25,
+                  xx.frt_25,
+                  xx.mt3_25,
+                  xx.oca_26,
+                  xx.qtd_26,
+                  xx.frt_26,
+                  xx.mt3_26,
+                  xx.oca_27,
+                  xx.qtd_27,
+                  xx.frt_27,
+                  xx.mt3_27,
+                  xx.oca_28,
+                  xx.qtd_28,
+                  xx.frt_28,
+                  xx.mt3_28,
+                  xx.oca_29,
+                  xx.qtd_29,
+                  xx.frt_29,
+                  xx.mt3_29,
+                  xx.oca_30,
+                  xx.qtd_30,
+                  xx.frt_30,
+                  xx.mt3_30)
+ ORDER BY codprod]]></expression><metadata><field name="CODGRUPOPROD" label="CodGrupo" type="S" visible="true" useFooter="false"></field><field name="DESCRGRUPOPROD" label="Desc Grupo" type="S" visible="true" useFooter="false"></field><field name="CODPROD" label="Codigo" type="I" visible="true" useFooter="false"></field><field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"></field><field name="QTDPEDOBS" label="Qtd Ped OBS" type="F" visible="true" useFooter="false"></field><field name="PEDCOMOBS" label="Ped Com OBS" type="S" visible="true" useFooter="false"></field><field name="MARCA" label="Marca" type="S" visible="true" useFooter="false"></field><field name="PENDENTE" label="Pendente" type="I" visible="true" useFooter="SUM"></field><field name="ESTOQUE" label="Estoque" type="I" visible="true" useFooter="SUM"></field><field name="ESTOQUE_DEF" label="Est.Defeito" type="I" visible="true" useFooter="SUM"></field><field name="DIFPOS" label="Dif +" type="F" visible="true" useFooter="SUM"></field><field name="DIFNEG" label="Dif -" type="F" visible="true" useFooter="SUM"><formatter  lessThan="0"><![CDATA[<span style="color:#FF0000">$VALUE</span>]]></formatter></field><field name="SITUACAO" label="Situação" type="S" visible="true" useFooter="false"></field><field name="CODPRO_SA" label="Codpro SA" type="I" visible="true" useFooter="null"></field><field name="SET_SA" label="Setor SA" type="S" visible="true" useFooter="false"></field><field name="ESTSA" label="Estoque SA" type="F" visible="true" useFooter="SUM" mask="#.##0;-n"></field><field name="CODPRO_PINT" label="Codpro PINT" type="I" visible="true" useFooter="false"></field><field name="ESTPINT" label="Est PINT" type="F" visible="true" useFooter="SUM" mask="#.##0;-n"></field><field name="VLTTOT" label="Vlr.Item" type="C" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="FRETE" label="Frete" type="C" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="ESTMIN" label="Est Minimo" type="I" visible="true" useFooter="false"></field><field name="FAROL" label="Farol" type="L" visible="true" useFooter="false"></field><field name="OCA_01" label="OCA_01" type="I" visible="true" useFooter="false"></field><field name="QTD_01" label="QTD_01" type="I" visible="true" useFooter="SUM"></field><field name="FRT_01" label="FRT_01" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_01" label="MT3_01" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_02" label="OCA_02" type="I" visible="true" useFooter="false"></field><field name="QTD_02" label="QTD_02" type="I" visible="true" useFooter="SUM"></field><field name="FRT_02" label="FRT_02" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_02" label="MT3_02" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_03" label="OCA_03" type="I" visible="true" useFooter="false"></field><field name="QTD_03" label="QTD_03" type="I" visible="true" useFooter="SUM"></field><field name="FRT_03" label="FRT_03" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_03" label="MT3_03" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_04" label="OCA_04" type="I" visible="true" useFooter="false"></field><field name="QTD_04" label="QTD_04" type="I" visible="true" useFooter="SUM"></field><field name="FRT_04" label="FRT_04" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_04" label="MT3_04" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_05" label="OCA_05" type="I" visible="true" useFooter="false"></field><field name="QTD_05" label="QTD_05" type="I" visible="true" useFooter="SUM"></field><field name="FRT_05" label="FRT_05" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_05" label="MT3_05" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_06" label="OCA_06" type="I" visible="true" useFooter="false"></field><field name="QTD_06" label="QTD_06" type="I" visible="true" useFooter="SUM"></field><field name="FRT_06" label="FRT_06" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_06" label="MT3_06" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_07" label="OCA_07" type="I" visible="true" useFooter="false"></field><field name="QTD_07" label="QTD_07" type="I" visible="true" useFooter="SUM"></field><field name="FRT_07" label="FRT_07" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_07" label="MT3_07" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_08" label="OCA_08" type="I" visible="true" useFooter="false"></field><field name="QTD_08" label="QTD_08" type="I" visible="true" useFooter="SUM"></field><field name="FRT_08" label="FRT_08" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_08" label="MT3_08" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_09" label="OCA_09" type="I" visible="true" useFooter="false"></field><field name="QTD_09" label="QTD_09" type="I" visible="true" useFooter="SUM"></field><field name="FRT_09" label="FRT_09" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_09" label="MT3_09" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_10" label="OCA_10" type="I" visible="true" useFooter="false"></field><field name="QTD_10" label="QTD_10" type="I" visible="true" useFooter="SUM"></field><field name="FRT_10" label="FRT_10" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_10" label="MT3_10" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_11" label="OCA_11" type="I" visible="true" useFooter="false"></field><field name="QTD_11" label="QTD_11" type="I" visible="true" useFooter="SUM"></field><field name="FRT_11" label="FRT_11" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_11" label="MT3_11" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_12" label="OCA_12" type="I" visible="true" useFooter="false"></field><field name="QTD_12" label="QTD_12" type="I" visible="true" useFooter="SUM"></field><field name="FRT_12" label="FRT_12" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_12" label="MT3_12" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_13" label="OCA_13" type="I" visible="true" useFooter="false"></field><field name="QTD_13" label="QTD_13" type="I" visible="true" useFooter="SUM"></field><field name="FRT_13" label="FRT_13" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_13" label="MT3_13" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_14" label="OCA_14" type="I" visible="true" useFooter="false"></field><field name="QTD_14" label="QTD_14" type="I" visible="true" useFooter="SUM"></field><field name="FRT_14" label="FRT_14" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_14" label="MT3_14" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_15" label="OCA_15" type="I" visible="true" useFooter="false"></field><field name="QTD_15" label="QTD_15" type="I" visible="true" useFooter="SUM"></field><field name="FRT_15" label="FRT_15" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_15" label="MT3_15" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_16" label="OCA_16" type="I" visible="true" useFooter="false"></field><field name="QTD_16" label="QTD_16" type="I" visible="true" useFooter="SUM"></field><field name="FRT_16" label="FRT_16" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_16" label="MT3_16" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_17" label="OCA_17" type="I" visible="true" useFooter="false"></field><field name="QTD_17" label="QTD_17" type="I" visible="true" useFooter="SUM"></field><field name="FRT_17" label="FRT_17" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_17" label="MT3_17" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_18" label="OCA_18" type="I" visible="true" useFooter="false"></field><field name="QTD_18" label="QTD_18" type="I" visible="true" useFooter="SUM"></field><field name="FRT_18" label="FRT_18" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_18" label="MT3_18" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_19" label="OCA_19" type="I" visible="true" useFooter="false"></field><field name="QTD_19" label="QTD_19" type="I" visible="true" useFooter="SUM"></field><field name="FRT_19" label="FRT_19" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_19" label="MT3_19" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_20" label="OCA_20" type="I" visible="true" useFooter="false"></field><field name="QTD_20" label="QTD_20" type="I" visible="true" useFooter="SUM"></field><field name="FRT_20" label="FRT_20" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_20" label="MT3_20" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_21" label="OCA_21" type="I" visible="true" useFooter="false"></field><field name="QTD_21" label="QTD_21" type="I" visible="true" useFooter="SUM"></field><field name="FRT_21" label="FRT_21" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_21" label="MT3_21" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_22" label="OCA_22" type="I" visible="true" useFooter="false"></field><field name="QTD_22" label="QTD_22" type="I" visible="true" useFooter="SUM"></field><field name="FRT_22" label="FRT_22" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_22" label="MT3_22" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_23" label="OCA_23" type="I" visible="true" useFooter="false"></field><field name="QTD_23" label="QTD_23" type="I" visible="true" useFooter="SUM"></field><field name="FRT_23" label="FRT_23" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_23" label="MT3_23" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_24" label="OCA_24" type="I" visible="true" useFooter="false"></field><field name="QTD_24" label="QTD_24" type="I" visible="true" useFooter="SUM"></field><field name="FRT_24" label="FRT_24" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_24" label="MT3_24" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_25" label="OCA_25" type="I" visible="true" useFooter="false"></field><field name="QTD_25" label="QTD_25" type="I" visible="true" useFooter="SUM"></field><field name="FRT_25" label="FRT_25" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_25" label="MT3_25" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_26" label="OCA_26" type="I" visible="true" useFooter="false"></field><field name="QTD_26" label="QTD_26" type="I" visible="true" useFooter="SUM"></field><field name="FRT_26" label="FRT_26" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_26" label="MT3_26" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_27" label="OCA_27" type="I" visible="true" useFooter="false"></field><field name="QTD_27" label="QTD_27" type="I" visible="true" useFooter="SUM"></field><field name="FRT_27" label="FRT_27" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_27" label="MT3_27" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_28" label="OCA_28" type="I" visible="true" useFooter="false"></field><field name="QTD_28" label="QTD_28" type="I" visible="true" useFooter="SUM"></field><field name="FRT_28" label="FRT_28" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_28" label="MT3_28" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_29" label="OCA_29" type="I" visible="true" useFooter="false"></field><field name="QTD_29" label="QTD_29" type="I" visible="true" useFooter="SUM"></field><field name="FRT_29" label="FRT_29" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_29" label="MT3_29" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="OCA_30" label="OCA_30" type="I" visible="true" useFooter="false"></field><field name="QTD_30" label="QTD_30" type="I" visible="true" useFooter="SUM"></field><field name="FRT_30" label="FRT_30" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="MT3_30" label="MT3_30" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field></metadata><on-click  navigate-to="lvl_avdxmil">
+          <param id="A_CODPROD">$CODPROD</param>
+        </on-click></grid></container></container></level><level id="lvl_avdxmgx" description="Detalhes"><args >
+    <arg id="A_NUNOTA" type="integer"/>
+  </args><container orientacao="H" tamanhoRelativo="100"><container orientacao="V" tamanhoRelativo="50"><grid id="grd_avdxmgy" useNewGrid="S"><title><![CDATA[Parceiro]]></title><expression type="sql" data-source="MGEDS"><![CDATA[SELECT codtipoper,
+       desctop,
+       nunota,
+       dtneg,
+       codparc,
+       razaosocial,
+       nutab,
+       destabprc,
+       cidadeuf,
+       SUM(totalm3) AS totalm3,
+       SUM(vlritem) AS vlrnota,
+       SUM(vlrfrete) AS vlrfrete
+  FROM (SELECT cab.nunota,
+               cab.codtipoper,
+               (SELECT DISTINCT top.descroper
+                  FROM tgftop top
+                 WHERE top.codtipoper = cab.codtipoper
+                   AND top.dhalter = cab.dhtipoper) desctop,
+               cab.dtneg,
+               cab.codparc,
+               ite.nutab,
+               (SELECT DISTINCT nta.nometab FROM tgftab tab INNER JOIN tgfnta nta ON tab.codtab = nta.codtab WHERE tab.nutab = ite.nutab) AS destabprc,
+               par.razaosocial,
+               cid.nomecid || '-' || uf.uf AS cidadeuf,
+               cab.vlrnota,
+               pro.codprod,
+               pro.descrprod,
+               (pro.m3 * (ite.qtdneg - ite.qtdentregue - ite.qtdconferida)) AS totalm3,
+               (ite.ad_vlrliq / ite.qtdneg) * (ite.qtdneg - ite.qtdentregue - ite.qtdconferida) AS vlritem,
+               ((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * ite.ad_vlrunitfrete) AS vlrfrete
+          FROM tgfcab cab
+         INNER JOIN tgfite ite
+            ON cab.nunota = ite.nunota
+         INNER JOIN tgfpro pro
+            ON ite.codprod = pro.codprod
+         INNER JOIN tgfpar par
+            ON (cab.codparc = par.codparc)
+         INNER JOIN tsicid cid
+            ON (par.codcid = cid.codcid)
+         INNER JOIN tsiufs uf
+            ON (cid.uf = uf.coduf)
+          LEFT JOIN tgford ord
+            ON cab.ordemcarga = ord.ordemcarga
+         WHERE cab.tipmov = 'P'
+           AND cab.pendente = 'S'
+           AND cab.ordemcarga IN :P_OC
+           AND nvl(ord.ad_formconc, 'N') IN :SIT)
+ GROUP BY codtipoper, desctop, nunota, dtneg, codparc, razaosocial, nutab, destabprc, cidadeuf
+ ORDER BY nunota, dtneg]]></expression><metadata><field name="CODTIPOPER" label="TOP" type="I" visible="true" useFooter="false"></field><field name="DESCTOP" label="Descrição TOP" type="S" visible="true" useFooter="false"></field><field name="NUNOTA" label="Nr.Unico" type="I" visible="true" useFooter="false"></field><field name="DTNEG" label="Data Neg" type="D" visible="true" useFooter="false"></field><field name="CODPARC" label="Codigo" type="I" visible="true" useFooter="false"></field><field name="RAZAOSOCIAL" label="Razão" type="S" visible="true" useFooter="false"></field><field name="NUTAB" label="Tab Prc" type="I" visible="true" useFooter="false"></field><field name="DESTABPRC" label="Tab Desc" type="S" visible="true" useFooter="false"></field><field name="CIDADEUF" label="Cidade" type="S" visible="true" useFooter="false"></field><field name="TOTALM3" label="M³" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="VLRNOTA" label="Vlr.Nota" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="VLRFRETE" label="Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field></metadata><on-click  navigate-to="lvl_avdxmgx">
+          <param id="A_NUNOTA"/>
+        </on-click><refresh-details  ui-list="grd_avdxmg3">
+          <param id="A_NUNOTA">$NUNOTA</param>
+        </refresh-details></grid></container><container orientacao="V" tamanhoRelativo="50"><grid id="grd_avdxmg3" useNewGrid="S"><args><arg id="A_NUNOTA" type="integer"></arg></args><title><![CDATA[Por Pedido]]></title><expression type="sql" data-source="MGEDS"><![CDATA[SELECT cab.nunota,
+       ite.codprod,
+       pro.descrprod,
+       (pro.m3 * (ite.qtdneg - ite.qtdentregue - ite.qtdconferida)) AS m3,
+       (ite.qtdneg - ite.qtdentregue - ite.qtdconferida) AS qtdneg,
+       ((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * (ite.ad_vlrliq / ite.qtdneg)) AS vlrtot,
+       ((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * ite.ad_vlrunitfrete) as vlrfrete
+  FROM tgfcab cab
+ INNER JOIN tgfite ite
+    ON (cab.nunota = ite.nunota)
+ INNER JOIN tgfpro pro
+    ON (ite.codprod = pro.codprod)
+ WHERE cab.tipmov = 'P'
+   AND cab.pendente = 'S'
+   AND ite.pendente = 'S'
+   AND cab.nunota = :A_NUNOTA
+ ORDER BY ite.codprod]]></expression><metadata><field name="NUNOTA" label="Nr.unico" type="I" visible="true" useFooter="false"></field><field name="CODPROD" label="Codigo" type="I" visible="true" useFooter="false"></field><field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"></field><field name="M3" label="M3" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="QTDNEG" label="Quantidade" type="F" visible="true" useFooter="SUM" mask="#.##0;-n"></field><field name="VLRTOT" label="Valor" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="VLRFRETE" label="Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field></metadata></grid></container></container></level><level id="lvl_avdxmil" description="Por Item"><args >
+    <arg id="A_CODPROD" type="integer"/>
+  </args><container orientacao="V" tamanhoRelativo="100"><grid id="grd_avdxmim" useNewGrid="S"><title><![CDATA[Por Item]]></title><expression type="sql" data-source="MGEDS"><![CDATA[SELECT cab.codparc,
+       par.razaosocial,
+       cid.nomecid,
+       uf.uf,
+       cab.dtneg,
+       cab.nunota,
+       ite.codprod,
+       pro.descrprod,
+       (ite.qtdneg - ite.qtdentregue - ite.qtdconferida) AS pendente,
+       ((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * pro.m3) as m3,
+       ((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * (ite.ad_vlrliq / ite.qtdneg)) AS valor,
+       ((ite.qtdneg - ite.qtdentregue - ite.qtdconferida) * ite.ad_vlrunitfrete) AS frete
+  FROM tgfcab cab
+ INNER JOIN tgfpar par
+    ON cab.codparc = par.codparc
+ INNER JOIN tgfite ite
+    ON cab.nunota = ite.nunota
+ INNER JOIN tgfpro pro
+    ON ite.codprod = pro.codprod
+ INNER JOIN tsicid cid
+    ON par.codcid = cid.codcid
+ INNER JOIN tsiufs uf
+    ON cid.uf = uf.coduf
+  LEFT JOIN tgford ord
+    ON cab.ordemcarga = ord.ordemcarga
+ WHERE cab.tipmov = 'P'
+   AND ite.pendente = 'S'
+   AND cab.ordemcarga IN :P_OC
+   AND ite.codprod IN :A_CODPROD
+   AND NVL(ord.ad_formconc, 'N') IN :SIT
+ ORDER BY cab.nunota]]></expression><metadata><field name="CODPARC" label="Cod.Cliente" type="I" visible="true" useFooter="false"></field><field name="RAZAOSOCIAL" label="Razão Social" type="S" visible="true" useFooter="false"></field><field name="NOMECID" label="NOMECID" type="S" visible="true" useFooter="false"></field><field name="UF" label="UF" type="S" visible="true" useFooter="false"></field><field name="DTNEG" label="Dt Neg" type="D" visible="true" useFooter="false"></field><field name="NUNOTA" label="Nr.Unico" type="I" visible="true" useFooter="false"></field><field name="CODPROD" label="Codigo" type="I" visible="true" useFooter="false"></field><field name="DESCRPROD" label="Produto" type="S" visible="true" useFooter="false"></field><field name="PENDENTE" label="Pendente" type="I" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="M3" label="M3" type="F" visible="true" useFooter="SUM" mask="#.##0,0000;-n"></field><field name="VALOR" label="Valor" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field><field name="FRETE" label="Frete" type="F" visible="true" useFooter="SUM" mask="#.##0,00;-n"></field></metadata></grid></container></level></gadget>
