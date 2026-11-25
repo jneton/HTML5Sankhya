@@ -398,13 +398,19 @@ body.ac535-detail #tablePanel th:nth-child(4),body.ac535-detail #tablePanel td:n
 <snk:load/>
 <c:catch var="haialaFalhaOracle">
 <snk:query var="haialaTesteOracle">
-SELECT COUNT(*) AS TOTAL
-FROM SANKHYA.TGFCAB
-WHERE CODEMP = 1 AND TIPMOV = 'P'
-AND CODTIPOPER IN (1000, 1001, 1005, 1007, 9000, 9001)
-AND STATUSNOTA IN ('A','P','L')
-AND DTNEG >= DATE '${haialaAno}-01-01'
-AND DTNEG < LEAST(TRUNC(SYSDATE)+1, DATE '${haialaAnoSeguinte}-01-01')
+WITH parametros AS
+ (SELECT to_date('${haialaAno}' || '0101', 'YYYYMMDD') AS dt_inicial,
+         least(trunc(SYSDATE) + 1, to_date('${haialaAnoSeguinte}' || '0101', 'YYYYMMDD')) AS dt_final
+    FROM dual)
+SELECT COUNT(*) AS total
+  FROM sankhya.tgfcab cab
+ CROSS JOIN parametros par
+ WHERE cab.codemp = 1
+   AND cab.tipmov = 'P'
+   AND cab.codtipoper IN (1000, 1001, 1005, 1007, 9000, 9001)
+   AND cab.statusnota IN ('A', 'P', 'L')
+   AND cab.dtneg >= par.dt_inicial
+   AND cab.dtneg < par.dt_final
 </snk:query>
 </c:catch>
 <script>window.haialaProgressDone&&window.haialaProgressDone(1,"Conexão Oracle");</script>
