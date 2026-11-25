@@ -1,0 +1,24 @@
+HAIALA | Relatórios Industriais HTML5 v2.2
+
+Pacote para Construtor de Componentes HTML5 do Sankhya.
+Conteúdo: definição XML, haiala_relatorios.jsp, consultas originais do analista, instruções.
+
+NOVIDADES
+- Filtros Ano/Mês recarregam o componente, executando a SQL SOMENTE no mês solicitado.
+- Relatório 01 utiliza integralmente a SQL entregue por TI (TGFESE/TGFEST, empresa 1), acrescentando hierarquia de grupos.
+- Relatório 02 utiliza a SQL entregue por TI (TPRAPF.QTD / TPRAPO.DHAPO), com :xsetor=8 fixo; acrescenta hierarquia de grupos.
+- As colunas D01..D31 e DIA_01..DIA_31 são exibidas como datas no HTML.
+- Importar CSV permanece removido. Exportar CSV preservado.
+
+INSTALAÇÃO
+1. Faça cópia do componente atual; importe este ZIP no Construtor HTML5.
+2. Abra o componente. A versão v2.2 aparece no cabeçalho.
+3. Verifique Relatório 01 em novembro/2026 (ex.: SKU 595) e Relatório 02 em agosto/2026.
+4. Se ocorrer erro, use o diagnóstico SQL exibido na tela e confira a SQL correspondente no DBExplorer.
+
+OBSERVAÇÕES DE HOMOLOGAÇÃO
+- A reconstrução histórica do Relatório 01 depende da cobertura/precisão de TGFESE e dos saldos TGFEST, além da data referencial atual.
+- A SQL original usa ese.dtreferencia > pd.dia; preservar conforme entregue, mas validar se ela inclui movimentos no próprio dia.
+- A SQL original de produção relaciona TPRAPF a TPRAPO pelo NUAPO; se houver múltiplos itens no apontamento, validar possível multiplicação ou atribuição incorreta por SKU.
+- Navegação Ano/Mês usa parâmetros de query da própria rota HTML5 (não endpoint JSON). Conferir compatibilidade do Construtor na instalação.
+- Não houve execução contra o Oracle de produção nesta sessão.

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gadget>
+  <level id="lvl_haiala_relatorios" description="Relatórios Industriais Haiala">
+    <container orientacao="V" tamanhoRelativo="100">
+      <html5component id="html5_haiala_relatorios" entryPoint="haiala_relatorios.jsp"/>
+    </container>
+  </level>
+</gadget>

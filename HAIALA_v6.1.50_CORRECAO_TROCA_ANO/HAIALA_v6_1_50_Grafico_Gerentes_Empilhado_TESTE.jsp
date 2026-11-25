@@ -467,28 +467,82 @@ ORDER BY DIA, OPERACAO
 <!-- v6.1.11: detalhes por NUNOTA, somente para popup informativo e de Pedidos; nao alimenta KPIs. -->
 <c:catch var="haialaFalhaQ6111DocsTOP">
 <snk:query var="haialaQ6111DocsTOP">
-SELECT CAB.NUNOTA AS PEDIDO_ID,
-       TO_CHAR(CAB.DTNEG,'YYYY-MM-DD') AS DIA,
-       CASE WHEN CAB.TIPMOV='P' AND CAB.CODTIPOPER IN (1000,1001,1005,1007,9000,9001)
-            THEN 1 ELSE TOP.AD_GRUPO END AS GRUPO,
-       CAB.CODTIPOPER AS OPERACAO,
-       NVL(CAB.CODVEND,-1) AS REPRESENTANTE,
-       NVL(CAB.CODPARC,-1) AS CLIENTE,
-       CAB.STATUSNOTA AS STATUSNOTA,
-       ROUND(NVL(CAB.VLRNOTA,0)-NVL(CAB.VLRSUBST,0),2) AS VLC,
-       ROUND(NVL(CAB.VLRSUBST,0),2) AS ST
-FROM SANKHYA.TGFCAB CAB
-JOIN SANKHYA.TGFTOP TOP
-  ON TOP.CODTIPOPER=CAB.CODTIPOPER
- AND TOP.DHALTER=CAB.DHTIPOPER
-WHERE CAB.CODEMP=1
-  AND CAB.DTNEG>=DATE '${haialaAno}-01-01'
-  AND CAB.DTNEG<LEAST(TRUNC(SYSDATE)+1, DATE '${haialaAnoSeguinte}-01-01')
-  AND CAB.STATUSNOTA IN ('A','P','L')
-  AND ((CAB.TIPMOV='P' AND ((TOP.AD_GRUPO=1 AND CAB.CODTIPOPER IN (1000,1001,1005,1007,9000,9001))
-       OR TOP.AD_GRUPO IN (3,4)))
-       OR (CAB.TIPMOV='D' AND TOP.AD_GRUPO=5))
-ORDER BY CAB.DTNEG,CAB.NUNOTA
+WITH parametros AS
+ (SELECT 1 AS codemp,
+         to_date('&haialaAno-01-01', 'YYYY-MM-DD') AS dt_inicio,
+         least(trunc(SYSDATE) + 1, to_date('&haialaAnoSeguinte-01-01', 'YYYY-MM-DD')) AS dt_fim
+    FROM dual),
+operacoes_especiais AS
+ (SELECT 1000 AS codtipoper
+    FROM dual
+  UNION ALL
+  SELECT 1001
+    FROM dual
+  UNION ALL
+  SELECT 1005
+    FROM dual
+  UNION ALL
+  SELECT 1007
+    FROM dual
+  UNION ALL
+  SELECT 9000
+    FROM dual
+  UNION ALL
+  SELECT 9001
+    FROM dual),
+documentos_validos AS
+ (SELECT cab.nunota,
+         cab.dtneg,
+         cab.tipmov,
+         cab.codtipoper,
+         cab.codvend,
+         cab.codparc,
+         cab.statusnota,
+         cab.vlrnota,
+         cab.vlrsubst,
+         top.ad_grupo,
+         CASE
+            WHEN cab.tipmov = 'P' AND EXISTS (SELECT 1 FROM operacoes_especiais op WHERE op.codtipoper = cab.codtipoper) THEN
+             1
+            ELSE
+             top.ad_grupo
+         END AS grupo_calculado
+    FROM sankhya.tgfcab cab
+   INNER JOIN sankhya.tgftop top
+      ON top.codtipoper = cab.codtipoper
+     AND top.dhalter = cab.dhtipoper
+   CROSS JOIN parametros par
+   WHERE cab.codemp = par.codemp
+     AND cab.dtneg >= par.dt_inicio
+     AND cab.dtneg < par.dt_fim
+     AND cab.statusnota IN ('A', 'P', 'L')
+     AND ((cab.tipmov = 'P' AND
+         ((top.ad_grupo = 1 AND EXISTS (SELECT 1 FROM operacoes_especiais op WHERE op.codtipoper = cab.codtipoper)) OR
+         top.ad_grupo IN (3, 4))) OR (cab.tipmov = 'D' AND top.ad_grupo = 5))),
+resultado_final AS
+ (SELECT doc.nunota AS pedido_id,
+         to_char(doc.dtneg, 'YYYY-MM-DD') AS dia,
+         doc.grupo_calculado AS grupo,
+         doc.codtipoper AS operacao,
+         nvl(doc.codvend, -1) AS representante,
+         nvl(doc.codparc, -1) AS cliente,
+         doc.statusnota,
+         round(nvl(doc.vlrnota, 0) - nvl(doc.vlrsubst, 0), 2) AS vlc,
+         round(nvl(doc.vlrsubst, 0), 2) AS st,
+         doc.dtneg AS data_ordenacao
+    FROM documentos_validos doc)
+SELECT pedido_id,
+       dia,
+       grupo,
+       operacao,
+       representante,
+       cliente,
+       statusnota,
+       vlc,
+       st
+  FROM resultado_final
+ ORDER BY data_ordenacao,
+          pedido_id
 </snk:query>
 </c:catch>
 <script>window.haialaProgressDone&&window.haialaProgressDone(3,"Documentos dos pedidos");</script>
@@ -819,41 +873,79 @@ ORDER BY DIA, OPERACAO, REPRESENTANTE, CLIENTE
 
 <c:catch var="haialaFalhaQ471">
 <snk:query var="haialaQ471">
-WITH GRUPOS_04_REGULARES AS (
-  SELECT G.CODGRUPOPROD FROM SANKHYA.TGFGRU G
-  START WITH G.CODGRUPOPROD=40000000
-  CONNECT BY NOCYCLE PRIOR G.CODGRUPOPROD=G.CODGRUPAI
+WITH parametros AS
+ (SELECT 1 AS codemp,
+         DATE '&haialaAno-01-01' AS dt_inicio,
+         least(trunc(SYSDATE) + 1, DATE '&haialaAnoSeguinte-01-01') AS dt_fim
+    FROM dual),
+grupos_04_regulares AS
+ (SELECT gru.codgrupoprod
+    FROM sankhya.tgfgru gru
+   START WITH gru.codgrupoprod = 40000000
+  CONNECT BY nocycle PRIOR gru.codgrupoprod = gru.codgrupai
   MINUS
-  SELECT E.CODGRUPOPROD FROM SANKHYA.TGFGRU E
-  START WITH E.CODGRUPOPROD=40209000
-  CONNECT BY NOCYCLE PRIOR E.CODGRUPOPROD=E.CODGRUPAI
-)
-SELECT CAB.NUNOTA AS PEDIDO_ID,
-       TO_CHAR(CAB.DTNEG,'YYYY-MM-DD') AS DIA,
-       CAB.CODTIPOPER AS OPERACAO,
-       NVL(CAB.CODVEND,-1) AS REPRESENTANTE,
-       CAB.CODPARC AS CLIENTE,
-       ITE.CODPROD AS SKU,
-       NVL(TRIM(PRO.AD_TIPOLOGIA), '(SEM TIPOLOGIA)') AS TIPOLOGIA,
-       ROUND(SUM(NVL(ITE.VLRTOT,0) - NVL(ITE.VLRDESC,0) - NVL(ITE.VLRDESCRAT,0)),2) AS VENDAS_SKU,
-       ROUND(SUM(NVL(ITE.VLRDESC,0) + NVL(ITE.VLRDESCRAT,0)),2) AS DESCONTO_SKU,
-       ROUND(SUM(NVL(ITE.VLRICMS,0)),2) AS ICMS_SKU,
-       ROUND(SUM(NVL(ITE.VLRSUBST,0)),2) AS ST_SKU,
-       ROUND(SUM(NVL(ITE.VLRIPI,0)),2) AS IPI_SKU
-FROM SANKHYA.TGFCAB CAB
-JOIN SANKHYA.TGFITE ITE ON ITE.NUNOTA = CAB.NUNOTA
-JOIN SANKHYA.TGFPRO PRO ON PRO.CODPROD = ITE.CODPROD
-JOIN GRUPOS_04_REGULARES GR ON GR.CODGRUPOPROD=PRO.CODGRUPOPROD
-WHERE CAB.CODEMP = 1
-  AND CAB.DTNEG >= DATE '${haialaAno}-01-01'
-  AND CAB.DTNEG < LEAST(TRUNC(SYSDATE)+1, DATE '${haialaAnoSeguinte}-01-01')
-  AND CAB.TIPMOV = 'P'
-  AND CAB.CODTIPOPER IN (1000, 1001, 1005, 1007, 9000, 9001)
-  AND CAB.STATUSNOTA IN ('A','P','L')
-GROUP BY CAB.NUNOTA, TO_CHAR(CAB.DTNEG,'YYYY-MM-DD'), CAB.CODTIPOPER,
-         NVL(CAB.CODVEND,-1), CAB.CODPARC, ITE.CODPROD,
-         NVL(TRIM(PRO.AD_TIPOLOGIA), '(SEM TIPOLOGIA)')
-ORDER BY DIA, PEDIDO_ID, SKU
+  SELECT gru.codgrupoprod
+    FROM sankhya.tgfgru gru
+   START WITH gru.codgrupoprod = 40209000
+  CONNECT BY nocycle PRIOR gru.codgrupoprod = gru.codgrupai),
+cabecalhos_validos AS
+ (SELECT cab.nunota,
+         cab.dtneg,
+         cab.codtipoper,
+         nvl(cab.codvend, -1) AS representante,
+         cab.codparc AS cliente
+    FROM sankhya.tgfcab cab
+   CROSS JOIN parametros par
+   WHERE cab.codemp = par.codemp
+     AND cab.dtneg >= par.dt_inicio
+     AND cab.dtneg < par.dt_fim
+     AND cab.tipmov = 'P'
+     AND cab.nunota <> 176029
+     AND cab.codtipoper IN (1000, 1001, 1005, 1007, 9000, 9001)
+     AND cab.statusnota IN ('A', 'P', 'L')),
+dados_vendas AS
+ (SELECT cab.nunota AS pedido_id,
+         to_char(cab.dtneg, 'YYYY-MM-DD') AS dia,
+         cab.codtipoper AS operacao,
+         cab.representante,
+         cab.cliente,
+         ite.codprod AS sku,
+         nvl(TRIM(pro.ad_tipologia), '(SEM TIPOLOGIA)') AS tipologia,
+         nvl(ite.vlrtot, 0) - nvl(ite.vlrdesc, 0) - nvl(ite.vlrdescrat, 0) AS valor_venda,
+         nvl(ite.vlrdesc, 0) + nvl(ite.vlrdescrat, 0) AS valor_desconto,
+         nvl(ite.vlricms, 0) AS valor_icms,
+         nvl(ite.vlrsubst, 0) AS valor_st,
+         nvl(ite.vlripi, 0) AS valor_ipi
+    FROM cabecalhos_validos cab
+   INNER JOIN sankhya.tgfite ite
+      ON ite.nunota = cab.nunota
+   INNER JOIN sankhya.tgfpro pro
+      ON pro.codprod = ite.codprod
+   INNER JOIN grupos_04_regulares gr
+      ON gr.codgrupoprod = pro.codgrupoprod)
+SELECT dados.pedido_id,
+       dados.dia,
+       dados.operacao,
+       dados.representante,
+       dados.cliente,
+       dados.sku,
+       dados.tipologia,
+       round(SUM(dados.valor_venda), 2) AS vendas_sku,
+       round(SUM(dados.valor_desconto), 2) AS desconto_sku,
+       round(SUM(dados.valor_icms), 2) AS icms_sku,
+       round(SUM(dados.valor_st), 2) AS st_sku,
+       round(SUM(dados.valor_ipi), 2) AS ipi_sku
+  FROM dados_vendas dados
+ GROUP BY dados.pedido_id,
+          dados.dia,
+          dados.operacao,
+          dados.representante,
+          dados.cliente,
+          dados.sku,
+          dados.tipologia
+ ORDER BY dados.dia,
+          dados.pedido_id,
+          dados.sku
 </snk:query>
 </c:catch>
 <script>window.haialaProgressDone&&window.haialaProgressDone(11,"SKUs comerciais");</script>
