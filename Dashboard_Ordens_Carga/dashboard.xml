@@ -1,0 +1,28 @@
+<gadget>
+  <prompt-parameters>
+    <parameter id="P_OC" description="Ordens de carga" metadata="multiList:Text" listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT ordemcarga AS VALUE,
+               LPAD(TO_CHAR(ordemcarga, 'FM9999'), 6, ' ') || ' - ' || roteiro AS LABEL
+          FROM tgford
+         WHERE situacao = 'A'
+           AND ordemcarga > 0
+         ORDER BY ordemcarga DESC
+      ]]></expression>
+    </parameter>
+    <parameter id="SIT" description="Situação da ordem" metadata="multiList:Text" listType="sql" required="true" keep-last="true" keep-date="false">
+      <expression type="SQL"><![CDATA[
+        SELECT 'N' AS VALUE, 'Aberto' AS LABEL FROM DUAL
+        UNION ALL
+        SELECT 'S' AS VALUE, 'Concluída' AS LABEL FROM DUAL
+      ]]></expression>
+    </parameter>
+  </prompt-parameters>
+  <level id="lvl_ordens_carga" description="Acompanhamento de Ordens de Carga">
+    <container orientacao="V" tamanhoRelativo="100">
+      <container orientacao="V" tamanhoRelativo="100">
+        <html5component id="html5_ordens_carga" entryPoint="dashboard.jsp"/>
+      </container>
+    </container>
+  </level>
+</gadget>
